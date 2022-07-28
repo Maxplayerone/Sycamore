@@ -19,6 +19,9 @@
     <ClInclude Include="src\Window.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\InputHandling\InputCallbacks.h" />
+    <ClInclude Include="src\InputHandling\MouseHandleler.h" />
+    <ClInclude Include="src\InputHandling\KeysHandleler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -28,5 +31,8 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\InputHandling\InputCallbacks.cpp" />
+    <ClCompile Include="src\InputHandling\MouseHandleler.cpp" />
+    <ClCompile Include="src\InputHandling\KeysHandleler.cpp" />
   </ItemGroup>
 </Project>

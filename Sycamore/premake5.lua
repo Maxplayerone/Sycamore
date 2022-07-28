@@ -24,19 +24,22 @@ project "Sycamore"
 
         filter {"system:windows", "architecture:x86"}
             defines {
-              "SM_WINDOWS"
+              "SM_WINDOWS",
+              "GLEW_STATIC"
            }
 
            --linker/input in vs
            --links the needed libraries
-           links {"glfw3.lib", "opengl32.lib"}
+           links {"glfw3.lib", "opengl32.lib", "glew32s.lib"}
 
            libdirs{
-            "vendor/GLFW32/lib-vc2022"
+            "vendor/GLFW32/lib-vc2022",
+            "vendor/GLEW/lib/Release/Win32"
            }
 
             includedirs{
-            "vendor/GLFW32/include"
+            "vendor/GLFW32/include",
+            "vendor/GLEW/include"
             }
 
         filter "configurations:Debug"
