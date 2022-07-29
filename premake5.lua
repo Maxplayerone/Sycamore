@@ -11,7 +11,8 @@ outputdir = "%{cfg.system}/%{cfg.buildcfg}-%{cfg.architecture}"
 
     files{
         "Sycamore/EntryPoint.cpp",
-        "Sycamore/Sycamore.h"
+        "Sycamore/Sycamore.h",
+        "Sycamore/premake5.lua"
     }
 
 

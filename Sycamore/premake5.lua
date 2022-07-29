@@ -10,7 +10,14 @@ project "Sycamore"
 
     files{
         "src/**.h",
-        "src/**.cpp"
+        "src/**.cpp",
+        "src/Assets/Images/**.jpg",
+        "src/Assets/Images/**.png",
+        "src/Assets/Shaders/**.shader",
+        "vendor/ImGui/**.h",
+        "vendor/ImGui/**.cpp",
+        "vendor/STBI_IMAGE/*.cpp",
+        "vendor/STBI_IMAGE/*.h"
     }
 
     
@@ -19,7 +26,8 @@ project "Sycamore"
         systemversion "latest"
 
         includedirs{
-            "vendor/spdlog/include"
+            "vendor/spdlog/include",
+            "vendor/GLM"
         }
 
         filter {"system:windows", "architecture:x86"}
