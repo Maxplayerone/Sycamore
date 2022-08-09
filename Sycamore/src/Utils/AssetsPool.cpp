@@ -12,12 +12,16 @@ Shader* AssetsPool::GetShader(const std::string& filepath) {
 	return tempShader;
 }
 
-Texture* AssetsPool::GetTexture(const std::string& filepath) {
+Texture* AssetsPool::GetTexture(const std::string& fileName) {
+	std::stringstream ss;
+	ss << "src/Assets/Images/" << fileName;
+	std::string filepath = ss.str();
+
 	auto itr = textures.find(filepath);
 	if (itr != textures.end()) return itr->second;
 
 	if (textureIndex >= 8) {
-		std::cout << "Texture slots are full!" << std::endl;
+		LOGGER_ERROR("Texture slots are full");
 		ASSERT(false);
 	}
 
@@ -37,11 +41,25 @@ SpriteSheet* AssetsPool::GetSpriteSheet(Texture* texture, unsigned int spriteWid
 	return spriteSheet;
 }
 
-SpriteSheet* AssetsPool::GetSpriteSheet(Texture* texture, unsigned int spriteLength, unsigned int numOfSprites) {
+SpriteSheet* AssetsPool::GetSpriteSheet(const std::string& fileName, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing) {
+	Texture* texture = GetTexture(fileName);
+
 	auto itr = spriteSheets.find(texture);
 	if (itr != spriteSheets.end()) return itr->second;
 
-	SpriteSheet* spriteSheet = new SpriteSheet(texture, spriteLength, spriteLength, numOfSprites, 0);
+	SpriteSheet* spriteSheet = new SpriteSheet(texture, spriteHeight, spriteWidth, numOfSprites, spacing);
+	spriteSheets.insert(std::make_pair(texture, spriteSheet));
+
+	return spriteSheet;
+}
+
+SpriteSheet* AssetsPool::GetSpriteSheet(const std::string& fileName , unsigned int spriteDimensions, unsigned int numOfSprites) {
+	Texture* texture = GetTexture(fileName);
+
+	auto itr = spriteSheets.find(texture);
+	if (itr != spriteSheets.end()) return itr->second;
+
+	SpriteSheet* spriteSheet = new SpriteSheet(texture, spriteDimensions, spriteDimensions, numOfSprites, 0);
 	spriteSheets.insert(std::make_pair(texture, spriteSheet));
 
 	return spriteSheet;

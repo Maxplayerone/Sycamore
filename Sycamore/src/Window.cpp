@@ -1,8 +1,10 @@
 #include "Window.h"
 
+#include"../Math/SM_math.h"
+
 Window::Window() {
 
-    /* Initialize the library */
+    /* Window and openGL setup */
     if (!glfwInit())
         exit(1);
 
@@ -27,33 +29,27 @@ Window::Window() {
 
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
-    glViewport(0, 0, 480, 360);
+    glViewport(0, 0, windowWidth, windowHeight);
 
     if (glewInit() != GLEW_OK)
         LOGGER_ERROR("Cannot initialize glew!");
 
     LOGGER_INFO("The window has been initialized");
 
-    /*Camera stuff*/
-    SetupCamera();
-    SetupImGui();
-}
 
-void Window::SetupCamera() {
+    /* Camera setup */
+    Shader* shaderProgram = AssetsPool::Get().GetShader();
+
+    glm::mat4 modelMat = glm::mat4(1.0f);
+    glm::mat4 viewMat = glm::mat4(1.0f);
+    glm::mat4 projMat = glm::mat4(1.0f);
+    projMat = glm::ortho(orthoProj.left, orthoProj.right, orthoProj.bottom, orthoProj.top, -1.0f, 100.0f);
+
+    shaderProgram->SetUniformMat4f("model", modelMat);
+    shaderProgram->SetUniformMat4f("view", viewMat);
+    shaderProgram->SetUniformMat4f("projection", projMat);
    
-    m_ModelMatrix = new ModelMatrix();
-    m_ViewMatrix = new ViewMatrix();
-    m_ProjMatrix = new ProjectionMatrix();
-
-    Shader* shaderProgram = AssetsPool::Get().GetShader("src/Assets/Shaders/Shader.shader");
-
-    camera = new Camera(*shaderProgram);
-    camera->Push(Camera::MatrixType::TYPE_MODEL, m_ModelMatrix->GetModelMatrix(), *shaderProgram);
-    camera->Push(Camera::MatrixType::TYPE_VIEW, m_ViewMatrix->GetViewMatrix(), *shaderProgram);
-    camera->Push(Camera::MatrixType::TYPE_PROJECTION, m_ProjMatrix->GetProjectionMatrix(), *shaderProgram);
-}
-
-void Window::SetupImGui() {
+    /*ImGui setup */
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -66,11 +62,11 @@ void Window::Run() {
     //default scene
     ChangeScene(1);
 
+
     while (!glfwWindowShouldClose(m_window)) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
 
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
@@ -79,15 +75,7 @@ void Window::Run() {
             m_currentScene->OnUpdate(deltaTime.count());
             m_currentScene->ImGui();
         }
-        
-        ImGui::Begin("window");
-        ImGui::SliderFloat("Camera zoom", &cameraScaleValue, 0.0f, 5.0f);
-        ImGui::End();
-        
-        Shader* shaderProgram = AssetsPool::Get().GetShader("src/Assets/Shaders/Shader.shader");
-        m_ProjMatrix = new ProjectionMatrix(cameraScaleValue);
-        camera->Push(Camera::MatrixType::TYPE_PROJECTION, m_ProjMatrix->GetProjectionMatrix(), *shaderProgram);
-        
+      
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(m_window);
@@ -113,11 +101,12 @@ void Window::ChangeScene(int sceneIndex) {
 }
 
 Window::~Window() {
+    /*
     delete m_ModelMatrix;
     delete m_ProjMatrix;
     delete m_ViewMatrix;
     delete camera;
-
+    */
     delete m_currentScene;
 
     glfwTerminate();

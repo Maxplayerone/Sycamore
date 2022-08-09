@@ -4,19 +4,20 @@ LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();
 
 	GameObject* coloredCube = new GameObject();
-	coloredCube->AddComponent(new Transform(-0.5f, -0.5f));
-	coloredCube->AddComponent(new SpriteRenderer(1.0f, 1.0f, 1.0f, 1.0f));
+	coloredCube->AddComponent(new Transform({-100.0f, 0.0f}, {100.0f, 100.0f}));
+	coloredCube->AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
 
-	Texture* spriteSheetTex = AssetsPool::Get().GetTexture("src/Assets/Images/spritesheet.png");
-	SpriteSheet* sheet = AssetsPool::Get().GetSpriteSheet(spriteSheetTex, 16, 26);
+	SpriteSheet* sheet = AssetsPool::Get().GetSpriteSheet("spritesheet.png", 16, 26);
+
 
 	GameObject* anotherCube = new GameObject();
-	anotherCube->AddComponent(new Transform(1.0f, 0.0f));
-	anotherCube->AddComponent(new SpriteRenderer(new Sprite(spriteSheetTex, sheet->GetSprite(3)->GetTexCoords())));
+	anotherCube->AddComponent(new Transform({50.0f, -30.0f}, {50.0f, 50.0f}));
+	anotherCube->AddComponent(new SpriteRenderer(AssetsPool::Get().GetTexture("amogus.jpg")->GetSlot()));
 	AddGameObjectToScene(anotherCube);
-
+	
 	activeGameObject = m_gameObjects[0];
+
 }
 
 void LevelEditorScene::OnUpdate(float deltaTime) {

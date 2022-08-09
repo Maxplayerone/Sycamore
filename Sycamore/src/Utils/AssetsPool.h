@@ -27,13 +27,18 @@ public:
 		return _instance;
 	}
 
-	Shader* GetShader(const std::string& filepath);
+	Shader* GetShader(const std::string& filepath = "src/Assets/Shaders/Shader.shader");
 	unsigned int GetGameObjectID() { return gameObjectIndex++; }
 
-	Texture* GetTexture(const std::string& filepath);
+	Texture* GetTexture(const std::string& fileName);
 
+	//if the user has a texture of the spriteSheet
 	SpriteSheet* GetSpriteSheet(Texture* texture, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing);
 	SpriteSheet* GetSpriteSheet(Texture* texture, unsigned int spriteLength, unsigned int numOfSprites);
+
+	//if the user just wants to use the file name (the texture is created automatically)
+	SpriteSheet* GetSpriteSheet(const std::string& fileName, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing);
+	SpriteSheet* GetSpriteSheet(const std::string& fileName, unsigned int spriteLength, unsigned int numOfSprites);
 };
 
 

@@ -22,11 +22,11 @@ public:
 	template<typename T>
 	int AddComponent(T* component) {
 		if (!Instanceof<Component>(component)) {
-			std::cout << "You need to pass a class with sub class component" << std::endl;
+			LOGGER_ERROR("You need to pass a derived class of component");
 			return -1;
 		}
 		if (std::find(m_components.begin(), m_components.end(), component) != m_components.end()) {
-			std::cout << "An object cannot have more than one component of the same type" << std::endl;
+			LOGGER_ERROR("An object cannot have more than one component of the same type");
 			return -1;
 		}
 
@@ -53,7 +53,9 @@ public:
 				ComponentType* cmpCpy = cmp;
 
 				m_components.erase(m_components.begin() + i);
-				std::cout << "m_components length " << m_components.size() << std::endl;
+				std::stringstream ss;
+				ss << "m_components length " << m_components.size();
+				LOGGER_INFO(ss.str());
 				return cmpCpy;
 			}
 		}

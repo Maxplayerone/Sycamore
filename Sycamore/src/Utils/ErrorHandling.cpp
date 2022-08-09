@@ -6,7 +6,9 @@ void GLClearError() {
 
 bool GLLogCall(const char* function, const char* file, int line) {
 	while (GLenum error = glGetError()) {
-		LOGGER_ERROR("[OpenGl error], %s", error);
+		std::stringstream ss;
+		ss << "[OpenGL error] " << error;
+		LOGGER_ERROR(ss.str());
 		return false;
 	}
 	return true;

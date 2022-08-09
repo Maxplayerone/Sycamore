@@ -4,33 +4,56 @@
 class Transform : public Component {
 private:
 	bool dirty;
-	float positions[2];
+
+	v2 pos;
+	v2 scale;
+
 public:
 
-	Transform(float posX, float posY) {
+	//position x and position y
+	Transform(v2 _pos) {
 		dirty = false;
-		positions[0] = posX;
-		positions[1] = posY;
+		pos.x = _pos.x;
+		pos.y = _pos.y;
+
+		scale.x = 1.0f;
+		scale.y = 1.0f;
+	}
+
+	Transform(v2 _pos, v2 _scale) {
+		dirty = false;
+		pos.x = _pos.x;
+		pos.y = _pos.y;
+
+		scale.x = _scale.x;
+		scale.y = _scale.y;
 	}
 
 	void Update(float deltaTime) override {
 		//std::cout << "Updating transform" << std::endl;
 	}
 
-	void SetPosition(float x, float y) {
-		this->positions[0] = x;
-		this->positions[1] = y;
+	void SetPosition(v2 _pos) {
+		pos.x = _pos.x;
+		pos.y = _pos.y;
 		dirty = true;
 	}
 
-	bool IsDirty() { return dirty; }
-	float GetPos(unsigned int index) { return positions[index]; }
+	bool IsDirty() const { return dirty; }
+	v2 GetPos() const { return pos; }
+	v2 GetScale() const { return scale; }
 
 	void ImGui() override {
+
 		ImGui::Begin("Transform");
-		ImGui::SliderFloat2("Position", positions, -2.0f, 2.0f);
-		std::cout << "x " << positions[0] << " y " << positions[1] << std::endl;
+		ImGui::SliderFloat("Position x", &pos.x, -480.0f, (480.0f - scale.x));
+		ImGui::SliderFloat("Position y", &pos.y, -320.0f, 320.0f);
+
+		/*for now I just care about having nice, symetrical quads*/
+		ImGui::SliderFloat("Scale", &scale.x, -100.0f, 100.0f);
+		scale.y = scale.x;
 		dirty = true;
+
 		ImGui::End();
 	}
 };

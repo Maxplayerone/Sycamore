@@ -23,9 +23,13 @@ void Shader::UnuseProgram() {
 }
 
 int Shader::GetUniformLocation(const std::string& name) {
+
     GLCall(int uniLocation = glGetUniformLocation(m_ProgramID, name.c_str()));
-    if (uniLocation == -1)
-        std::cout << "No active uniform with name " << name << std::endl;
+    if (uniLocation == -1) {
+        std::stringstream ss;
+        ss << "No active uniform with name " << name;
+        LOGGER_WARNING(ss.str());
+    }
 
     return uniLocation;
 }
@@ -47,7 +51,9 @@ void Shader::SetUniform1iv(const std::string& name) {
 ShaderSources Shader::ParseShader(const std::string& filepath) {
     std::ifstream stream(filepath);
     if (stream.fail()) {
-        LOGGER_ERROR("Cannot open the shader file");
+        std::stringstream ss;
+        ss << "Cannot open the shader file with the path " << filepath;
+        LOGGER_ERROR(ss.str());
         ASSERT(false);
     }
 
@@ -85,10 +91,15 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 
     int length;
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+
     char* message = (char*)malloc(length * sizeof(char));
     glGetShaderInfoLog(id, length, &length, message);
-    std::cout << "Failed to compile shader!" << std::endl;
-    std::cout << message << std::endl;
+    //it throws an error for some reason idk why
+    /*
+    std::stringstream _ss;
+    _ss << "Failed to compile the shader " << message;
+    LOGGER_ERROR(_ss);
+    */
     free(message);
     return 0;
 }

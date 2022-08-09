@@ -10,6 +10,7 @@
 
 #include"../Utils/AssetsPool.h"
 #include"../Utils/ErrorHandling.h"
+#include"../Utils/DataTypes.h"
 
 #define MAX_BATCH_SIZE 1000
 
@@ -25,8 +26,6 @@ private:
 
     //the number of indexes in the vertices buffer occupied by a single quad
     const unsigned int VERTICES_DATA_FOR_QUAD = 32;
-    //the length of each side of the quad
-    const float QUAD_LENGTH = 1.0f;
     //position + color + texCoords + texIndex
     const unsigned int DATA_IN_ONE_VERTEX = 8;
 

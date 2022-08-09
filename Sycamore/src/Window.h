@@ -34,9 +34,15 @@ class Window
 {
 private:
 	GLFWwindow* m_window;
-
 	const uint windowWidth = 960;
 	const uint windowHeight = 720;
+
+	F4 orthoProj{ -((float)windowWidth) / 2,
+							(float)windowWidth / 2 ,
+							-((float)windowHeight) / 2,
+							(float)windowHeight / 2
+	};
+
 	const std::string windowName = "Sycamore-Engine";
 
 	ModelMatrix* m_ModelMatrix;

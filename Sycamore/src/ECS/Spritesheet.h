@@ -48,4 +48,6 @@ public:
 	Sprite* GetSprite(unsigned int index) {
 		return m_sprites[index];
 	}
+
+	Texture* GetTexture() const { return m_texture; }
 };

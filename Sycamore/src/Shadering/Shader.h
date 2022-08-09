@@ -6,6 +6,7 @@
 
 #include"../Utils/ErrorHandling.h"
 #include"../Utils/Logger.h"
+#include"../Utils/DataTypes.h"
 
 #include"glm/glm.hpp"
 
@@ -16,7 +17,7 @@ struct ShaderSources {
 
 class Shader {
 private:
-    unsigned int m_ProgramID;
+    uint m_ProgramID;
     std::string m_filepath;
 
     ShaderSources ParseShader(const std::string& filepath);

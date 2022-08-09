@@ -64,24 +64,24 @@ void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
     for (int i = 0; i < 4; i++) {
         switch (i) {
         case 1:
-            offsetX = QUAD_LENGTH;
+            offsetX = trans->GetScale().x;
             break;
         case 2:
             offsetX = 0.0f;
-            offsetY = QUAD_LENGTH;
+            offsetY = trans->GetScale().y;
             break;
         case 3:
-            offsetX = QUAD_LENGTH;
+            offsetX = trans->GetScale().x;
             break;
         default:
             break;
         }
 
-        vertices[(0 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos(0) + offsetX;
-        vertices[(1 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos(1) + offsetY;
-        vertices[(2 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetR();
-        vertices[(3 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetG();
-        vertices[(4 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetB();
+        vertices[(0 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().x + offsetX;
+        vertices[(1 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().y + offsetY;
+        vertices[(2 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().r;
+        vertices[(3 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().g;
+        vertices[(4 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().b;
         vertices[(5 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
         vertices[(6 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
         vertices[(7 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexIndex();
@@ -89,12 +89,13 @@ void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
 }
 
 void BatchRenderer::TestVertices() {
-    std::cout << "Vertices array" << std::endl;
+    LOGGER_INFO("Vertices buffer");
     for (int i = 0; i < 2 * VERTICES_DATA_FOR_QUAD; i++) {
-        if (i % DATA_IN_ONE_VERTEX == 0) std::cout << "new vertex " << std::endl;
-        if (i % VERTICES_DATA_FOR_QUAD == 0) std::cout << "new game object" << std::endl;
-
-        std::cout << "Element at index " << i << " | " << vertices[i] << std::endl;
+        if (i % DATA_IN_ONE_VERTEX == 0) LOGGER_INFO("New vertex");
+        if (i % VERTICES_DATA_FOR_QUAD == 0) LOGGER_INFO("New game object");
+        std::stringstream ss;
+        ss << "Element at index " << i << " | " << vertices[i];
+        LOGGER_INFO(ss.str());
     }
     ASSERT(false);
 }
@@ -119,24 +120,24 @@ void BatchRenderer::RenderDebug(GameObject* go) {
     for (int i = 0; i < 4; i++) {
         switch (i) {
         case 1:
-            offsetX = QUAD_LENGTH;
+            offsetX = trans->GetScale().x;
             break;
         case 2:
             offsetX = 0.0f;
-            offsetY = QUAD_LENGTH;
+            offsetY = trans->GetScale().y;
             break;
         case 3:
-            offsetX = QUAD_LENGTH;
+            offsetX = trans->GetScale().x;
             break;
         default:
             break;
         }
 
-        _vertices[(0 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos(0) + offsetX;
-        _vertices[(1 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos(1) + offsetY;
-        _vertices[(2 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetR();
-        _vertices[(3 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetG();
-        _vertices[(4 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetB();
+        _vertices[(0 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().x + offsetX;
+        _vertices[(1 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().y + offsetY;
+        _vertices[(2 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().r;
+        _vertices[(3 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().g;
+        _vertices[(4 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().b;
         _vertices[(5 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
         _vertices[(6 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
         _vertices[(7 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexIndex();
@@ -147,7 +148,9 @@ void BatchRenderer::RenderDebug(GameObject* go) {
         if (i % DATA_IN_ONE_VERTEX == 0) LOGGER_INFO("New vertex");
         if (i % VERTICES_DATA_FOR_QUAD == 0) LOGGER_INFO("New gameobject");
 
-        std::cout << "Element at index " << i << " | " << _vertices[i] << std::endl;
+        std::stringstream ss;
+        ss << "Element at index " << i << " | " << _vertices[i];
+        LOGGER_INFO(ss.str());
     }
 
     vertexBuffer = new VertexBuffer(VERTICES_DATA_FOR_QUAD * sizeof(float), _vertices);

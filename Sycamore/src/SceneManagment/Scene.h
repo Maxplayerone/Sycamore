@@ -16,6 +16,8 @@
 #include"../ECS/GameObject.h"
 #include"../ECS/SpriteSheet.h"
 
+#include"../Utils/DataTypes.h"
+
 class Scene {
 protected:
 	Renderer* m_renderer;

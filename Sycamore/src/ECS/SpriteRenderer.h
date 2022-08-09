@@ -2,16 +2,16 @@
 #include"Component.h"
 #include"Sprite.h"
 #include"GameObject.h"
+#include"Spritesheet.h"
+
+#include"../Utils/DataTypes.h"
 
 class SpriteRenderer : public Component {
 private:
 	unsigned int m_TextureIndex;
 	Sprite* m_Sprite;
 
-	float r;
-	float b;
-	float g;
-	float a;
+	color4 color;
 
 	bool dirty = false;
 
@@ -26,62 +26,58 @@ private:
 	}
 public:
 
-	SpriteRenderer(float _r, float _g, float _b, float _a) {
-		r = _r;
-		g = _g;
-		b = _b;
-		a = _a;
+	SpriteRenderer(color4 _color) {
+		color.r = _color.r;
+		color.g = _color.g;
+		color.b = _color.b;
+		color.a = _color.a;
 
 		m_Sprite = GetDummySprite();
 		m_TextureIndex = 0;
 	}
 
 	SpriteRenderer(Sprite* sprite) {
-		r = 1.0f;
-		b = 1.0f;
-		g = 1.0f;
-		a = 1.0f;
+		color.r = 1.0f;
+		color.g = 1.0f;
+		color.b = 1.0f;
+		color.a = 1.0f;
 
 		m_Sprite = sprite;
 		m_TextureIndex = sprite->GetTexSlot();
 	}
 
 	SpriteRenderer(unsigned int texIndex) {
-		r = 1.0f;
-		b = 1.0f;
-		g = 1.0f;
-		a = 1.0f;
+		color.r = 1.0f;
+		color.g = 1.0f;
+		color.b = 1.0f;
+		color.a = 1.0f;
 
 
 		m_TextureIndex = texIndex;
 		m_Sprite = GetDummySprite();
 	}
 
+	SpriteRenderer(SpriteSheet* sheet, uint spriteIndex) {
+		color.r = 1.0f;
+		color.g = 1.0f;
+		color.b = 1.0f;
+		color.a = 1.0f;
+
+		m_TextureIndex = sheet->GetSprite(spriteIndex)->GetTexSlot();
+		m_Sprite = sheet->GetSprite(spriteIndex);
+	}
+
 	unsigned int GetTexIndex() const { return m_TextureIndex; }
 	float* GetTexCoords() const { return m_Sprite->GetTexCoords(); }
 	Texture* GetTexture() const { return m_Sprite->GetTexture(); }
-	float GetR() const { return r; }
-	float GetG() const { return g; }
-	float GetB() const { return b; }
-	float GetA() const { return a; }
+	color4 GetColor4() const { return color; }
 
-	void SetR(float value) {
-		r = value;
-		dirty = true;
-	}
+	void SetColor4(color4 _color) {
+		color.r = _color.r;
+		color.g = _color.g;
+		color.b = _color.b;
+		color.a = _color.a;
 
-	void SetG(float value) {
-		g = value;
-		dirty = true;
-	}
-
-	void SetB(float value) {
-		b = value;
-		dirty = true;
-	}
-
-	void SetA(float value) {
-		a = value;
 		dirty = true;
 	}
 
@@ -104,13 +100,11 @@ public:
 
 	//only works for colors
 	void ImGui() override {
-		float colors[4] = { r, g, b, a };
 		ImGui::Begin("Sprite renderer");
-		ImGui::SliderFloat4("Colors", colors, 0.0f, 1.0f);
-		r = colors[0];
-		g = colors[1];
-		b = colors[2];
-		a = colors[3];
+		ImGui::SliderFloat("Red", &color.r, 0.0f, 1.0f);
+		ImGui::SliderFloat("Green", &color.g, 0.0f, 1.0f);
+		ImGui::SliderFloat("Blue", &color.b, 0.0f, 1.0f);
+		ImGui::SliderFloat("Alpha", &color.a, 0.0f, 1.0f);
 		ImGui::End();
 	}
 };

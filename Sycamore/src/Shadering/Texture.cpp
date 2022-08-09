@@ -7,7 +7,9 @@ Texture::Texture(const std::string& path)
 	stbi_set_flip_vertically_on_load(1);
 	m_imageBuffer = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, 4);
 	if (!m_imageBuffer) {
-		std::cout << "Cannot load texture from file " << path << std::endl;
+		std::stringstream ss;
+		ss << "Cannot load the texture file from the filepath " << path;
+		LOGGER_ERROR(ss.str());
 		ASSERT(false);
 	}
 
@@ -34,7 +36,9 @@ Texture::Texture(const std::string& path, unsigned int slot)
 	stbi_set_flip_vertically_on_load(1);
 	m_imageBuffer = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, 4);
 	if (!m_imageBuffer) {
-		std::cout << "Cannot load texture from file " << path << std::endl;
+		std::stringstream ss;
+		ss << "Cannot load the texture file from the filepath " << path;
+		LOGGER_ERROR(ss.str());
 		ASSERT(false);
 	}
 
@@ -62,7 +66,7 @@ Texture::~Texture() {
 
 void Texture::Bind() const {
 	if (m_slot == 0) {
-		std::cout << "You haven't assigned a texture slot!" << std::endl;
+		LOGGER_WARNING("You haven't assigned a texture slot");
 		return;
 	}
 	GLCall(glActiveTexture(GL_TEXTURE0 + m_slot));
