@@ -40,6 +40,15 @@
     <Filter Include="vendor\ImGui">
       <UniqueIdentifier>{1DA38CEE-0906-1C93-B28B-54499ECDE715}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\ImGui\include">
+      <UniqueIdentifier>{90972523-7C26-AFEC-2545-C3E711B3BF92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGui\include\imgui">
+      <UniqueIdentifier>{FA10C986-E620-7557-4FDA-D9753B0964F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGui\lib">
+      <UniqueIdentifier>{C3884EDC-AF81-6D2E-D8B3-52B3C40B4D3A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\STBI_IMAGE">
       <UniqueIdentifier>{76E38740-E2F9-85D6-2B71-11F897C6565E}</UniqueIdentifier>
     </Filter>
@@ -133,38 +142,36 @@
     <ClInclude Include="src\Window.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imconfig.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imconfig.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imgui.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imgui_impl_glfw.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_glfw.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imgui_impl_opengl3.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_opengl3.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imgui_internal.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_internal.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imstb_rectpack.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imstb_rectpack.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imstb_textedit.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imstb_textedit.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\ImGui\imstb_truetype.h">
-      <Filter>vendor\ImGui</Filter>
+    <ClInclude Include="vendor\ImGui\include\imgui\imstb_truetype.h">
+      <Filter>vendor\ImGui\include\imgui</Filter>
     </ClInclude>
     <ClInclude Include="vendor\STBI_IMAGE\stbi_image.h">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClInclude>
-    <ClInclude Include="Math\SM_math.h" />
-    <ClInclude Include="Math\src\vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -216,31 +223,30 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui_demo.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui_demo.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui_draw.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui_draw.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui_impl_glfw.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui_impl_glfw.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui_impl_opengl3.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui_impl_opengl3.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui_tables.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui_tables.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\ImGui\imgui_widgets.cpp">
-      <Filter>vendor\ImGui</Filter>
+    <ClCompile Include="vendor\ImGui\lib\imgui_widgets.cpp">
+      <Filter>vendor\ImGui\lib</Filter>
     </ClCompile>
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClCompile>
-    <ClCompile Include="Math\src\vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

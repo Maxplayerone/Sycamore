@@ -44,7 +44,6 @@ public:
 	v2 GetScale() const { return scale; }
 
 	void ImGui() override {
-
 		ImGui::Begin("Transform");
 		ImGui::SliderFloat("Position x", &pos.x, -480.0f, (480.0f - scale.x));
 		ImGui::SliderFloat("Position y", &pos.y, -320.0f, 320.0f);

@@ -1,9 +1,7 @@
 #pragma once
-#include"../../vendor/imGui/imgui.h"
-#include"../../vendor/imGui/imgui_impl_glfw.h"
-#include"../../vendor/imGui/imgui_impl_opengl3.h"
-
 #include"../Utils/DataTypes.h"
+
+#include"imgui/imgui.h"
 
 class Component {
 public:

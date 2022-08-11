@@ -49,13 +49,22 @@ Window::Window() {
     shaderProgram->SetUniformMat4f("view", viewMat);
     shaderProgram->SetUniformMat4f("projection", projMat);
    
-    /*ImGui setup */
+    //Setup ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
+
+    //flags
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+    //setup style
     ImGui::StyleColorsDark();
+    
+    //setup platform/renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGui_ImplOpenGL3_Init("#version 410");
+
 }
 
 void Window::Run() {
@@ -63,11 +72,11 @@ void Window::Run() {
     ChangeScene(1);
 
 
-    while (!glfwWindowShouldClose(m_window)) {
+    while (!glfwWindowShouldClose(m_window)) {    
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
+        
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
         
@@ -75,15 +84,25 @@ void Window::Run() {
             m_currentScene->OnUpdate(deltaTime.count());
             m_currentScene->ImGui();
         }
-      
+    
+        bool show = true;
+        //ImGui::ShowDemoWindow(&show);
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+      
         glfwSwapBuffers(m_window);
         glfwPollEvents();
 
         endTime = std::chrono::high_resolution_clock::now();
         deltaTime = endTime - startTime;
         startTime = endTime;
+
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(m_window);
+        }
     }
 }
 
@@ -107,6 +126,10 @@ Window::~Window() {
     delete m_ViewMatrix;
     delete camera;
     */
+    
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();   
     delete m_currentScene;
 
     glfwTerminate();

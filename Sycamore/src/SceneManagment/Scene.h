@@ -1,11 +1,6 @@
 #pragma once
 #include<iostream>
 
-//imGui
-#include"../../vendor/imGui/imgui.h"
-#include"../../vendor/imGui/imgui_impl_glfw.h"
-#include"../../vendor/imGui/imgui_impl_opengl3.h"
-
 //shadering
 #include"../Shadering/Renderer.h"
 #include"../Shadering/Texture.h"
@@ -17,6 +12,8 @@
 #include"../ECS/SpriteSheet.h"
 
 #include"../Utils/DataTypes.h"
+
+#include"imgui/imgui.h"
 
 class Scene {
 protected:

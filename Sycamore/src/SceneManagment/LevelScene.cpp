@@ -9,7 +9,4 @@ void LevelScene::OnUpdate(float deltaTime) {
 }
 
 void LevelScene::ImGui() {
-	ImGui::Begin("Level scene");
-	ImGui::ColorEdit4("Change BG color", BGcolor);
-	ImGui::End();
 }

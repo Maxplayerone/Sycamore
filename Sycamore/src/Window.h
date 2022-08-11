@@ -26,9 +26,9 @@
 #include"Camera/ViewMatrix.h"
 
 //imGui
-#include"../vendor/imGui/imgui.h"
-#include"../vendor/imGui/imgui_impl_glfw.h"
-#include"../vendor/imGui/imgui_impl_opengl3.h"
+#include"imgui/imgui.h"
+#include"imgui/imgui_impl_glfw.h"
+#include"imgui/imgui_impl_opengl3.h"
 
 class Window
 {
@@ -59,9 +59,6 @@ private:
 	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point endTime;
 	std::chrono::duration<float> deltaTime;
-
-	void SetupCamera();
-	void SetupImGui();
 
 	void ChangeScene(int sceneIndex);
 public:

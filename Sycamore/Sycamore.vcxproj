@@ -58,8 +58,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>SM_WINDOWS;GLEW_STATIC;SM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\A Programming\C++\Sycamore Engine\Sycamore\Sycamore\vendor\nlohmann_json\include;vendor\spdlog\include;vendor\GLM;vendor\GLFW32\include;vendor\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;SM_WINDOWS;SM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLM;vendor\GLFW32\include;vendor\GLEW\include;vendor\ImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -75,8 +75,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>SM_WINDOWS;GLEW_STATIC;SM_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\A Programming\C++\Sycamore Engine\Sycamore\Sycamore\vendor\nlohmann_json\include;vendor\spdlog\include;vendor\GLM;vendor\GLFW32\include;vendor\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;SM_WINDOWS;SM_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLM;vendor\GLFW32\include;vendor\GLEW\include;vendor\ImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -93,8 +93,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Math\SM_math.h" />
-    <ClInclude Include="Math\src\vector.h" />
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexArray.h" />
@@ -125,20 +123,19 @@
     <ClInclude Include="src\Utils\ErrorHandling.h" />
     <ClInclude Include="src\Utils\Logger.h" />
     <ClInclude Include="src\Window.h" />
-    <ClInclude Include="vendor\ImGui\imconfig.h" />
-    <ClInclude Include="vendor\ImGui\imgui.h" />
-    <ClInclude Include="vendor\ImGui\imgui_impl_glfw.h" />
-    <ClInclude Include="vendor\ImGui\imgui_impl_opengl3.h" />
-    <ClInclude Include="vendor\ImGui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="vendor\ImGui\imgui_internal.h" />
-    <ClInclude Include="vendor\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="vendor\ImGui\imstb_textedit.h" />
-    <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imconfig.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imgui_internal.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="vendor\ImGui\include\imgui\imstb_truetype.h" />
     <ClInclude Include="vendor\STBI_IMAGE\stbi_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
-    <ClCompile Include="Math\src\vector.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
@@ -155,13 +152,13 @@
     <ClCompile Include="src\Utils\ErrorHandling.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui_demo.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui_draw.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui_tables.cpp" />
+    <ClCompile Include="vendor\ImGui\lib\imgui_widgets.cpp" />
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp" />
   </ItemGroup>
   <ItemGroup>
