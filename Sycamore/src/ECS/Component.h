@@ -2,6 +2,7 @@
 #include"../Utils/DataTypes.h"
 
 #include"imgui/imgui.h"
+#include"../../Math/SM_math.h"
 
 class Component {
 public:

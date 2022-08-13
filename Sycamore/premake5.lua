@@ -12,6 +12,10 @@ project "Sycamore"
         "src/**.h",
         "src/**.cpp",
 
+        "Math/src/**.h",
+        "Math/src/**.cpp",
+        "Math/SM_math.h",
+
         "src/Assets/Images/**.jpg",
         "src/Assets/Images/**.png",
         "src/Assets/Shaders/**.shader",

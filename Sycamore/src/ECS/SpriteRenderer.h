@@ -46,7 +46,7 @@ public:
 		m_TextureIndex = sprite->GetTexSlot();
 	}
 
-	SpriteRenderer(unsigned int texIndex) {
+	SpriteRenderer(uint texIndex) {
 		color.r = 1.0f;
 		color.g = 1.0f;
 		color.b = 1.0f;

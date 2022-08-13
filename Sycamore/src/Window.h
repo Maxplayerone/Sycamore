@@ -66,5 +66,8 @@ public:
 	~Window();
 
 	void Run();
+
+	//sets the imGui style
+	void ImGuiTheme();
 };
 

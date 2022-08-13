@@ -1,11 +1,18 @@
 #pragma once
-#include<vector>
+
 #include"Component.h"
+
 #include"../Utils/AssetsPool.h"
+
+//rand
+#include <cstdlib> 
+#include<vector>
 
 class GameObject {
 private:
 	std::vector<Component*> m_components;
+
+	std::string m_name;
 
 	template<typename Base, typename T>
 	inline bool Instanceof(const T* ptr) {
@@ -13,11 +20,13 @@ private:
 	}
 
 	unsigned int m_ID;
+
+	std::string GetRandomName();
 public:
 
-	GameObject() {
-		m_ID = AssetsPool::Get().GetGameObjectID();
-	}
+	GameObject();
+	GameObject(std::string& name);
+
 	//adds a component to the game object
 	template<typename T>
 	int AddComponent(T* component) {
@@ -61,17 +70,8 @@ public:
 		}
 	}
 
+	void Update(float deltaTime);
+	void ImGui();
+
 	unsigned int GetID() const { return m_ID; }
-
-	void Update(float deltaTime) {
-		for (int i = 0; i < m_components.size(); i++) {
-			m_components[i]->Update(deltaTime);
-		}
-	}
-
-	void ImGui() {
-		for (auto component : m_components) {
-			component->ImGui();
-		}
-	}
 };

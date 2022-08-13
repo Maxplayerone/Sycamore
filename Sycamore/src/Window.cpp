@@ -56,7 +56,7 @@ Window::Window() {
 
     //flags
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     //setup style
     ImGui::StyleColorsDark();
@@ -80,6 +80,7 @@ void Window::Run() {
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
         
+        ImGuiTheme();
         if (m_currentScene != nullptr) {
             m_currentScene->OnUpdate(deltaTime.count());
             m_currentScene->ImGui();
@@ -97,12 +98,14 @@ void Window::Run() {
         deltaTime = endTime - startTime;
         startTime = endTime;
 
+        /*
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(m_window);
         }
+        */
     }
 }
 
@@ -133,5 +136,23 @@ Window::~Window() {
     delete m_currentScene;
 
     glfwTerminate();
+}
+
+void Window::ImGuiTheme() {
+    ImGuiStyle* style = &ImGui::GetStyle();
+
+    //centering the header text
+    style->WindowTitleAlign = ImVec2(0.5, 0.5);
+    style->SelectableTextAlign = ImVec2(0.5, 0.5);
+
+    style->FramePadding = ImVec2(8, 4);
+
+    //header colors
+    style->Colors[ImGuiCol_TitleBg] = ImColor(255, 147, 32, 255);
+    style->Colors[ImGuiCol_TitleBgActive] = ImColor(255, 147, 32, 255);
+    style->Colors[ImGuiCol_TitleBgCollapsed] = ImColor(0, 0, 0, 130);
+
+    //disable collapsing
+    style->WindowMenuButtonPosition = ImGuiDir_None;
 }
 

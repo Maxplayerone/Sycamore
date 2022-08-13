@@ -93,6 +93,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Math\SM_math.h" />
+    <ClInclude Include="Math\src\vector.h" />
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexArray.h" />
@@ -136,9 +138,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="Math\src\vector.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\ECS\GameObject.cpp" />
     <ClCompile Include="src\InputHandling\InputCallbacks.cpp" />
     <ClCompile Include="src\InputHandling\KeysHandleler.cpp" />
     <ClCompile Include="src\InputHandling\MouseHandleler.cpp" />
@@ -162,11 +166,13 @@
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="imgui.ini" />
     <None Include="premake5.lua" />
     <None Include="src\Assets\Shaders\Shader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Assets\Images\amogus.jpg" />
+    <Image Include="src\Assets\Images\blocks.png" />
     <Image Include="src\Assets\Images\spritesheet.png" />
     <Image Include="src\Assets\Images\testSheet.png" />
     <Image Include="src\Assets\Images\trollface.png" />

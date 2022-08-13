@@ -9,23 +9,6 @@ struct F4 {
 	const float top;
 };
 
-struct v2 {
-	float x;
-	float y;
-};
-
-struct v3 {
-	float x;
-	float y;
-	float z;
-};
-
-struct v4 {
-	float x;
-	float y;
-	float z;
-	float w;
-};
 
 struct color3 {
 	float r;
