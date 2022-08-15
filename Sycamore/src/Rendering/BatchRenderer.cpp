@@ -1,5 +1,18 @@
 #include"BatchRenderer.h"
 
+#include"../Buffers/IndexBuffer.h"
+#include"../Buffers/VertexArray.h"
+#include"../Buffers/VertexBuffer.h"
+
+#include"../ECS/GameObject.h"
+#include"../ECS/Transform.h"
+#include"../ECS/SpriteRenderer.h"
+
+#include"../Utils/AssetsPool.h"
+#include"../Utils/ErrorHandling.h"
+#include"../Utils/DataTypes.h"
+#include"../Utils/Logger.h"
+
 void BatchRenderer::Add(GameObject* go) {
     auto itr = std::find(objectsForRender.begin(), objectsForRender.end(), go);
     //the object is already in the vector
@@ -10,6 +23,7 @@ void BatchRenderer::Add(GameObject* go) {
 
 void BatchRenderer::Render() {
 
+    //dirty flagging
     for (int i = 0; i < objectsForRender.size(); i++) {
         //if the position/color/texture of any object changed
         if (objectsForRender[i]->GetComponent<Transform>()->IsDirty() || objectsForRender[i]->GetComponent<SpriteRenderer>()->IsDirty() || oneTimeFlag) {
@@ -18,6 +32,7 @@ void BatchRenderer::Render() {
             rebufferData = true;
         }
     }
+
     //this is one of the stupidest things I did as a programmer, but it works
     oneTimeFlag = false;
     //TestVertices();

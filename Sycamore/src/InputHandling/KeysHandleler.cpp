@@ -1,7 +1,7 @@
 #include"KeysHandleler.h"
 
 KeyHandleler::KeyHandleler() {
-	for (int i = 0; i < keys_count; i++)
+	for (uint i = 0; i < keys_count; i++)
 		m_keys[i] = false;
 }
 

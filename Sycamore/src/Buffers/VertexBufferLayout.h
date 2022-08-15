@@ -1,6 +1,6 @@
 #pragma once
 #include"../Utils/ErrorHandling.h"
-#include<vector>
+#include"../smpch.h"
 
 struct VertexBufferElements {
 	unsigned int type; //the type of the verticies (floats, uint)

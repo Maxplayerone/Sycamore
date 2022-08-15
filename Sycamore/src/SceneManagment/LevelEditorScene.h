@@ -1,10 +1,10 @@
 #pragma once
 #include"Scene.h"
-#include"../Utils/AssetsPool.h"
+#include"../Utils/DataTypes.h"
 
 class LevelEditorScene : public Scene {
 private:
-	float BGcolor[4] = { 0.4f, 0.92f, 0.42f, 1.0f };
+	color4 bgColor = { 0.4f, 0.92f, 0.42f, 1.0f };
 	GameObject* activeGameObject;
 public:
 	LevelEditorScene();

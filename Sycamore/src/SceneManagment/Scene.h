@@ -1,19 +1,8 @@
 #pragma once
-#include<iostream>
+#include"../smpch.h"
 
-//shadering
-#include"../Shadering/Renderer.h"
-#include"../Shadering/Texture.h"
-
-//ecs
-#include"../ECS/SpriteRenderer.h"
-#include"../ECS/Transform.h"
-#include"../ECS/GameObject.h"
-#include"../ECS/SpriteSheet.h"
-
-#include"../Utils/DataTypes.h"
-
-#include"imgui/imgui.h"
+class Renderer;
+class GameObject;
 
 class Scene {
 protected:

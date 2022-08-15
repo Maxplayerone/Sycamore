@@ -1,8 +1,8 @@
 #pragma once
-#include<unordered_map>
+#include"../smpch.h"
 
-#include"../Shadering/Shader.h"
-#include"../Shadering/Texture.h"
+#include"../Rendering/Shader.h"
+#include"../Rendering/Texture.h"
 #include"../ECS/SpriteSheet.h"
 
 //TODO: MAKE THE SAME THING FOR TEXTURES
@@ -34,7 +34,7 @@ public:
 
 	//if the user has a texture of the spriteSheet
 	SpriteSheet* GetSpriteSheet(Texture* texture, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing);
-	SpriteSheet* GetSpriteSheet(Texture* texture, unsigned int spriteLength, unsigned int numOfSprites);
+	//SpriteSheet* GetSpriteSheet(Texture* texture, unsigned int spriteLength, unsigned int numOfSprites);
 
 	//if the user just wants to use the file name (the texture is created automatically)
 	SpriteSheet* GetSpriteSheet(const std::string& fileName, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing);

@@ -1,5 +1,9 @@
 #include"ErrorHandling.h"
 
+#include"../smpch.h"
+
+#include"Logger.h"
+
 void GLClearError() {
 	while (glGetError() != GL_NO_ERROR);
 }

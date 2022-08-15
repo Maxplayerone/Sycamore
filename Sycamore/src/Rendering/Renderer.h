@@ -1,6 +1,9 @@
 #pragma once
-#include"BatchRenderer.h"
-#include"../ECS/GameObject.h"
+
+#include"../Utils/DataTypes.h"
+
+class GameObject;
+class BatchRenderer;
 
 class Renderer {
 private:
@@ -8,7 +11,7 @@ private:
 public:
 	Renderer();
 
-	void ChangeBGColor(float r, float g, float b, float a) const;
+	void ChangeBGColor(color4 color) const;
 	void Add(GameObject* go);
 	void Render();
 

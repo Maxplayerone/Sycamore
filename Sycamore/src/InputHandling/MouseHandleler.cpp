@@ -1,5 +1,5 @@
 #include"MouseHandleler.h"
-#include<iostream>
+#include"../smpch.h"
 
 MouseHandleler::MouseHandleler()
 	: xPos(0), yPos(0), xOffset(0), yOffset(0) {

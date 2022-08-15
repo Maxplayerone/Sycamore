@@ -1,10 +1,24 @@
 #include"LevelEditorScene.h"
 
+#include"../Rendering/Renderer.h"
+#include"../Rendering/Texture.h"
+#include"../Rendering/DebugDraw.h"
+
+#include"../ECS/SpriteRenderer.h"
+#include"../ECS/Transform.h"
+#include"../ECS/GameObject.h"
+#include"../ECS/SpriteSheet.h"
+
+#include"../Utils/AssetsPool.h"
+
+#include"imgui/imgui.h"
+
 LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();
+	DebugDraw::Start();
 
 	GameObject* coloredCube = new GameObject();
-	coloredCube->AddComponent(new Transform({-100.0f, 0.0f}, {100.0f, 100.0f}));
+	coloredCube->AddComponent(new Transform({-300.0f, 0.0f}, {100.0f, 100.0f}));
 	coloredCube->AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
 
@@ -20,14 +34,17 @@ LevelEditorScene::LevelEditorScene() {
 }
 
 void LevelEditorScene::OnUpdate(float deltaTime) {
-	this->m_renderer->ChangeBGColor(BGcolor[0], BGcolor[1], BGcolor[2], BGcolor[3]);
+	this->m_renderer->ChangeBGColor(bgColor);
 	
 	for (int i = 0; i < m_gameObjects.size(); i++) {
 		m_gameObjects[i]->Update(deltaTime);
 	}
 	activeGameObject->ImGui();
 
+	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 1.0f, 1.0f, 1.0f }, 120.0f);
+
 	this->m_renderer->Render();
+	DebugDraw::Render();
 }
 
 void LevelEditorScene::AddGameObjectToScene(GameObject* go) {
@@ -43,7 +60,9 @@ void LevelEditorScene::AddGameObjectToScene(GameObject* go) {
 void LevelEditorScene::ImGui() {
 	//scene color changing
 	ImGui::Begin("Level editor scene");
-	ImGui::ColorEdit4("BG color", BGcolor);
+	ImGui::SliderFloat("bg color r", &bgColor.r, 0.0f, 1.0f);
+	ImGui::SliderFloat("bg color g", &bgColor.g, 0.0f, 1.0f);
+	ImGui::SliderFloat("bg color b", &bgColor.b, 0.0f, 1.0f);
 	ImGui::End();
 
 	//cool blocks

@@ -1,6 +1,17 @@
 #include "Window.h"
 
-#include"../Math/SM_math.h"
+//imGui
+#include"imgui/imgui.h"
+#include"imgui/imgui_impl_glfw.h"
+#include"imgui/imgui_impl_opengl3.h"
+
+//input handling
+#include"InputHandling/InputCallbacks.h"
+#include"InputHandling/KeysHandleler.h"
+#include"InputHandling/MouseHandleler.h"
+
+#include"Utils/Logger.h"
+#include"Utils/AssetsPool.h"
 
 Window::Window() {
 

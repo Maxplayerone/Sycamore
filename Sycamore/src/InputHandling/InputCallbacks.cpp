@@ -1,7 +1,4 @@
 #include"InputCallbacks.h"
-#include"KeysHandleler.h"
-#include"MouseHandleler.h"
-#include<iostream>
 
 void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS)

@@ -1,5 +1,10 @@
 #include"Texture.h"
 
+#include"../STBI_IMAGE/stbi_image.h"
+
+#include"../Utils/ErrorHandling.h"
+#include"../Utils/Logger.h"
+
 Texture::Texture(const std::string& path)
 	: m_TextureID(0), m_FilePath(path), m_imageBuffer(nullptr),
 	m_width(0), m_height(0), m_channels(0)

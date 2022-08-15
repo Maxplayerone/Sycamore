@@ -1,5 +1,5 @@
 #pragma once
-#include<iostream>
+#include"../../src/smpch.h"
 
 namespace SM_math {
 

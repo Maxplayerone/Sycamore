@@ -1,5 +1,8 @@
 #include"AssetsPool.h"
 
+#include"ErrorHandling.h"
+#include"Logger.h"
+
 AssetsPool AssetsPool::_instance;
 
 Shader* AssetsPool::GetShader(const std::string& filepath) {

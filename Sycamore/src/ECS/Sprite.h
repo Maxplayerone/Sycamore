@@ -1,5 +1,5 @@
 #pragma once
-#include"../Shadering/Texture.h"
+#include"../Rendering/Texture.h"
 
 class Sprite {
 private:

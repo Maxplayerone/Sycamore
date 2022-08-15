@@ -1,5 +1,6 @@
 #pragma once
 #include"../Utils/DataTypes.h"
+
 class KeyHandleler {
 private:
 	KeyHandleler();

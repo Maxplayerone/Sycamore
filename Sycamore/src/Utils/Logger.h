@@ -2,12 +2,6 @@
 #include"spdlog/spdlog.h"
 #include"spdlog/sinks/stdout_color_sinks.h"
 
-//helps with putting the variables in the argument of the macros
-#include <sstream>
-
-//the class should be only used for initializing
-//if you want to log out stuff use the macros
-
 class Logger
 {
 private:

@@ -1,9 +1,9 @@
 #pragma once
-#include"../Shadering/Texture.h"
+#include"../Rendering/Texture.h"
 
 #include"Sprite.h"
 
-#include<vector>
+#include"../smpch.h"
 
 class SpriteSheet {
 private:

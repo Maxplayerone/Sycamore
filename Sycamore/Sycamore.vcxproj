@@ -113,18 +113,20 @@
     <ClInclude Include="src\InputHandling\InputCallbacks.h" />
     <ClInclude Include="src\InputHandling\KeysHandleler.h" />
     <ClInclude Include="src\InputHandling\MouseHandleler.h" />
+    <ClInclude Include="src\Rendering\BatchRenderer.h" />
+    <ClInclude Include="src\Rendering\DebugDraw.h" />
+    <ClInclude Include="src\Rendering\Renderer.h" />
+    <ClInclude Include="src\Rendering\Shader.h" />
+    <ClInclude Include="src\Rendering\Texture.h" />
     <ClInclude Include="src\SceneManagment\LevelEditorScene.h" />
     <ClInclude Include="src\SceneManagment\LevelScene.h" />
     <ClInclude Include="src\SceneManagment\Scene.h" />
-    <ClInclude Include="src\Shadering\BatchRenderer.h" />
-    <ClInclude Include="src\Shadering\Renderer.h" />
-    <ClInclude Include="src\Shadering\Shader.h" />
-    <ClInclude Include="src\Shadering\Texture.h" />
     <ClInclude Include="src\Utils\AssetsPool.h" />
     <ClInclude Include="src\Utils\DataTypes.h" />
     <ClInclude Include="src\Utils\ErrorHandling.h" />
     <ClInclude Include="src\Utils\Logger.h" />
     <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\smpch.h" />
     <ClInclude Include="vendor\ImGui\include\imgui\imconfig.h" />
     <ClInclude Include="vendor\ImGui\include\imgui\imgui.h" />
     <ClInclude Include="vendor\ImGui\include\imgui\imgui_impl_glfw.h" />
@@ -146,16 +148,19 @@
     <ClCompile Include="src\InputHandling\InputCallbacks.cpp" />
     <ClCompile Include="src\InputHandling\KeysHandleler.cpp" />
     <ClCompile Include="src\InputHandling\MouseHandleler.cpp" />
+    <ClCompile Include="src\Rendering\BatchRenderer.cpp" />
+    <ClCompile Include="src\Rendering\DebugDraw.cpp" />
+    <ClCompile Include="src\Rendering\Renderer.cpp" />
+    <ClCompile Include="src\Rendering\Shader.cpp" />
+    <ClCompile Include="src\Rendering\Texture.cpp" />
     <ClCompile Include="src\SceneManagment\LevelEditorScene.cpp" />
     <ClCompile Include="src\SceneManagment\LevelScene.cpp" />
-    <ClCompile Include="src\Shadering\BatchRenderer.cpp" />
-    <ClCompile Include="src\Shadering\Renderer.cpp" />
-    <ClCompile Include="src\Shadering\Shader.cpp" />
-    <ClCompile Include="src\Shadering\Texture.cpp" />
     <ClCompile Include="src\Utils\AssetsPool.cpp" />
+    <ClCompile Include="src\Utils\DataTypes.cpp" />
     <ClCompile Include="src\Utils\ErrorHandling.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\smpch.cpp" />
     <ClCompile Include="vendor\ImGui\lib\imgui.cpp" />
     <ClCompile Include="vendor\ImGui\lib\imgui_demo.cpp" />
     <ClCompile Include="vendor\ImGui\lib\imgui_draw.cpp" />
@@ -166,7 +171,6 @@
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgui.ini" />
     <None Include="premake5.lua" />
     <None Include="src\Assets\Shaders\Shader.shader" />
   </ItemGroup>

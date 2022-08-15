@@ -1,5 +1,6 @@
 #pragma once
-#include<iostream>
+
+#include"smpch.h"
 
 //openGL
 #include"GL/glew.h"
@@ -7,13 +8,6 @@
 
 //utilities
 #include"Utils/DataTypes.h"
-#include"Utils/Logger.h"
-#include"Utils/AssetsPool.h"
-
-//input handling
-#include"InputHandling/InputCallbacks.h"
-#include"InputHandling/KeysHandleler.h"
-#include"InputHandling/MouseHandleler.h"
 
 //scene managment
 #include"SceneManagment/LevelEditorScene.h"
@@ -24,11 +18,6 @@
 #include"Camera/ModelMatrix.h"
 #include"Camera/ProjectionMatrix.h"
 #include"Camera/ViewMatrix.h"
-
-//imGui
-#include"imgui/imgui.h"
-#include"imgui/imgui_impl_glfw.h"
-#include"imgui/imgui_impl_opengl3.h"
 
 class Window
 {

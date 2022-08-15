@@ -1,5 +1,8 @@
 #include"Shader.h"
 
+#include"../Utils/ErrorHandling.h"
+#include"../Utils/Logger.h"
+
 Shader::Shader(std::string filepath)
     : m_ProgramID(0), m_filepath(filepath)
 {

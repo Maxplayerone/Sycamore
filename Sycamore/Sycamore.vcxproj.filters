@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Math">
+      <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\src">
+      <UniqueIdentifier>{46725DCC-323F-B8D7-5B58-A67F4784ED65}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -25,11 +31,11 @@
     <Filter Include="src\InputHandling">
       <UniqueIdentifier>{1167DE2D-7D7D-DCC3-C6F4-67E5324AAD4B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Rendering">
+      <UniqueIdentifier>{BA10DABB-26D1-55F2-EF0B-9F6F5B8B9ACE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\SceneManagment">
       <UniqueIdentifier>{42F59113-2ED9-5269-9739-4DBC833C3DEB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Shadering">
-      <UniqueIdentifier>{91EA660C-FDAA-E242-C6E5-2BC03265271F}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Utils">
       <UniqueIdentifier>{4D9AFFB3-B904-B42A-0243-65D06EEC917F}</UniqueIdentifier>
@@ -54,6 +60,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Math\SM_math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\src\vector.h">
+      <Filter>Math\src</Filter>
+    </ClInclude>
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h">
       <Filter>src\Buffers</Filter>
@@ -106,6 +118,21 @@
     <ClInclude Include="src\InputHandling\MouseHandleler.h">
       <Filter>src\InputHandling</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\BatchRenderer.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\DebugDraw.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Renderer.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Shader.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Texture.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\SceneManagment\LevelEditorScene.h">
       <Filter>src\SceneManagment</Filter>
     </ClInclude>
@@ -114,18 +141,6 @@
     </ClInclude>
     <ClInclude Include="src\SceneManagment\Scene.h">
       <Filter>src\SceneManagment</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shadering\BatchRenderer.h">
-      <Filter>src\Shadering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shadering\Renderer.h">
-      <Filter>src\Shadering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shadering\Shader.h">
-      <Filter>src\Shadering</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shadering\Texture.h">
-      <Filter>src\Shadering</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\AssetsPool.h">
       <Filter>src\Utils</Filter>
@@ -140,6 +155,9 @@
       <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Window.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\smpch.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="vendor\ImGui\include\imgui\imconfig.h">
@@ -172,11 +190,12 @@
     <ClInclude Include="vendor\STBI_IMAGE\stbi_image.h">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClInclude>
-    <ClInclude Include="Math\SM_math.h" />
-    <ClInclude Include="Math\src\vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="Math\src\vector.cpp">
+      <Filter>Math\src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Buffers\IndexBuffer.cpp">
       <Filter>src\Buffers</Filter>
     </ClCompile>
@@ -185,6 +204,9 @@
     </ClCompile>
     <ClCompile Include="src\Buffers\VertexBuffer.cpp">
       <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\GameObject.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\InputHandling\InputCallbacks.cpp">
       <Filter>src\InputHandling</Filter>
@@ -195,25 +217,31 @@
     <ClCompile Include="src\InputHandling\MouseHandleler.cpp">
       <Filter>src\InputHandling</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\BatchRenderer.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\DebugDraw.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Renderer.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Shader.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Texture.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\SceneManagment\LevelEditorScene.cpp">
       <Filter>src\SceneManagment</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneManagment\LevelScene.cpp">
       <Filter>src\SceneManagment</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shadering\BatchRenderer.cpp">
-      <Filter>src\Shadering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shadering\Renderer.cpp">
-      <Filter>src\Shadering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shadering\Shader.cpp">
-      <Filter>src\Shadering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shadering\Texture.cpp">
-      <Filter>src\Shadering</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\AssetsPool.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\DataTypes.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\ErrorHandling.cpp">
@@ -223,6 +251,9 @@
       <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\smpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\ImGui\lib\imgui.cpp">
@@ -249,20 +280,18 @@
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\GameObject.cpp">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\src\vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
     <None Include="src\Assets\Shaders\Shader.shader">
       <Filter>src\Assets\Shaders</Filter>
     </None>
-    <None Include="imgui.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Assets\Images\amogus.jpg">
+      <Filter>src\Assets\Images</Filter>
+    </Image>
+    <Image Include="src\Assets\Images\blocks.png">
       <Filter>src\Assets\Images</Filter>
     </Image>
     <Image Include="src\Assets\Images\spritesheet.png">
@@ -274,6 +303,5 @@
     <Image Include="src\Assets\Images\trollface.png">
       <Filter>src\Assets\Images</Filter>
     </Image>
-    <Image Include="src\Assets\Images\blocks.png" />
   </ItemGroup>
 </Project>

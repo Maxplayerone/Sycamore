@@ -1,4 +1,5 @@
 #include"IndexBuffer.h"
+#include"../Utils/ErrorHandling.h"
 
 IndexBuffer::IndexBuffer(unsigned int indeciesCount)
     : m_indiciesCount(indeciesCount), m_BufferID(0) {

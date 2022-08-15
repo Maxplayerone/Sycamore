@@ -1,11 +1,7 @@
 #pragma once
-#include<iostream>
-#include<fstream>
-#include<sstream>
-#include<string>
 
-#include"../Utils/ErrorHandling.h"
-#include"../Utils/Logger.h"
+#include"../smpch.h"
+
 #include"../Utils/DataTypes.h"
 
 #include"glm/glm.hpp"

@@ -1,4 +1,5 @@
 #pragma once
+#include"../smpch.h"
 
 typedef unsigned int uint;
 
@@ -16,9 +17,13 @@ struct color3 {
 	float b;
 };
 
+std::ostream& operator<< (std::ostream& stream, const color3 color);
+
 struct color4 {
 	float r;
 	float g;
 	float b;
 	float a;
 };
+
+std::ostream& operator<< (std::ostream& stream, const color4 color);

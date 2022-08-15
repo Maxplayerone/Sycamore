@@ -1,12 +1,6 @@
 #pragma once
-
 #include"Component.h"
-
-#include"../Utils/AssetsPool.h"
-
-//rand
-#include <cstdlib> 
-#include<vector>
+#include"../Utils/Logger.h"
 
 class GameObject {
 private:

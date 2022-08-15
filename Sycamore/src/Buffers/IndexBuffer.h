@@ -1,5 +1,4 @@
 #pragma once
-#include"../Utils/ErrorHandling.h"
 
 class IndexBuffer {
 private:

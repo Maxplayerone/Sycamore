@@ -1,16 +1,11 @@
 #pragma once
-#include"../Buffers/IndexBuffer.h"
-#include"../Buffers/VertexArray.h"
-#include"../Buffers/VertexBuffer.h"
+
+class GameObject;
 #include"../Buffers/VertexBufferLayout.h"
-
-#include"../ECS/GameObject.h"
-#include"../ECS/Transform.h"
-#include"../ECS/SpriteRenderer.h"
-
-#include"../Utils/AssetsPool.h"
-#include"../Utils/ErrorHandling.h"
-#include"../Utils/DataTypes.h"
+class VertexArray;
+class VertexBuffer;
+class IndexBuffer;
+#include"../smpch.h"
 
 #define MAX_BATCH_SIZE 1000
 

@@ -1,9 +1,14 @@
 #include"Renderer.h"
 
+#include"BatchRenderer.h"
 
-void Renderer::ChangeBGColor(float r, float g, float b, float a) const {
+#include"../ECS/GameObject.h"
+
+#include"../Utils/Logger.h"
+
+void Renderer::ChangeBGColor(color4 color) const {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(r, g, b, a);
+	glClearColor(color.r, color.g, color.b, color.a);
 }
 
 Renderer::Renderer() {

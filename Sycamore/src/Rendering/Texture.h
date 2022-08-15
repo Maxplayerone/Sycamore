@@ -1,9 +1,5 @@
 #pragma once
-#include<iostream>
-
-#include"../STBI_IMAGE/stbi_image.h"
-
-#include"../Utils/ErrorHandling.h"
+#include"../smpch.h"
 
 class Texture {
 private:

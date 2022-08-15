@@ -1,10 +1,11 @@
 #include"VertexBuffer.h"
-#include<array>
 
-VertexBuffer::VertexBuffer(unsigned int bufferSize, const void* vertexDataPointer) {
+#include"../Utils/ErrorHandling.h"
+
+VertexBuffer::VertexBuffer(unsigned int bufferSizeBytes, const void* vertexDataPointer) {
 	GLCall(glGenBuffers(1, &m_BufferID));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_BufferID));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, bufferSize, vertexDataPointer, GL_STATIC_DRAW));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, bufferSizeBytes, vertexDataPointer, GL_DYNAMIC_DRAW));
 }
 
 
