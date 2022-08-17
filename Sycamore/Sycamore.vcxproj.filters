@@ -190,6 +190,7 @@
     <ClInclude Include="vendor\STBI_IMAGE\stbi_image.h">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClInclude>
+    <ClInclude Include="src\Settings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -286,6 +287,7 @@
     <None Include="src\Assets\Shaders\Shader.shader">
       <Filter>src\Assets\Shaders</Filter>
     </None>
+    <None Include="src\Assets\Shaders\DebugDrawing.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Assets\Images\amogus.jpg">

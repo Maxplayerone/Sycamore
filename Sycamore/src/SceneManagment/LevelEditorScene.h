@@ -4,7 +4,7 @@
 
 class LevelEditorScene : public Scene {
 private:
-	color4 bgColor = { 0.4f, 0.92f, 0.42f, 1.0f };
+	color4 bgColor = { 0.96f, 0.96f, 0.96f, 1.0f};
 	GameObject* activeGameObject;
 public:
 	LevelEditorScene();

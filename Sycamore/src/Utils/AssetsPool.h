@@ -5,7 +5,6 @@
 #include"../Rendering/Texture.h"
 #include"../ECS/SpriteSheet.h"
 
-//TODO: MAKE THE SAME THING FOR TEXTURES
 class AssetsPool {
 private:
 	AssetsPool() {};
@@ -27,7 +26,8 @@ public:
 		return _instance;
 	}
 
-	Shader* GetShader(const std::string& filepath = "src/Assets/Shaders/Shader.shader");
+	enum class ShaderType {NORMAL, DEBUG};
+	Shader* GetShader(ShaderType = ShaderType::NORMAL);
 	unsigned int GetGameObjectID() { return gameObjectIndex++; }
 
 	Texture* GetTexture(const std::string& fileName);

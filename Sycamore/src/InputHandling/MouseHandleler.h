@@ -35,6 +35,8 @@ public:
 	//gets x and y position of the mouse in relation to the screen
 	void GetMousePosAbsolute(double x, double y);
 
+	void DebugCheckMouesPos();
+
 };
 
 

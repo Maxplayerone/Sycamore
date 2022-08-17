@@ -6,9 +6,6 @@
 #include"GL/glew.h"
 #include"GLFW/glfw3.h"
 
-//utilities
-#include"Utils/DataTypes.h"
-
 //scene managment
 #include"SceneManagment/LevelEditorScene.h"
 #include"SceneManagment/LevelScene.h"
@@ -23,28 +20,16 @@ class Window
 {
 private:
 	GLFWwindow* m_window;
-	const uint windowWidth = 960;
-	const uint windowHeight = 720;
 
-	F4 orthoProj{ -((float)windowWidth) / 2,
-							(float)windowWidth / 2 ,
-							-((float)windowHeight) / 2,
-							(float)windowHeight / 2
-	};
+	ModelMatrix* m_ModelMatrix = nullptr;
+	ViewMatrix* m_ViewMatrix = nullptr;
+	ProjectionMatrix* m_ProjMatrix = nullptr;
+	Camera* camera = nullptr;
 
-	const std::string windowName = "Sycamore-Engine";
-
-	ModelMatrix* m_ModelMatrix;
-	ViewMatrix* m_ViewMatrix;
-	ProjectionMatrix* m_ProjMatrix;
-	Camera* camera;
-
-	Scene* m_currentScene;
-
-	//for later deletion
-	float cameraScaleValue = 3.5f;
+	Scene* m_currentScene = nullptr;
 
 	//delta time
+	//maybe should use floats instead of this thingy?
 	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point endTime;
 	std::chrono::duration<float> deltaTime;

@@ -1,5 +1,7 @@
 #include"MouseHandleler.h"
+
 #include"../smpch.h"
+#include"../Utils/Logger.h"
 
 MouseHandleler::MouseHandleler()
 	: xPos(0), yPos(0), xOffset(0), yOffset(0) {
@@ -34,5 +36,11 @@ void MouseHandleler::ReturnScrollInput(double* x, double* y) {
 
 bool MouseHandleler::IsScrolling() {
 	return MouseHandleler::Get().xOffset != 0 || MouseHandleler::Get().yOffset != 0 ? true : false;
+}
+
+void MouseHandleler::DebugCheckMouesPos() {
+	std::stringstream ss;
+	ss << "Position x: " << xPos << std::endl << "Position y: " << yPos << std::endl;
+	LOGGER_INFO(ss.str());
 }
 

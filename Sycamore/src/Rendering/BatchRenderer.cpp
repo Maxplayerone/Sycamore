@@ -41,7 +41,7 @@ void BatchRenderer::Render() {
         rebufferData = false;
     }
 
-    Shader* shader = AssetsPool::Get().GetShader("src/Assets/Shaders/Shader.shader");
+    Shader* shader = AssetsPool::Get().GetShader();
     shader->UseProgram();
     GLCall(glDrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
 }
@@ -172,6 +172,6 @@ void BatchRenderer::RenderDebug(GameObject* go) {
     vertexArray->AddVertexBuffer(*vertexBuffer, vertexBufferLayout);
     indexBuffer = new IndexBuffer(6);
     
-    Shader* shader = AssetsPool::Get().GetShader("src/Assets/Shaders/Shader.shader");
+    Shader* shader = AssetsPool::Get().GetShader();
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 }

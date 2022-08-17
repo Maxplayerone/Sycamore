@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="Math\SM_math.h" />
     <ClInclude Include="Math\src\vector.h" />
+    <ClInclude Include="src\Settings.h" />
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexArray.h" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
+    <None Include="src\Assets\Shaders\DebugDrawing.shader" />
     <None Include="src\Assets\Shaders\Shader.shader" />
   </ItemGroup>
   <ItemGroup>

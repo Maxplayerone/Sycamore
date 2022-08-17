@@ -15,22 +15,27 @@
 
 LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();
+
 	DebugDraw::Start();
+	DebugDraw::DrawDebugGrid();
 
 	GameObject* coloredCube = new GameObject();
-	coloredCube->AddComponent(new Transform({-300.0f, 0.0f}, {100.0f, 100.0f}));
+	//offset of -7.5f
+	coloredCube->AddComponent(new Transform({0.0f, 0.0f}, {32.0f, 32.0f}));
 	coloredCube->AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
 
 	SpriteSheet* sheet = AssetsPool::Get().GetSpriteSheet("blocks.png", 16, 81);
 
 	GameObject* anotherCube = new GameObject();
-	anotherCube->AddComponent(new Transform({50.0f, -30.0f}, {50.0f, 50.0f}));
+	anotherCube->AddComponent(new Transform({64.0f, 0.0f}, {32.0f, 32.0f}));
 	anotherCube->AddComponent(new SpriteRenderer(AssetsPool::Get().GetTexture("amogus.jpg")->GetSlot()));
 	AddGameObjectToScene(anotherCube);
 	
 	activeGameObject = m_gameObjects[0];
 
+	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f }, 120.0f);
+	DebugDraw::AddLine2D({ -100.0f, -100.0f }, { -200.0f, -200.0f }, { 0.0f, 0.0f, 0.0f }, 240.0f);
 }
 
 void LevelEditorScene::OnUpdate(float deltaTime) {
@@ -40,8 +45,6 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 		m_gameObjects[i]->Update(deltaTime);
 	}
 	activeGameObject->ImGui();
-
-	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 1.0f, 1.0f, 1.0f }, 120.0f);
 
 	this->m_renderer->Render();
 	DebugDraw::Render();

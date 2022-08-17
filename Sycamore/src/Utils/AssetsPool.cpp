@@ -5,7 +5,19 @@
 
 AssetsPool AssetsPool::_instance;
 
-Shader* AssetsPool::GetShader(const std::string& filepath) {
+Shader* AssetsPool::GetShader(ShaderType type) {
+	std::string filepath;
+
+	switch(type){
+	case ShaderType::NORMAL:
+		filepath = "src/Assets/Shaders/Shader.shader";
+		break;
+	case ShaderType::DEBUG:
+		filepath = "src/Assets/Shaders/DebugDrawing.shader";
+		break;
+	}
+
+
 	auto itr = shaders.find(filepath);
 	if (itr != shaders.end()) return itr->second;
 

@@ -10,17 +10,27 @@
 #include"InputHandling/KeysHandleler.h"
 #include"InputHandling/MouseHandleler.h"
 
+//utilities
+#include"Utils/DataTypes.h"
 #include"Utils/Logger.h"
 #include"Utils/AssetsPool.h"
 
-Window::Window() {
+#include"Settings.h"
+
+Window::Window() {    
+
+    F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
+                            (float)SM_settings::windowWidth / 2 ,
+                            -((float)SM_settings::windowHeight) / 2,
+                            (float)SM_settings::windowHeight / 2
+    };
 
     /* Window and openGL setup */
     if (!glfwInit())
         exit(1);
 
     /* Create a windowed mode window and its OpenGL context */
-    m_window = glfwCreateWindow(windowWidth, windowHeight, windowName.c_str(), NULL, NULL);
+    m_window = glfwCreateWindow(SM_settings::windowWidth, SM_settings::windowHeight, SM_settings::windowName.c_str(), NULL, NULL);
     if (!m_window)
     {
         LOGGER_ERROR("Cannot initialize glfw!");
@@ -40,7 +50,7 @@ Window::Window() {
 
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
-    glViewport(0, 0, windowWidth, windowHeight);
+    glViewport(0, 0, SM_settings::windowWidth, SM_settings::windowHeight);
 
     if (glewInit() != GLEW_OK)
         LOGGER_ERROR("Cannot initialize glew!");
@@ -97,8 +107,6 @@ void Window::Run() {
             m_currentScene->ImGui();
         }
     
-        bool show = true;
-        //ImGui::ShowDemoWindow(&show);
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
       
@@ -117,6 +125,7 @@ void Window::Run() {
             glfwMakeContextCurrent(m_window);
         }
         */
+        
     }
 }
 
