@@ -1,5 +1,8 @@
 #pragma once
 
+#include"../../Math/SM_math.h"
+#include"../Camera/ProjectionMatrix.h"
+
 class MouseHandleler {
 private:
 	MouseHandleler();
@@ -16,27 +19,31 @@ public:
 	}
 
 	bool* mouseButtons = new bool[3];
-	double xOffset;
-	double yOffset;
-
-	double xPos;
-	double yPos;
+	SM_math::vec2 offset;
+	//will change for my vector but I need
+	//glm's one for matrix multiplication
+	glm::vec2 position;
 
 	int ArrayLength() { return 3; }
-	//check if any mouse button is pressed
-	bool IsMouseButtonPressed(int button);
-	//saves the input from the scroll callback into class variables
-	//x input doesn't really work on my mouse so yeah, only y is important
-	void GetScrollInput(double x, double y);
 
-	void ReturnScrollInput(double* x, double* y);
+	bool IsMouseButtonPressed(int button);
+
+	void SetScrollInput(double x, double y);
+	SM_math::vec2 GetScrollInput() const { return offset; }
 	bool IsScrolling();
 
 	//gets x and y position of the mouse in relation to the screen
-	void GetMousePosAbsolute(double x, double y);
+	void SetMousePosAbsolute(double x, double y);
 
-	void DebugCheckMouesPos();
+	glm::vec2 GetMousePosAbs() const { return position; }
+	//returns the position of the mouse in model space 
+	//(used for block placing in the editor)
+	glm::vec2 GetMousePosModel();
 
+	void DebugCheckMouesPosAbs();
+	void DebugCheckMousePosModel();
+
+	void GetProjectionMatrix(glm::mat4& _projMat);
 };
 
 

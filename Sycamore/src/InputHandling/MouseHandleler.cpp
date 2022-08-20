@@ -3,8 +3,9 @@
 #include"../smpch.h"
 #include"../Utils/Logger.h"
 
-MouseHandleler::MouseHandleler()
-	: xPos(0), yPos(0), xOffset(0), yOffset(0) {
+glm::mat4 projMat;
+
+MouseHandleler::MouseHandleler(){
 	for (int i = 0; i < 3; i++)
 		mouseButtons[i] = false;
 }
@@ -15,32 +16,36 @@ bool MouseHandleler::IsMouseButtonPressed(int button) {
 	return MouseHandleler::Get().mouseButtons[button];
 }
 
-void MouseHandleler::GetScrollInput(double x, double y) {
+void MouseHandleler::SetScrollInput(double x, double y) {
 	if (x != 0)
-		MouseHandleler::Get().xOffset = x;
+		offset.x = x;
 	if (y != 0)
-		MouseHandleler::Get().yOffset = y;
-}
-
-void MouseHandleler::GetMousePosAbsolute(double x, double y) {
-	MouseHandleler::Get().xPos = x;
-	MouseHandleler::Get().yPos = y;
-}
-
-void MouseHandleler::ReturnScrollInput(double* x, double* y) {
-	if (x != 0)
-		*x = MouseHandleler::Get().xOffset;
-	if (y != 0)
-		*y = MouseHandleler::Get().yOffset;
+		offset.y = y;
 }
 
 bool MouseHandleler::IsScrolling() {
-	return MouseHandleler::Get().xOffset != 0 || MouseHandleler::Get().yOffset != 0 ? true : false;
+	return offset.x != 0 || offset.y != 0 ? true : false;
 }
 
-void MouseHandleler::DebugCheckMouesPos() {
+void MouseHandleler::SetMousePosAbsolute(double x, double y) {
+	position.x = x;
+	position.y = y;
+}
+
+glm::vec2 MouseHandleler::GetMousePosModel() {
+	return projMat * glm::vec4(position, 1.0f, 1.0f);
+}
+
+void MouseHandleler::GetProjectionMatrix(glm::mat4& _projMat) {
+	projMat = _projMat;
+}
+
+void MouseHandleler::DebugCheckMouesPosAbs() {
 	std::stringstream ss;
-	ss << "Position x: " << xPos << std::endl << "Position y: " << yPos << std::endl;
+	ss << "Mouse position  x " << position.x << " mouse position y " << position.y;
 	LOGGER_INFO(ss.str());
+}
+
+void MouseHandleler::DebugCheckMousePosModel() {
 }
 

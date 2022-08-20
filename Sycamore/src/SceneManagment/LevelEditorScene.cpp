@@ -10,6 +10,9 @@
 #include"../ECS/SpriteSheet.h"
 
 #include"../Utils/AssetsPool.h"
+#include"../Utils/Profiler.h"
+
+#include"../InputHandling/MouseHandleler.h"
 
 #include"imgui/imgui.h"
 
@@ -19,47 +22,62 @@ LevelEditorScene::LevelEditorScene() {
 	DebugDraw::Start();
 	DebugDraw::DrawDebugGrid();
 
-	GameObject* coloredCube = new GameObject();
+	GameObject coloredCube;
 	//offset of -7.5f
-	coloredCube->AddComponent(new Transform({0.0f, 0.0f}, {32.0f, 32.0f}));
-	coloredCube->AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
+	coloredCube.AddComponent(new Transform({64.0f, -32.0f}, {32.0f, 32.0f}));
+	coloredCube.AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
 
 	SpriteSheet* sheet = AssetsPool::Get().GetSpriteSheet("blocks.png", 16, 81);
 
-	GameObject* anotherCube = new GameObject();
-	anotherCube->AddComponent(new Transform({64.0f, 0.0f}, {32.0f, 32.0f}));
-	anotherCube->AddComponent(new SpriteRenderer(AssetsPool::Get().GetTexture("amogus.jpg")->GetSlot()));
+	GameObject anotherCube;
+	anotherCube.AddComponent(new Transform({64.0f, 0.0f}, {32.0f, 32.0f}));
+	anotherCube.AddComponent(new SpriteRenderer(AssetsPool::Get().GetTexture("amogus.jpg")->GetSlot()));
 	AddGameObjectToScene(anotherCube);
 	
-	activeGameObject = m_gameObjects[0];
+	activeGameObject = m_sceneObjects[0];
 
 	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f }, 120.0f);
 	DebugDraw::AddLine2D({ -100.0f, -100.0f }, { -200.0f, -200.0f }, { 0.0f, 0.0f, 0.0f }, 240.0f);
 }
 
 void LevelEditorScene::OnUpdate(float deltaTime) {
+	SM_Profiler::MAIN("LevelEditorScene update");
+
 	this->m_renderer->ChangeBGColor(bgColor);
-	
-	for (int i = 0; i < m_gameObjects.size(); i++) {
-		m_gameObjects[i]->Update(deltaTime);
+
+	{
+		SM_Profiler::MAIN("LevelEditorScene gameObject updating");
+		for (int i = 0; i < m_sceneObjectsSize; i++) {
+
+			m_sceneObjects[i].Update(deltaTime);
+		}
 	}
-	activeGameObject->ImGui();
+	activeGameObject.ImGui();
 
 	this->m_renderer->Render();
 	DebugDraw::Render();
 }
 
-void LevelEditorScene::AddGameObjectToScene(GameObject* go) {
+void LevelEditorScene::AddGameObjectToScene(GameObject&  go) {
+	/*
 	auto itr = std::find(this->m_gameObjects.begin(), this->m_gameObjects.end(), go);
 	//the game object is already in the vector
 	if (itr != this->m_gameObjects.end()) return;
-
-	this->m_gameObjects.push_back(go);
-	this->m_renderer->Add(m_gameObjects[m_gameObjects.size() - 1]);
+	*/
+	m_sceneObjects[m_sceneObjectsSize++] = go;
+	std::stringstream ss;
+	ss << "Game object count " << m_sceneObjectsSize;
+	//we're accessing an array index, which starts at 0 (that's why we decrease by one)
+	this->m_renderer->Add(m_sceneObjects[m_sceneObjectsSize - 1]);
 }
 
+//teleports the block that was clicked by a mouse
+//to it's cursor position
+void MoveClickedBlock() {
+}
 
+static float posX = 0;
 void LevelEditorScene::ImGui() {
 	//scene color changing
 	ImGui::Begin("Level editor scene");
@@ -86,7 +104,16 @@ void LevelEditorScene::ImGui() {
 		ImGui::PushID(i);
 
 		Sprite* spr = sheet->GetSprite(i);
-		ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr->GetTexCoords()[0], spr->GetTexCoords()[1] }, { spr->GetTexCoords()[6], spr->GetTexCoords()[7] });
+		if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr->GetTexCoords()[0], spr->GetTexCoords()[1] }, { spr->GetTexCoords()[6], spr->GetTexCoords()[7] })) {
+			/*
+			GameObject go;
+			//go.AddComponent(new Transform({MouseHandleler::Get().GetMousePosAbs().x, MouseHandleler::Get().GetMousePosAbs().y}));
+			go.AddComponent(new Transform({1.0f, 1.0f}));
+			MouseHandleler::Get().DebugCheckMouesPos();
+			go.AddComponent(new SpriteRenderer(spr));
+			AddGameObjectToScene(go);
+			*/
+		}
 
 		float last_button_x2 = ImGui::GetItemRectMax().x;
 		float next_button_x2 = last_button_x2 + style.ItemSpacing.x + buttonSize.x; // Expected position if next button was on same line

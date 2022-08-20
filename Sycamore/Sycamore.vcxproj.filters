@@ -191,6 +191,8 @@
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClInclude>
     <ClInclude Include="src\Settings.h" />
+    <ClInclude Include="src\Utils\Profiler.h" />
+    <ClInclude Include="src\Utils\ObjectPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -281,6 +283,8 @@
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utils\Profiler.cpp" />
+    <ClCompile Include="src\Utils\ObjectPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

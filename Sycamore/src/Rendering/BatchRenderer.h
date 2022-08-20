@@ -1,22 +1,26 @@
 #pragma once
 
-class GameObject;
+#include"../ECS/GameObject.h"
+
 #include"../Buffers/VertexBufferLayout.h"
-class VertexArray;
-class VertexBuffer;
-class IndexBuffer;
+#include"../Buffers/IndexBuffer.h"
+#include"../Buffers/VertexArray.h"
+#include"../Buffers/VertexBuffer.h"
+
 #include"../smpch.h"
+#include"../Utils/DataTypes.h"
 
 #define MAX_BATCH_SIZE 1000
 
 class BatchRenderer {
 private:
     VertexBufferLayout vertexBufferLayout;
-    VertexArray* vertexArray;
+    VertexArray vertexArray;
     VertexBuffer* vertexBuffer;
     IndexBuffer* indexBuffer;
 
-    std::vector<GameObject*> objectsForRender;
+    GameObject objectsForRender[MAX_BATCH_SIZE];
+    uint gameObjectCount = 0;
     float* vertices;
 
     //the number of indexes in the vertices buffer occupied by a single quad
@@ -25,22 +29,23 @@ private:
     const unsigned int DATA_IN_ONE_VERTEX = 8;
 
     //prints the context of the vertices array and stops the program
-    void TestVertices();
+    //cyclesCount - how many times the function will run before assertion
+    void TestVertices(uint cyclesCount); 
 
     //used when the vertices buffer is changed
     void SetupBuffers();
-    bool rebufferData = true;
-    bool oneTimeFlag = true;
+
+    bool oneTimeFlag = true; //ignore this please
 public:
     BatchRenderer();
-    void Add(GameObject* go);
+    void Add(GameObject& go);
     void Render();
 
-    bool HasRoom() const { return objectsForRender.size() < MAX_BATCH_SIZE ? true : false; }
+    bool HasRoom() const { return (gameObjectCount < MAX_BATCH_SIZE) ? true : false; }
 
     void LoadVerticesData(unsigned int gameObjectIndex);
 
     //renders a single object (ONLY FOR DEBUG)
-    void RenderDebug(GameObject* go);
+    void RenderDebug(GameObject& go);
 };
 

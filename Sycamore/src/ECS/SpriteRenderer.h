@@ -13,7 +13,7 @@ private:
 
 	color4 color;
 
-	bool dirty = false;
+	bool dirty;
 
 	Sprite* GetDummySprite() {
 		float texCoords[8] = {
@@ -34,6 +34,8 @@ public:
 
 		m_Sprite = GetDummySprite();
 		m_TextureIndex = 0;
+
+		dirty = true;
 	}
 
 	SpriteRenderer(Sprite* sprite) {
@@ -44,6 +46,8 @@ public:
 
 		m_Sprite = sprite;
 		m_TextureIndex = sprite->GetTexSlot();
+
+		dirty = true;
 	}
 
 	SpriteRenderer(uint texIndex) {
@@ -55,6 +59,8 @@ public:
 
 		m_TextureIndex = texIndex;
 		m_Sprite = GetDummySprite();
+
+		dirty = true;
 	}
 
 	SpriteRenderer(SpriteSheet* sheet, uint spriteIndex) {
@@ -65,6 +71,8 @@ public:
 
 		m_TextureIndex = sheet->GetSprite(spriteIndex)->GetTexSlot();
 		m_Sprite = sheet->GetSprite(spriteIndex);
+
+		dirty = true;
 	}
 
 	unsigned int GetTexIndex() const { return m_TextureIndex; }
@@ -90,21 +98,22 @@ public:
 
 	bool IsDirty() { return dirty; }
 
-
-	void Start() {
-		dirty = false;
-	}
-
 	void Update(float deltaTime) override {
 	}
 
 	//only works for colors
 	void ImGui() override {
+		color4 oldColor = color;
+
 		ImGui::Begin("Sprite renderer");
 		ImGui::SliderFloat("Red", &color.r, 0.0f, 1.0f);
 		ImGui::SliderFloat("Green", &color.g, 0.0f, 1.0f);
 		ImGui::SliderFloat("Blue", &color.b, 0.0f, 1.0f);
 		ImGui::SliderFloat("Alpha", &color.a, 0.0f, 1.0f);
+
+		if (color.r != oldColor.r || color.g != oldColor.g || color.b != oldColor.b || color.a != oldColor.a)
+			dirty = true;
+
 		ImGui::End();
 	}
 };

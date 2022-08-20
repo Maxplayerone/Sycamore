@@ -13,7 +13,9 @@
 //utilities
 #include"Utils/DataTypes.h"
 #include"Utils/Logger.h"
+#include"Utils/ObjectPool.h"
 #include"Utils/AssetsPool.h"
+#include"Utils/Profiler.h"
 
 #include"Settings.h"
 
@@ -59,6 +61,7 @@ Window::Window() {
 
 
     /* Camera setup */
+    //suint shaderID = SM_Pool::GetShader();
     Shader* shaderProgram = AssetsPool::Get().GetShader();
 
     glm::mat4 modelMat = glm::mat4(1.0f);
@@ -91,22 +94,27 @@ Window::Window() {
 void Window::Run() {
     //default scene
     ChangeScene(1);
+    ImGuiTheme();
 
+    while (!glfwWindowShouldClose(m_window)) {
+        SM_Profiler::MAIN("Main loop");
 
-    while (!glfwWindowShouldClose(m_window)) {    
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
-        
-        ImGuiTheme();
+          /*
         if (m_currentScene != nullptr) {
             m_currentScene->OnUpdate(deltaTime.count());
             m_currentScene->ImGui();
         }
-    
+        */
+        SM_Profiler::ImGuiRender();
+        //MouseHandleler::Get().DebugCheckMouesPosAbs();
+        MouseHandleler::Get().DebugCheckMousePosModel();
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
       

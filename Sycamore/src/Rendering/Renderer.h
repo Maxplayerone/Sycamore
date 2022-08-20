@@ -12,9 +12,9 @@ public:
 	Renderer();
 
 	void ChangeBGColor(color4 color) const;
-	void Add(GameObject* go);
+	void Add(GameObject& go);
 	void Render();
 
 	//renders a single object onto the scene
-	void RenderDebug(GameObject* go);
+	void RenderDebug(GameObject& go);
 };

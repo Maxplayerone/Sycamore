@@ -96,6 +96,8 @@
     <ClInclude Include="Math\SM_math.h" />
     <ClInclude Include="Math\src\vector.h" />
     <ClInclude Include="src\Settings.h" />
+    <ClInclude Include="src\Utils\ObjectPool.h" />
+    <ClInclude Include="src\Utils\Profiler.h" />
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexArray.h" />
@@ -160,6 +162,8 @@
     <ClCompile Include="src\Utils\DataTypes.cpp" />
     <ClCompile Include="src\Utils\ErrorHandling.cpp" />
     <ClCompile Include="src\Utils\Logger.cpp" />
+    <ClCompile Include="src\Utils\ObjectPool.cpp" />
+    <ClCompile Include="src\Utils\Profiler.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\smpch.cpp" />
     <ClCompile Include="vendor\ImGui\lib\imgui.cpp" />

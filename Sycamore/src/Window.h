@@ -44,4 +44,3 @@ public:
 	//sets the imGui style
 	void ImGuiTheme();
 };
-

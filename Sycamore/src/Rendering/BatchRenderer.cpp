@@ -1,55 +1,44 @@
 #include"BatchRenderer.h"
 
-#include"../Buffers/IndexBuffer.h"
-#include"../Buffers/VertexArray.h"
-#include"../Buffers/VertexBuffer.h"
-
-#include"../ECS/GameObject.h"
 #include"../ECS/Transform.h"
 #include"../ECS/SpriteRenderer.h"
 
 #include"../Utils/AssetsPool.h"
 #include"../Utils/ErrorHandling.h"
-#include"../Utils/DataTypes.h"
 #include"../Utils/Logger.h"
+#include"../Utils/Profiler.h"
 
-void BatchRenderer::Add(GameObject* go) {
-    auto itr = std::find(objectsForRender.begin(), objectsForRender.end(), go);
+void BatchRenderer::Add(GameObject& go) {
+    //auto itr = std::find(objectsForRender.begin(), objectsForRender.end(), go);
     //the object is already in the vector
-    if (itr != objectsForRender.end()) return;
+    //if (itr != objectsForRender.end()) return;
 
-    objectsForRender.push_back(go);
+    objectsForRender[gameObjectCount++] = go;
 }
 
 void BatchRenderer::Render() {
-
+    SM_Profiler::MAIN("Batch render");
     //dirty flagging
-    for (int i = 0; i < objectsForRender.size(); i++) {
+    for (int i = 0; i < gameObjectCount; i++) {
         //if the position/color/texture of any object changed
-        if (objectsForRender[i]->GetComponent<Transform>()->IsDirty() || objectsForRender[i]->GetComponent<SpriteRenderer>()->IsDirty() || oneTimeFlag) {
+        if (objectsForRender[i].GetComponent<Transform>()->IsDirty() || objectsForRender[i].GetComponent<SpriteRenderer>()->IsDirty() || oneTimeFlag) {
             LoadVerticesData(i);
-            //std::cout << "Need to rebuffer data :/" << std::endl;
-            rebufferData = true;
+            objectsForRender[i].GetComponent<Transform>()->Clean();
+            objectsForRender[i].GetComponent<SpriteRenderer>()->Clean();
         }
     }
-
-    //this is one of the stupidest things I did as a programmer, but it works
     oneTimeFlag = false;
-    //TestVertices();
-    if (rebufferData) {
-        SetupBuffers();
-        rebufferData = false;
-    }
-
+    //TestVertices(2);
+    
+    SetupBuffers();
     Shader* shader = AssetsPool::Get().GetShader();
     shader->UseProgram();
+    //access violation reading location
     GLCall(glDrawElements(GL_TRIANGLES, indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
 BatchRenderer::BatchRenderer() {
     vertices = new float[MAX_BATCH_SIZE * VERTICES_DATA_FOR_QUAD]; //1000 * 32 * 32bytes per float = 64000 bytes
-
-    vertexArray = new VertexArray();
 
     //every...
     vertexBufferLayout.AddFloat(2); //position vertex
@@ -66,9 +55,9 @@ BatchRenderer::BatchRenderer() {
 }
 
 void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
-    GameObject* go = objectsForRender[gameObjectIndex];
-    Transform* trans = go->GetComponent<Transform>();
-    SpriteRenderer* rend = go->GetComponent<SpriteRenderer>();
+    GameObject go = objectsForRender[gameObjectIndex];
+    Transform* trans = go.GetComponent<Transform>();
+    SpriteRenderer* rend = go.GetComponent<SpriteRenderer>();
 
     unsigned int texCoordsIndex = 0;
     float offsetX = 0.0f;
@@ -103,28 +92,32 @@ void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
     }
 }
 
-void BatchRenderer::TestVertices() {
+static uint cycles = 0;
+void BatchRenderer::TestVertices(uint cyclesCount) {
     LOGGER_INFO("Vertices buffer");
     for (int i = 0; i < 2 * VERTICES_DATA_FOR_QUAD; i++) {
-        if (i % DATA_IN_ONE_VERTEX == 0) LOGGER_INFO("New vertex");
-        if (i % VERTICES_DATA_FOR_QUAD == 0) LOGGER_INFO("New game object");
+        if (i % DATA_IN_ONE_VERTEX == 0) LOGGER_WARNING("New vertex");
+        if (i % VERTICES_DATA_FOR_QUAD == 0) LOGGER_ERROR("New game object");
         std::stringstream ss;
         ss << "Element at index " << i << " | " << vertices[i];
         LOGGER_INFO(ss.str());
     }
-    ASSERT(false);
+    std::cout << std::endl << std::endl << std::endl;
+    cycles++;
+    if(cycles >= cyclesCount)
+        ASSERT(false);
 }
 
 void BatchRenderer::SetupBuffers() {
-    vertexBuffer = new VertexBuffer(objectsForRender.size() * VERTICES_DATA_FOR_QUAD * sizeof(float), vertices);
-    vertexArray->AddVertexBuffer(*vertexBuffer, vertexBufferLayout);
-    indexBuffer = new IndexBuffer(6 * objectsForRender.size());
+    vertexBuffer = new VertexBuffer(gameObjectCount * VERTICES_DATA_FOR_QUAD * sizeof(float), vertices);
+    vertexArray.AddVertexBuffer(*vertexBuffer, vertexBufferLayout);
+    indexBuffer = new IndexBuffer(6 * gameObjectCount);
 }
 
-void BatchRenderer::RenderDebug(GameObject* go) {
+void BatchRenderer::RenderDebug(GameObject& go) {
     float* _vertices = new float[VERTICES_DATA_FOR_QUAD];
-    Transform* trans = go->GetComponent<Transform>();
-    SpriteRenderer* rend = go->GetComponent<SpriteRenderer>();
+    Transform* trans = go.GetComponent<Transform>();
+    SpriteRenderer* rend = go.GetComponent<SpriteRenderer>();
 
     unsigned int texCoordsIndex = 0;
     float offsetX = 0.0f;
@@ -169,7 +162,7 @@ void BatchRenderer::RenderDebug(GameObject* go) {
     }
 
     vertexBuffer = new VertexBuffer(VERTICES_DATA_FOR_QUAD * sizeof(float), _vertices);
-    vertexArray->AddVertexBuffer(*vertexBuffer, vertexBufferLayout);
+    vertexArray.AddVertexBuffer(*vertexBuffer, vertexBufferLayout);
     indexBuffer = new IndexBuffer(6);
     
     Shader* shader = AssetsPool::Get().GetShader();

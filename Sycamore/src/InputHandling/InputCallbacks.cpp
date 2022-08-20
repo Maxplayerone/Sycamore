@@ -15,9 +15,9 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 }
 
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-    MouseHandleler::Get().GetScrollInput(xoffset, yoffset);
+    MouseHandleler::Get().SetScrollInput(xoffset, yoffset);
 }
 
 void CursorPosCallback(GLFWwindow* window, double xPos, double yPos) {
-    MouseHandleler::Get().GetMousePosAbsolute(xPos, yPos);
+    MouseHandleler::Get().SetMousePosAbsolute(xPos, yPos);
 }

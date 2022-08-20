@@ -21,12 +21,12 @@ void Renderer::Render() {
 		batch->Render();
 }
 
-void Renderer::Add(GameObject* go) {
+void Renderer::Add(GameObject& go) {
 	if (batch->HasRoom())
 		batch->Add(go);
 }
 
-void Renderer::RenderDebug(GameObject* go) {
+void Renderer::RenderDebug(GameObject& go) {
 	LOGGER_WARNING("Rendering an object for debugging purpuses");
 	batch->RenderDebug(go);
 }
