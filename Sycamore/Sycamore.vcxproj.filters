@@ -121,9 +121,6 @@
     <ClInclude Include="src\Rendering\BatchRenderer.h">
       <Filter>src\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rendering\DebugDraw.h">
-      <Filter>src\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="src\Rendering\Renderer.h">
       <Filter>src\Rendering</Filter>
     </ClInclude>
@@ -141,9 +138,6 @@
     </ClInclude>
     <ClInclude Include="src\SceneManagment\Scene.h">
       <Filter>src\SceneManagment</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\AssetsPool.h">
-      <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\DataTypes.h">
       <Filter>src\Utils</Filter>
@@ -193,6 +187,8 @@
     <ClInclude Include="src\Settings.h" />
     <ClInclude Include="src\Utils\Profiler.h" />
     <ClInclude Include="src\Utils\ObjectPool.h" />
+    <ClInclude Include="src\Rendering\DebugDraw.h" />
+    <ClInclude Include="Math\src\matrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -223,9 +219,6 @@
     <ClCompile Include="src\Rendering\BatchRenderer.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\DebugDraw.cpp">
-      <Filter>src\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="src\Rendering\Renderer.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
@@ -240,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="src\SceneManagment\LevelScene.cpp">
       <Filter>src\SceneManagment</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\AssetsPool.cpp">
-      <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\DataTypes.cpp">
       <Filter>src\Utils</Filter>
@@ -285,6 +275,8 @@
     </ClCompile>
     <ClCompile Include="src\Utils\Profiler.cpp" />
     <ClCompile Include="src\Utils\ObjectPool.cpp" />
+    <ClCompile Include="src\Rendering\DebugDraw.cpp" />
+    <ClCompile Include="Math\src\matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

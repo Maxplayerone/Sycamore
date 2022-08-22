@@ -23,3 +23,4 @@ public:
 #define LOGGER_WARNING(...) SPDLOG_WARN(__VA_ARGS__)
 #define LOGGER_ERROR(...) SPDLOG_ERROR(__VA_ARGS__)
 
+

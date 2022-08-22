@@ -9,34 +9,33 @@
 #include"../ECS/GameObject.h"
 #include"../ECS/SpriteSheet.h"
 
-#include"../Utils/AssetsPool.h"
 #include"../Utils/Profiler.h"
+#include"../Utils/ObjectPool.h"
 
 #include"../InputHandling/MouseHandleler.h"
 
 #include"imgui/imgui.h"
 
 LevelEditorScene::LevelEditorScene() {
-	this->m_renderer = new Renderer();
-
-	DebugDraw::Start();
-	DebugDraw::DrawDebugGrid();
+	this->m_renderer = new Renderer();	
 
 	GameObject coloredCube;
-	//offset of -7.5f
-	coloredCube.AddComponent(new Transform({64.0f, -32.0f}, {32.0f, 32.0f}));
+	coloredCube.AddComponent(new Transform({0.0f, 0.0f}, {32.0f, 32.0f}));
 	coloredCube.AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
 
-	SpriteSheet* sheet = AssetsPool::Get().GetSpriteSheet("blocks.png", 16, 81);
+	SpriteSheet* sheet = SM_Pool::GetSpriteSheet("blocks.png", 16, 81);
+
 
 	GameObject anotherCube;
 	anotherCube.AddComponent(new Transform({64.0f, 0.0f}, {32.0f, 32.0f}));
-	anotherCube.AddComponent(new SpriteRenderer(AssetsPool::Get().GetTexture("amogus.jpg")->GetSlot()));
+	anotherCube.AddComponent( new SpriteRenderer( sheet->GetSprite(5) ) );
+
 	AddGameObjectToScene(anotherCube);
 	
 	activeGameObject = m_sceneObjects[0];
 
+	DebugDraw::DrawDebugGrid();
 	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f }, 120.0f);
 	DebugDraw::AddLine2D({ -100.0f, -100.0f }, { -200.0f, -200.0f }, { 0.0f, 0.0f, 0.0f }, 240.0f);
 }
@@ -55,8 +54,8 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 	}
 	activeGameObject.ImGui();
 
-	this->m_renderer->Render();
 	DebugDraw::Render();
+	this->m_renderer->Render();	
 }
 
 void LevelEditorScene::AddGameObjectToScene(GameObject&  go) {
@@ -88,10 +87,9 @@ void LevelEditorScene::ImGui() {
 
 	//cool blocks
 	ImGui::Begin("Blocks");	
-	Texture* tex = AssetsPool::Get().GetTexture("blocks.png");
 	unsigned int spriteNum = 81;
 
-	SpriteSheet* sheet = AssetsPool::Get().GetSpriteSheet("blocks.png", 16, 81);
+	SpriteSheet* sheet = SM_Pool::GetSpriteSheet("blocks.png", 16, 81);
 
 	ImVec2 buttonSize(40, 40);
 	ImGui::Text("Manually wrapping:");
@@ -104,17 +102,18 @@ void LevelEditorScene::ImGui() {
 		ImGui::PushID(i);
 
 		Sprite* spr = sheet->GetSprite(i);
+		
 		if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr->GetTexCoords()[0], spr->GetTexCoords()[1] }, { spr->GetTexCoords()[6], spr->GetTexCoords()[7] })) {
-			/*
+			
 			GameObject go;
 			//go.AddComponent(new Transform({MouseHandleler::Get().GetMousePosAbs().x, MouseHandleler::Get().GetMousePosAbs().y}));
 			go.AddComponent(new Transform({1.0f, 1.0f}));
-			MouseHandleler::Get().DebugCheckMouesPos();
+			//MouseHandleler::Get().DebugCheckMouesPos();
 			go.AddComponent(new SpriteRenderer(spr));
 			AddGameObjectToScene(go);
-			*/
+			
 		}
-
+		
 		float last_button_x2 = ImGui::GetItemRectMax().x;
 		float next_button_x2 = last_button_x2 + style.ItemSpacing.x + buttonSize.x; // Expected position if next button was on same line
 

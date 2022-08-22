@@ -1,9 +1,17 @@
 #pragma once
-#include"../Rendering/Shader.h"
+#include"../smpch.h"
 
-/*
+#include"DataTypes.h"
+
+#include"../Rendering/Texture.h"
+
+#include"../ECS/Spritesheet.h"
+
 namespace SM_Pool {
-	uint shaderID[4];
-	uint GetShader(const std::string& filepath = "src/Assets/Shaders/Shader.shader");
+	uint GetShaderID(const std::string& filepath = "src/Assets/Shaders/Shader.shader");
+	//relative filepath
+	Texture* GetTexture(const std::string& filename);
+
+	SpriteSheet* GetSpriteSheet(const std::string& fileName, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing);
+	SpriteSheet* GetSpriteSheet(const std::string& fileName, unsigned int spriteDimensions, unsigned int numOfSprites);
 }
-*/

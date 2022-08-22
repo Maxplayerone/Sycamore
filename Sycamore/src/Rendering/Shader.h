@@ -11,31 +11,14 @@ struct ShaderSources {
     std::string fragmentShader;
 };
 
-class Shader {
-private:
-    uint m_ProgramID;
-    std::string m_filepath;
+namespace Shader {
 
-    ShaderSources ParseShader(const std::string& filepath);
-    unsigned int CompileShader(unsigned int type, const std::string& source);
-    unsigned int CreateProgram(const std::string& vertexSource, const std::string& fragmentSource);
+    void UseShader(uint shaderID);
+    void UnuseShader();
+    uint CreateShader(const std::string& filepath);
+    void DeleteShader(uint shaderID);
 
-    int GetUniformLocation(const std::string& name);
-public:
-    Shader(std::string filepath);
-    ~Shader();
-
-    //binds the shader
-    void UseProgram();
-    //unbinds the shader
-    void UnuseProgram();
-
-    unsigned int GetID() const { return m_ProgramID; }
-
-    //sets four float uniform
-    void SetUniformMat4f(const std::string& uniformName, const glm::mat4 matrix);
-    //sets one int uniform
-    void SetUniform1i(const std::string& name, int value);
-
-    void SetUniform1iv(const std::string& name);
-};
+    void SetUniformMat4f(uint shaderID, const std::string& uniformName, const glm::mat4 matrix);
+    void SetUniform1i(uint shaderID, const std::string& name, int value);
+    void SetUniform1iv(uint shaderID, const std::string& name);
+}

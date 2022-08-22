@@ -3,27 +3,31 @@
 #include"VertexBufferLayout.h"
 #include"VertexBuffer.h"
 
-VertexArray::VertexArray() {
-	GLCall(glGenVertexArrays(1, &m_BufferID));
-	GLCall(glBindVertexArray(m_BufferID));
+uint arrayBufferID;
+
+uint SM_Buffers::CreateVertexArray() {
+	GLCall(glGenVertexArrays(1, &arrayBufferID));
+	GLCall(glBindVertexArray(arrayBufferID));
+
+	return arrayBufferID;
 }
 
-void VertexArray::Bind() const {
-	GLCall(glBindVertexArray(m_BufferID));
+void SM_Buffers::BindVertexArray(uint id){
+	GLCall(glBindVertexArray(id));
 }
 
 
-void VertexArray::Unbind() const {
+void SM_Buffers::UnbindVertexArray(){
 	GLCall(glBindVertexArray(0));
 }
 
-VertexArray::~VertexArray() {
-	GLCall(glDeleteVertexArrays(1, &m_BufferID));
+void SM_Buffers::DeleteVertexArray(uint id) {
+	GLCall(glDeleteVertexArrays(1, &id));
 }
 
-void VertexArray::AddVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
-	Bind();
-	vb.Bind();
+void SM_Buffers::AddVertexBuffer(uint vaID, uint vbID, const VertexBufferLayout& layout) {
+	BindVertexArray(vaID);
+	SM_Buffers::BindVertexBuffer(vbID);
 	const std::vector<VertexBufferElements>& elements = layout.GetElements();
 	unsigned int offset = 0;
 	for (unsigned int i = 0; i < elements.size(); i++) {

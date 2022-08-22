@@ -1,14 +1,12 @@
 #pragma once
+#include"../Utils/DataTypes.h"
 
-class VertexBuffer {
-private:
-	unsigned int m_BufferID;
-public:
-	VertexBuffer(unsigned int bufferSizeBytes, const void* vertexDataPointer);
-	~VertexBuffer();
+namespace SM_Buffers {
+		uint CreateVertexBuffer(unsigned int bufferSizeBytes, const void* vertexDataPointer);
+		void DestroyVertexBuffer(uint id);
 
-	void Bind() const;
-	void Unbind() const;
-};
+		void BindVertexBuffer(uint id);
+		void UnbindVertexBuffer();
+}
 
 

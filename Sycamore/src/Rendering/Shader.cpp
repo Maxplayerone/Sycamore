@@ -3,55 +3,9 @@
 #include"../Utils/ErrorHandling.h"
 #include"../Utils/Logger.h"
 
-Shader::Shader(std::string filepath)
-    : m_ProgramID(0), m_filepath(filepath)
-{
-    ShaderSources sources = ParseShader(m_filepath);
-    m_ProgramID = CreateProgram(sources.vertexShader, sources.fragmentShader);
+uint shaderID;
 
-    GLCall(glUseProgram(m_ProgramID));
-}
-
-Shader::~Shader() {
-    GLCall(glDeleteProgram(m_ProgramID));
-}
-
-void Shader::UseProgram() {
-    //std::cout << "Program id " << m_ProgramID << std::endl;
-    GLCall(glUseProgram(m_ProgramID));
-}
-
-void Shader::UnuseProgram() {
-    GLCall(glUseProgram(0));
-}
-
-int Shader::GetUniformLocation(const std::string& name) {
-
-    GLCall(int uniLocation = glGetUniformLocation(m_ProgramID, name.c_str()));
-    if (uniLocation == -1) {
-        std::stringstream ss;
-        ss << "No active uniform with name " << name;
-        LOGGER_WARNING(ss.str());
-    }
-
-    return uniLocation;
-}
-
-void Shader::SetUniformMat4f(const std::string& uniformName, glm::mat4 matrix) {
-    glUniformMatrix4fv(GetUniformLocation(uniformName), 1, GL_FALSE, &matrix[0][0]);
-}
-
-void Shader::SetUniform1i(const std::string& name, int value) {
-    GLCall(glUniform1i(GetUniformLocation(name), value));
-}
-
-void Shader::SetUniform1iv(const std::string& name) {
-    int location = GetUniformLocation(name.c_str());
-    int sampler[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-    GLCall(glUniform1iv(location, 8, sampler));
-}
-
-ShaderSources Shader::ParseShader(const std::string& filepath) {
+ShaderSources ParseShader(const std::string& filepath) {
     std::ifstream stream(filepath);
     if (stream.fail()) {
         std::stringstream ss;
@@ -82,7 +36,7 @@ ShaderSources Shader::ParseShader(const std::string& filepath) {
     return { sources[0].str(), sources[1].str() };
 }
 
-unsigned int Shader::CompileShader(unsigned int type, const std::string& source) {
+uint CompileShader(unsigned int type, const std::string& source) {
     unsigned int id = glCreateShader(type);
     const char* src = source.c_str();
     glShaderSource(id, 1, &src, nullptr);
@@ -107,7 +61,7 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
     return 0;
 }
 
-unsigned int Shader::CreateProgram(const std::string& vertexSource, const std::string& fragmentSource) {
+uint CreateProgram(const std::string& vertexSource, const std::string& fragmentSource) {
     unsigned int program = glCreateProgram();
     unsigned int vertexSh = CompileShader(GL_VERTEX_SHADER, vertexSource);
     unsigned int fragmentSh = CompileShader(GL_FRAGMENT_SHADER, fragmentSource);
@@ -121,4 +75,52 @@ unsigned int Shader::CreateProgram(const std::string& vertexSource, const std::s
     glDeleteShader(fragmentSh);
 
     return program;
+}
+
+int GetUniformLocation(uint shaderID, const std::string& name) {
+
+    GLCall(int uniLocation = glGetUniformLocation(shaderID, name.c_str()));
+    if (uniLocation == -1) {
+        std::stringstream ss;
+        ss << "No active uniform with name " << name;
+        LOGGER_WARNING(ss.str());
+    }
+
+    return uniLocation;
+}
+
+uint Shader::CreateShader(const std::string& filepath)
+{
+    ShaderSources sources = ParseShader(filepath);
+    shaderID = CreateProgram(sources.vertexShader, sources.fragmentShader);
+
+    GLCall(glUseProgram(shaderID));
+
+    return shaderID;
+}
+
+void Shader::DeleteShader(uint shaderID) {
+    GLCall(glDeleteProgram(shaderID));
+}
+
+void Shader::UseShader(uint shaderID) {
+    GLCall(glUseProgram(shaderID));
+}
+
+void Shader::UnuseShader() {
+    GLCall(glUseProgram(0));
+}
+
+void Shader::SetUniformMat4f(uint shaderID, const std::string& uniformName, glm::mat4 matrix) {
+    glUniformMatrix4fv(GetUniformLocation(shaderID, uniformName), 1, GL_FALSE, &matrix[0][0]);
+}
+
+void Shader::SetUniform1i(uint shaderID, const std::string& name, int value) {
+    GLCall(glUniform1i(GetUniformLocation(shaderID, name), value));
+}
+
+void Shader::SetUniform1iv(uint shaderID, const std::string& name) {
+    int location = GetUniformLocation(shaderID, name);
+    int sampler[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    GLCall(glUniform1iv(location, 8, sampler));
 }

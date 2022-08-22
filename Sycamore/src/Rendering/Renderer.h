@@ -1,6 +1,7 @@
 #pragma once
 
 #include"../Utils/DataTypes.h"
+#include"../../Math/SM_math.h"
 
 class GameObject;
 class BatchRenderer;
@@ -15,6 +16,4 @@ public:
 	void Add(GameObject& go);
 	void Render();
 
-	//renders a single object onto the scene
-	void RenderDebug(GameObject& go);
 };

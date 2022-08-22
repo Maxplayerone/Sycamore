@@ -1,17 +1,13 @@
 #pragma once
 
-class IndexBuffer {
-private:
-	unsigned int m_BufferID;
-	unsigned int m_indiciesCount;
+typedef unsigned int uint;
 
-	void CreateIndexBuffer(const void* indiciesPointer);
-public:
-	IndexBuffer(unsigned int indeciesCount);
-	~IndexBuffer();
-	void Bind();
-	void Unbind();
-	unsigned int GetCount() { return m_indiciesCount; }
-};
+namespace SM_Buffers {
+	uint CreateIndexBuffer(int indiciesCount);
+	void DeleteIndexBuffer(uint id);
+
+	void BindIndexBuffer(uint id);
+	void UnbindIndexBuffer();
+}
 
 

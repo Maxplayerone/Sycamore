@@ -8,10 +8,12 @@
 #include"../Buffers/VertexBuffer.h"
 #include"../Buffers/VertexBufferLayout.h"
 
-#include"../Utils/AssetsPool.h"
+#include"../Utils/ObjectPool.h"
 #include"../Utils/ErrorHandling.h"
 #include"../Utils/Logger.h"
 #include"../Utils/DataTypes.h"
+
+#include"../Rendering/Shader.h"
 
 const uint MAX_DEBUG_OBJECTS = 50;
 //(2 * position + 3 * colours) * 2
@@ -23,6 +25,9 @@ float vertices[MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT];
 //because we added data to vertices array
 bool dirty = false;
 
+uint _vbID;
+uint _vaID;
+uint debugDrawShaderID;
 
 struct DebugLine2D {
 	SM_math::vec2 start;
@@ -41,19 +46,6 @@ struct DebugLine2D {
 
 uint debugLine2DCount = 0;
 DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
-
-void PrintLine2D(uint arrayIndex) {
-	std::stringstream ss;
-	DebugLine2D line = lines2D[arrayIndex];
-
-	//new lines don't work
-	ss << "Start vector: " << line.start << '\0';
-	ss << "End vector: " << line.end << '\0';
-	ss << "Color: " << line.color << '\0';
-	ss << "Lifetime: " << line.lifetime << '\0';
-
-	LOGGER_INFO(ss.str());
-}
 
 void PrintLine2D(DebugLine2D line) {
 	std::stringstream ss;
@@ -123,53 +115,36 @@ void DeleteFromVertices(uint arrayIndex) {
 	}
 }
 
-void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, bool hasLifetime, float lifetime) {
+
+void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, float lifetime) {
 	DebugLine2D tmpLine;
 	tmpLine.start = start;
 	tmpLine.end = end;
 	tmpLine.color = color;
-	tmpLine.hasLifetime = hasLifetime;
+	tmpLine.hasLifetime = true;
 	tmpLine.lifetime = lifetime;
 	tmpLine.isFree = true;
 	lines2D[debugLine2DCount] = tmpLine;
 
 	UpdateVerticesLine2D();
 }
-
-void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, float lifetime) {
-	AddLine2D(start, end, color, true, lifetime);
-}
-
 void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, float lifetime) {
-	DebugDraw::AddLine2D(start, end, {1.0f, 1.0f, 1.0f}, true, lifetime);
+	DebugDraw::AddLine2D(start, end, {1.0f, 1.0f, 1.0f}, lifetime);
 }
-
 void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, bool hasLifetime) {
-	DebugDraw::AddLine2D(start, end, { 0.0f, 0.0f, 0.0f }, hasLifetime, 1.0f);
-}
+	DebugLine2D tmpLine;
+	tmpLine.start = start;
+	tmpLine.end = end;
+	tmpLine.color = { 1.0f, 1.0f, 1.0f };
+	tmpLine.hasLifetime = hasLifetime;
+	tmpLine.lifetime = 1.0f;
+	tmpLine.isFree = true;
+	lines2D[debugLine2DCount] = tmpLine;
 
+	UpdateVerticesLine2D();
+}
 void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end) {
-	DebugDraw::AddLine2D(start, end, { 0.0f, 0.0f, 0.0f }, false, 1.0f);
-}
-
-void SetupBuffers() {
-	VertexArray* va = new VertexArray();
-
-	VertexBufferLayout vbLayout;
-	vbLayout.AddFloat(2); // position
-	vbLayout.AddFloat(3); // colour
-
-	VertexBuffer* vb = new VertexBuffer(MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT * sizeof(float), vertices);
-	va->AddVertexBuffer(*vb, vbLayout);
-
-	GLCall(glLineWidth(1.0f));
-
-	Shader* shader = AssetsPool::Get().GetShader();
-	shader->UseProgram();
-}
-
-void DebugDraw::Start() {
-	SetupBuffers();
+	DebugDraw::AddLine2D(start, end, { 0.0f, 0.0f, 0.0f }, 1.0f);
 }
 
 
@@ -193,43 +168,61 @@ void DebugDraw::Render() {
 	UpdateFrame();
 	
 	//quick fix for now. Should probably fix it pretty soon
-	SetupBuffers();
+	if(dirty) {
+		_vaID = SM_Buffers::CreateVertexArray();
 
-	//PrintLine2D(0);
+		VertexBufferLayout vbLayout;
+		vbLayout.AddFloat(2); // position
+		vbLayout.AddFloat(3); // colour
+
+		_vbID = SM_Buffers::CreateVertexBuffer(MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT * sizeof(float), vertices);
+		SM_Buffers::AddVertexBuffer(_vaID, _vbID, vbLayout);
+
+		GLCall(glLineWidth(1.0f));
+
+		debugDrawShaderID = SM_Pool::GetShaderID();
+		Shader::UseShader(debugDrawShaderID);
+
+		dirty = false;
+	}
+	else {
+		SM_Buffers::BindVertexArray(_vaID);;
+		SM_Buffers::BindVertexBuffer(_vbID);
+		Shader::UseShader(debugDrawShaderID);
+	}
 	
 	GLCall(glDrawArrays(GL_LINES, 0, 2 * debugLine2DCount));
 }
 
-//variables for drawDebugGrid method
+
 const int GRID_WIDTH = 32;
 const int GRID_HEIGHT = 32;
 
 const int SCREEN_WIDTH = SM_settings::windowWidth;
 const int SCREEN_HEIGHT = SM_settings::windowHeight;
 
-//left-most side of the screen
 float leftX = -SCREEN_WIDTH / 2;
-//right-most side of the screen
 float rightX = SCREEN_WIDTH / 2;
-
-//bottom-most side of the screen
 float bottomY = -SCREEN_HEIGHT / 2;
-//top-most side of the screen
 float topY = SCREEN_HEIGHT / 2;
 
 int verticalGridSpaces = SCREEN_HEIGHT / GRID_HEIGHT;
-int horizontalGridSpaces = (SCREEN_WIDTH / GRID_WIDTH) + 1;
+//if we have a higher value we get a access violation error
+int horizontalGridSpaces = (SCREEN_WIDTH / GRID_WIDTH) - 4;
 
 void DebugDraw::DrawDebugGrid() {
-
 	//vertical lines
 	for (int i = 0; i < verticalGridSpaces; i++) {
-		AddLine2D({ leftX, bottomY + (GRID_HEIGHT  * (i + 1))  - 23.5f}, {rightX, bottomY + (GRID_HEIGHT * (i + 1)) - 23.5f}, false);
+		AddLine2D( { leftX, bottomY + (GRID_HEIGHT  * (i + 1))  - 23.5f} ,  {rightX, bottomY + (GRID_HEIGHT * (i + 1)) - 23.5f} , false);
 	}
+	
 	//horizontal lines
+
+	
 	for (int i = 0; i < horizontalGridSpaces; i++) {
-		AddLine2D({leftX + (GRID_WIDTH * (i + 1)), bottomY}, {leftX + (GRID_WIDTH * (i + 1)), topY}, false);
+		AddLine2D( {leftX + (GRID_WIDTH * (i + 1)), bottomY} ,  {leftX + (GRID_WIDTH * (i + 1)), topY} , false);
 	}
+	
 }
 
 

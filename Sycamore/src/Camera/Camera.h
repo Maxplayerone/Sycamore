@@ -15,36 +15,36 @@ private:
 public:
 	enum class MatrixType { TYPE_MODEL, TYPE_VIEW, TYPE_PROJECTION };
 
-	Camera(Shader& shaderProgram) {
+	Camera(uint shaderID) {
 		modelMat = glm::mat4(1.0f);
 		viewMat = glm::mat4(1.0f);
 		projMat = glm::mat4(1.0f);
 
-		shaderProgram.SetUniformMat4f("model", modelMat);
-		shaderProgram.SetUniformMat4f("view", viewMat);
-		shaderProgram.SetUniformMat4f("projection", projMat);
+		Shader::SetUniformMat4f(shaderID, "model", modelMat);
+		Shader::SetUniformMat4f(shaderID, "view", viewMat);
+		Shader::SetUniformMat4f(shaderID, "projection", projMat);
 	}
 
-	void Push(MatrixType type, glm::mat4 matrix, Shader& shaderProgram) {
+	void Push(MatrixType type, glm::mat4 matrix, uint shaderID) {
 		switch (type) {
 		case MatrixType::TYPE_MODEL:
 			modelMat = matrix;
-			shaderProgram.SetUniformMat4f("model", modelMat);
+			Shader::SetUniformMat4f(shaderID, "model", modelMat);
 			break;
 		case MatrixType::TYPE_VIEW:
 			viewMat = matrix;
-			shaderProgram.SetUniformMat4f("view", viewMat);
+			Shader::SetUniformMat4f(shaderID, "view", viewMat);
 			break;
 		case MatrixType::TYPE_PROJECTION:
 			projMat = matrix;
-			shaderProgram.SetUniformMat4f("projection", projMat);
+			Shader::SetUniformMat4f(shaderID, "projection", projMat);
 			break;
 		}
 	}
 
-	void Update(Shader& shaderProgram) {
-		shaderProgram.SetUniformMat4f("model", modelMat);
-		shaderProgram.SetUniformMat4f("view", viewMat);
-		shaderProgram.SetUniformMat4f("projection", projMat);
+	void Update(uint shaderID) {
+		Shader::SetUniformMat4f(shaderID, "model", modelMat);
+		Shader::SetUniformMat4f(shaderID, "view", viewMat);
+		Shader::SetUniformMat4f(shaderID, "projection", projMat);
 	}
 };

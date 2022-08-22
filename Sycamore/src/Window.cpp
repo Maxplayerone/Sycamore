@@ -14,10 +14,11 @@
 #include"Utils/DataTypes.h"
 #include"Utils/Logger.h"
 #include"Utils/ObjectPool.h"
-#include"Utils/AssetsPool.h"
 #include"Utils/Profiler.h"
 
 #include"Settings.h"
+
+#include"../../Math/SM_math.h"
 
 Window::Window() {    
 
@@ -59,19 +60,16 @@ Window::Window() {
 
     LOGGER_INFO("The window has been initialized");
 
-
-    /* Camera setup */
-    //suint shaderID = SM_Pool::GetShader();
-    Shader* shaderProgram = AssetsPool::Get().GetShader();
-
+    uint shaderID = SM_Pool::GetShaderID();
+    
     glm::mat4 modelMat = glm::mat4(1.0f);
     glm::mat4 viewMat = glm::mat4(1.0f);
     glm::mat4 projMat = glm::mat4(1.0f);
     projMat = glm::ortho(orthoProj.left, orthoProj.right, orthoProj.bottom, orthoProj.top, -1.0f, 100.0f);
 
-    shaderProgram->SetUniformMat4f("model", modelMat);
-    shaderProgram->SetUniformMat4f("view", viewMat);
-    shaderProgram->SetUniformMat4f("projection", projMat);
+    Shader::SetUniformMat4f(shaderID, "model", modelMat);
+    Shader::SetUniformMat4f(shaderID, "view", viewMat);
+    Shader::SetUniformMat4f(shaderID, "projection", projMat);
    
     //Setup ImGui context
     IMGUI_CHECKVERSION();
@@ -89,6 +87,10 @@ Window::Window() {
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
 
+    SM_math::mat4 matrix(1.0f);
+    std::stringstream ss;
+    ss << matrix;
+    LOGGER_INFO(ss.str());
 }
 
 void Window::Run() {
@@ -105,12 +107,10 @@ void Window::Run() {
         
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
         if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
-          /*
-        if (m_currentScene != nullptr) {
-            m_currentScene->OnUpdate(deltaTime.count());
-            m_currentScene->ImGui();
-        }
-        */
+          
+        m_currentScene->OnUpdate(deltaTime.count());
+        m_currentScene->ImGui();
+        
         SM_Profiler::ImGuiRender();
         //MouseHandleler::Get().DebugCheckMouesPosAbs();
         MouseHandleler::Get().DebugCheckMousePosModel();

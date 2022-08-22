@@ -1,41 +1,39 @@
 #include"IndexBuffer.h"
 #include"../Utils/ErrorHandling.h"
 
-IndexBuffer::IndexBuffer(unsigned int indeciesCount)
-    : m_indiciesCount(indeciesCount), m_BufferID(0) {
+uint IndexbufferID;
 
-    unsigned int* indices = new unsigned int[indeciesCount];
+uint SM_Buffers::CreateIndexBuffer(int indiciesCount) {
 
-    unsigned int numOfQuads = indeciesCount / 6;
-    unsigned int offset = 4;
+    uint* indices = new unsigned int[indiciesCount];
+    uint numOfQuads = indiciesCount / 6;
 
     for (int i = 0; i < numOfQuads; i++) {
         //LB, RB, RT, RT, LT, LB
-        indices[0 + (i * 6)] = 0 + (i * offset);
-        indices[1 + (i * 6)] = 1 + (i * offset);
-        indices[2 + (i * 6)] = 3 + (i * offset);
-        indices[3 + (i * 6)] = 3 + (i * offset);
-        indices[4 + (i * 6)] = 2 + (i * offset);
-        indices[5 + (i * 6)] = 0 + (i * offset);
+        indices[0 + (i * 6)] = 0 + (i * 4);
+        indices[1 + (i * 6)] = 1 + (i * 4);
+        indices[2 + (i * 6)] = 3 + (i * 4);
+        indices[3 + (i * 6)] = 3 + (i * 4);
+        indices[4 + (i * 6)] = 2 + (i * 4);
+        indices[5 + (i * 6)] = 0 + (i * 4);
     }
 
-    CreateIndexBuffer(indices);
+    GLCall(glGenBuffers(1, &IndexbufferID));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexbufferID));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indiciesCount, (void*)indices, GL_STATIC_DRAW));
+
+    delete[] indices;
+    return IndexbufferID;
 }
 
-void IndexBuffer::CreateIndexBuffer(const void* indiciesPointer) {
-    GLCall(glGenBuffers(1, &m_BufferID));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * m_indiciesCount, indiciesPointer, GL_STATIC_DRAW));
+void SM_Buffers::DeleteIndexBuffer(uint id) {
+    glDeleteBuffers(1, &id);
 }
 
-IndexBuffer::~IndexBuffer() {
-    glDeleteBuffers(1, &m_BufferID);
+void SM_Buffers::BindIndexBuffer(uint id) {
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
 }
 
-void IndexBuffer::Bind() {
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID));
-}
-
-void IndexBuffer::Unbind() {
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID));
+void SM_Buffers::UnbindIndexBuffer() {
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }

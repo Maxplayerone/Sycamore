@@ -4,7 +4,6 @@
 
 #include"../ECS/GameObject.h"
 
-#include"../Utils/Logger.h"
 
 void Renderer::ChangeBGColor(color4 color) const {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -26,7 +25,3 @@ void Renderer::Add(GameObject& go) {
 		batch->Add(go);
 }
 
-void Renderer::RenderDebug(GameObject& go) {
-	LOGGER_WARNING("Rendering an object for debugging purpuses");
-	batch->RenderDebug(go);
-}

@@ -3,9 +3,6 @@
 #include"../ECS/GameObject.h"
 
 #include"../Buffers/VertexBufferLayout.h"
-#include"../Buffers/IndexBuffer.h"
-#include"../Buffers/VertexArray.h"
-#include"../Buffers/VertexBuffer.h"
 
 #include"../smpch.h"
 #include"../Utils/DataTypes.h"
@@ -14,11 +11,6 @@
 
 class BatchRenderer {
 private:
-    VertexBufferLayout vertexBufferLayout;
-    VertexArray vertexArray;
-    VertexBuffer* vertexBuffer;
-    IndexBuffer* indexBuffer;
-
     GameObject objectsForRender[MAX_BATCH_SIZE];
     uint gameObjectCount = 0;
     float* vertices;
@@ -32,9 +24,6 @@ private:
     //cyclesCount - how many times the function will run before assertion
     void TestVertices(uint cyclesCount); 
 
-    //used when the vertices buffer is changed
-    void SetupBuffers();
-
     bool oneTimeFlag = true; //ignore this please
 public:
     BatchRenderer();
@@ -44,8 +33,5 @@ public:
     bool HasRoom() const { return (gameObjectCount < MAX_BATCH_SIZE) ? true : false; }
 
     void LoadVerticesData(unsigned int gameObjectIndex);
-
-    //renders a single object (ONLY FOR DEBUG)
-    void RenderDebug(GameObject& go);
 };
 

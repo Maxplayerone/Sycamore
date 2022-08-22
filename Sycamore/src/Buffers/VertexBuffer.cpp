@@ -2,21 +2,26 @@
 
 #include"../Utils/ErrorHandling.h"
 
-VertexBuffer::VertexBuffer(unsigned int bufferSizeBytes, const void* vertexDataPointer) {
-	GLCall(glGenBuffers(1, &m_BufferID));
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_BufferID));
+uint bufferID;
+
+uint SM_Buffers::CreateVertexBuffer(unsigned int bufferSizeBytes, const void* vertexDataPointer) {
+	GLCall(glGenBuffers(1, &bufferID));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, bufferID));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, bufferSizeBytes, vertexDataPointer, GL_DYNAMIC_DRAW));
+
+	return bufferID;
 }
 
 
-void VertexBuffer::Bind() const {
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_BufferID));
+
+void SM_Buffers::BindVertexBuffer(uint id) {
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, id));
 }
 
-void VertexBuffer::Unbind() const {
+void SM_Buffers::UnbindVertexBuffer(){
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-VertexBuffer::~VertexBuffer() {
-	GLCall(glDeleteBuffers(1, &m_BufferID));
+void SM_Buffers::DestroyVertexBuffer(uint id) {
+	GLCall(glDeleteBuffers(1, &id));
 }

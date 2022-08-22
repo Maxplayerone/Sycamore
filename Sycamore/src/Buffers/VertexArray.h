@@ -1,17 +1,16 @@
 #pragma once
 
+typedef unsigned int uint;
+
 class VertexBufferLayout;
-class VertexBuffer;
 
-class VertexArray {
-private:
-	unsigned int m_BufferID;
-public:
-	VertexArray();
-	~VertexArray();
+namespace SM_Buffers {
+	uint CreateVertexArray();
+	void DeleteVertexArray(uint id);
 
-	void AddVertexBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
-	void Bind() const;
-	void Unbind() const;
-};
+	void BindVertexArray(uint id);
+	void UnbindVertexArray();
+
+	void AddVertexBuffer(uint vaID, uint vbID, const VertexBufferLayout& layout);
+}
 
