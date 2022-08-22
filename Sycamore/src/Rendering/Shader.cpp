@@ -111,8 +111,8 @@ void Shader::UnuseShader() {
     GLCall(glUseProgram(0));
 }
 
-void Shader::SetUniformMat4f(uint shaderID, const std::string& uniformName, glm::mat4 matrix) {
-    glUniformMatrix4fv(GetUniformLocation(shaderID, uniformName), 1, GL_FALSE, &matrix[0][0]);
+void Shader::SetUniformMat4f(uint shaderID, const std::string& uniformName, SM_math::mat4 matrix) {
+    glUniformMatrix4fv(GetUniformLocation(shaderID, uniformName), 1, GL_FALSE, &matrix.m4[0][0]);
 }
 
 void Shader::SetUniform1i(uint shaderID, const std::string& name, int value) {

@@ -3,7 +3,7 @@
 #include"../smpch.h"
 #include"../Utils/Logger.h"
 
-glm::mat4 projMat;
+SM_math::mat4 projMat(1.0f);
 
 MouseHandleler::MouseHandleler(){
 	for (int i = 0; i < 3; i++)
@@ -32,11 +32,11 @@ void MouseHandleler::SetMousePosAbsolute(double x, double y) {
 	position.y = y;
 }
 
-glm::vec2 MouseHandleler::GetMousePosModel() {
-	return projMat * glm::vec4(position, 1.0f, 1.0f);
+SM_math::vec4 MouseHandleler::GetMousePosModel() {
+	return projMat * SM_math::vec4(position, 1.0f, 1.0f);
 }
 
-void MouseHandleler::GetProjectionMatrix(glm::mat4& _projMat) {
+void MouseHandleler::GetProjectionMatrix(SM_math::mat4& _projMat) {
 	projMat = _projMat;
 }
 

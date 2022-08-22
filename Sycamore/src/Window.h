@@ -10,21 +10,10 @@
 #include"SceneManagment/LevelEditorScene.h"
 #include"SceneManagment/LevelScene.h"
 
-//camera
-#include"Camera/Camera.h"
-#include"Camera/ModelMatrix.h"
-#include"Camera/ProjectionMatrix.h"
-#include"Camera/ViewMatrix.h"
-
 class Window
 {
 private:
 	GLFWwindow* m_window;
-
-	ModelMatrix* m_ModelMatrix = nullptr;
-	ViewMatrix* m_ViewMatrix = nullptr;
-	ProjectionMatrix* m_ProjMatrix = nullptr;
-	Camera* camera = nullptr;
 
 	Scene* m_currentScene = nullptr;
 

@@ -103,5 +103,38 @@ namespace SM_math {
 			return stream;
 		}
 	};
+
+	struct vec4 {
+		float x;
+		float y;
+		float z;
+		float w;
+
+		vec4(float _x, float _y, float _z,float _w) {
+			x = _x;
+			y = _y;
+			z = _z;
+			w = _w;
+		}
+
+		vec4(SM_math::vec2 v2, float _z, float _w) {
+			x = v2.x;
+			y = v2.y;
+			z = _z;
+			w = _w;
+		}
+
+		vec4(float num) {
+			x = num;
+			y = num;
+			z = num;
+			w = num;
+		}
+
+		friend std::ostream& operator<< (std::ostream& stream, const SM_math::vec4& vector) {
+			stream << "[" << vector.x << " , " << vector.y << " , " << vector.z << " , " << vector.w << "]";
+			return stream;
+		}
+	};
 }
 

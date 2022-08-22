@@ -79,18 +79,6 @@
     <ClInclude Include="src\Buffers\VertexBufferLayout.h">
       <Filter>src\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Camera\Camera.h">
-      <Filter>src\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Camera\ModelMatrix.h">
-      <Filter>src\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Camera\ProjectionMatrix.h">
-      <Filter>src\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Camera\ViewMatrix.h">
-      <Filter>src\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Component.h">
       <Filter>src\ECS</Filter>
     </ClInclude>

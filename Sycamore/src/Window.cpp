@@ -20,6 +20,8 @@
 
 #include"../../Math/SM_math.h"
 
+#include"Rendering/Shader.h"
+
 Window::Window() {    
 
     F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
@@ -62,10 +64,15 @@ Window::Window() {
 
     uint shaderID = SM_Pool::GetShaderID();
     
-    glm::mat4 modelMat = glm::mat4(1.0f);
-    glm::mat4 viewMat = glm::mat4(1.0f);
-    glm::mat4 projMat = glm::mat4(1.0f);
-    projMat = glm::ortho(orthoProj.left, orthoProj.right, orthoProj.bottom, orthoProj.top, -1.0f, 100.0f);
+    //glm::mat4 modelMat = glm::mat4(1.0f);
+    //glm::mat4 viewMat = glm::mat4(1.0f);
+    //glm::mat4 projMat = glm::mat4(1.0f);
+
+    SM_math::mat4 modelMat(1.0f);
+    SM_math::mat4 viewMat(1.0f);
+    SM_math::mat4 projMat(1.0f);
+    projMat = SM_math::ortho(orthoProj.left, orthoProj.right, orthoProj.top, orthoProj.bottom, -1.0f, 100.0f);
+    //projMat = glm::ortho(orthoProj.left, orthoProj.right, orthoProj.bottom, orthoProj.top, -1.0f, 100.0f);
 
     Shader::SetUniformMat4f(shaderID, "model", modelMat);
     Shader::SetUniformMat4f(shaderID, "view", viewMat);
@@ -88,8 +95,10 @@ Window::Window() {
     ImGui_ImplOpenGL3_Init("#version 410");
 
     SM_math::mat4 matrix(1.0f);
+    SM_math::vec4 vector(1.0f);
+    SM_math::vec4 result = matrix * vector;
     std::stringstream ss;
-    ss << matrix;
+    ss << result;
     LOGGER_INFO(ss.str());
 }
 
@@ -150,14 +159,7 @@ void Window::ChangeScene(int sceneIndex) {
     }
 }
 
-Window::~Window() {
-    /*
-    delete m_ModelMatrix;
-    delete m_ProjMatrix;
-    delete m_ViewMatrix;
-    delete camera;
-    */
-    
+Window::~Window() {   
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();   

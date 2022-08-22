@@ -105,10 +105,6 @@
     <ClInclude Include="src\Buffers\VertexArray.h" />
     <ClInclude Include="src\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexBufferLayout.h" />
-    <ClInclude Include="src\Camera\Camera.h" />
-    <ClInclude Include="src\Camera\ModelMatrix.h" />
-    <ClInclude Include="src\Camera\ProjectionMatrix.h" />
-    <ClInclude Include="src\Camera\ViewMatrix.h" />
     <ClInclude Include="src\ECS\Component.h" />
     <ClInclude Include="src\ECS\GameObject.h" />
     <ClInclude Include="src\ECS\Sprite.h" />

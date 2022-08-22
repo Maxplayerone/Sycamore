@@ -1,7 +1,6 @@
 #pragma once
 
 #include"../../Math/SM_math.h"
-#include"../Camera/ProjectionMatrix.h"
 
 class MouseHandleler {
 private:
@@ -22,7 +21,7 @@ public:
 	SM_math::vec2 offset;
 	//will change for my vector but I need
 	//glm's one for matrix multiplication
-	glm::vec2 position;
+	SM_math::vec2 position;
 
 	int ArrayLength() { return 3; }
 
@@ -35,15 +34,15 @@ public:
 	//gets x and y position of the mouse in relation to the screen
 	void SetMousePosAbsolute(double x, double y);
 
-	glm::vec2 GetMousePosAbs() const { return position; }
+	SM_math::vec2 GetMousePosAbs() const { return position; }
 	//returns the position of the mouse in model space 
 	//(used for block placing in the editor)
-	glm::vec2 GetMousePosModel();
+	SM_math::vec4 GetMousePosModel();
 
 	void DebugCheckMouesPosAbs();
 	void DebugCheckMousePosModel();
 
-	void GetProjectionMatrix(glm::mat4& _projMat);
+	void GetProjectionMatrix(SM_math::mat4& _projMat);
 };
 
 

@@ -29,7 +29,6 @@ project "Sycamore"
 
     includedirs{
         "vendor/spdlog/include",
-        "vendor/GLM",
         "vendor/GLFW32/include",
         "vendor/GLEW/include",
         "vendor/ImGui/include"
