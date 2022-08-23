@@ -46,7 +46,7 @@ void BatchRenderer::Render() {
     for (int i = 0; i < gameObjectCount; i++) {
         //if the position/color/texture of any object changed
         if (objectsForRender[i].GetComponent<Transform>()->IsDirty() || objectsForRender[i].GetComponent<SpriteRenderer>()->IsDirty() || oneTimeFlag) {
-            LOGGER_INFO("Re-setupping the batch renderer");
+            //LOGGER_INFO("Re-setupping the batch renderer");
             LoadVerticesData(i);
             objectsForRender[i].GetComponent<Transform>()->Clean();
             objectsForRender[i].GetComponent<SpriteRenderer>()->Clean();

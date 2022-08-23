@@ -14,12 +14,16 @@ private:
 	color4 bgColor = { 0.96f, 0.96f, 0.96f, 1.0f};
 
 	GameObject m_sceneObjects[MAX_OBJECT_SIZE];
+	uint m_gameObjectLengthToCenter[MAX_OBJECT_SIZE];
 	uint m_sceneObjectsSize = 0;
 
 	GameObject activeGameObject;
 
 	int CheckForActiveGameObject();
 	void MoveClickedBlock(uint goIndex);
+
+	bool canSnapBlock = false;
+	void SnapBlockToGrid();
 public:
 	LevelEditorScene();
 

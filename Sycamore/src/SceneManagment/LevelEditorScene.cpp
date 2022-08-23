@@ -8,6 +8,7 @@
 
 #include"../Utils/Profiler.h"
 #include"../Utils/ObjectPool.h"
+#include"../Utils/Settings.h"
 
 #include"../InputHandling/MouseHandleler.h"
 
@@ -36,6 +37,7 @@ LevelEditorScene::LevelEditorScene() {
 	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f }, 120.0f);
 	DebugDraw::AddLine2D({ -100.0f, -100.0f }, { -200.0f, -200.0f }, { 0.0f, 0.0f, 0.0f }, 240.0f);
 }
+int result = -2;
 
 void LevelEditorScene::OnUpdate(float deltaTime) {
 	SM_Profiler::MAIN("LevelEditorScene update");
@@ -49,15 +51,18 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 			m_sceneObjects[i].Update(deltaTime);
 		}
 	}
-	int result = -1;
-	//MouseHandleler::Get().PrintMousePosModel();
 
-	if (MouseHandleler::Get().IsMouseButtonPressed(0))
-		result = CheckForActiveGameObject();
-
+	if (MouseHandleler::Get().IsMouseButtonPressed(0)) {
+		if (canSnapBlock)
+			SnapBlockToGrid();
+		else
+			result = CheckForActiveGameObject();
+	}
+		
 	activeGameObject.ImGui();
-	if(result > -1)
-		MoveClickedBlock(result);
+
+	if (result > -1)
+		MoveClickedBlock(result);	
 
 	DebugDraw::Render();
 	this->m_renderer->Render();	
@@ -71,7 +76,7 @@ int LevelEditorScene::CheckForActiveGameObject() {
 
 		if (mouse.x > pos.x && mouse.x < pos.x + scale.x && mouse.y > pos.y && mouse.y < pos.y + scale.y) {
 			activeGameObject = m_sceneObjects[i];
-
+			canSnapBlock = true;
 			return i;
 		}
 	}
@@ -79,9 +84,43 @@ int LevelEditorScene::CheckForActiveGameObject() {
 }
 
 void LevelEditorScene::MoveClickedBlock(uint gameObjectIndex) {
-	SM_math::vec2 pos = m_sceneObjects[gameObjectIndex].GetComponent<Transform>()->GetPos();
+	SM_math::vec2 offset(16.0f, 16.0f);
+
+	SM_math::vec2 mousePos = MouseHandleler::Get().GetMousePosModel();
+	m_sceneObjects[gameObjectIndex].GetComponent<Transform>()->SetPosition(mousePos - offset);
 }
 
+void LevelEditorScene::SnapBlockToGrid() {
+	SM_math::vec2 pos = activeGameObject.GetComponent<Transform>()->GetPos();
+	int finalX;
+	int finalY;
+
+	int widthError = (int)pos.x % SM_settings::GRID_WIDTH;
+	//closer to the right side
+	if (widthError >= SM_settings::GRID_WIDTH / 2) {
+		int widthCorrection = SM_settings::GRID_WIDTH - widthError;
+		finalX = pos.x + widthCorrection;
+	}
+	else {
+		finalX = pos.x - widthError;
+	}
+
+	int heightError = (int)pos.y % SM_settings::GRID_HEIGHT;
+
+	if (heightError >= SM_settings::GRID_HEIGHT / 2) {
+		int heightCorrection = SM_settings::GRID_HEIGHT - heightError;
+		finalY = pos.y + heightCorrection;
+	}
+	else {
+		finalY = pos.y - heightError;
+	}
+	
+
+	activeGameObject.GetComponent<Transform>()->SetPosition({ (float)finalX,  (float)finalY});
+
+	canSnapBlock = false;
+	result = -1;
+}
 void LevelEditorScene::AddGameObjectToScene(GameObject& go) {
 	/*
 	auto itr = std::find(this->m_gameObjects.begin(), this->m_gameObjects.end(), go);

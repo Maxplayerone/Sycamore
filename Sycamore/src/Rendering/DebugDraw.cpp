@@ -194,10 +194,6 @@ void DebugDraw::Render() {
 	GLCall(glDrawArrays(GL_LINES, 0, 2 * debugLine2DCount));
 }
 
-
-const int GRID_WIDTH = 32;
-const int GRID_HEIGHT = 32;
-
 const int SCREEN_WIDTH = SM_settings::windowWidth;
 const int SCREEN_HEIGHT = SM_settings::windowHeight;
 
@@ -206,21 +202,21 @@ float rightX = SCREEN_WIDTH / 2;
 float bottomY = -SCREEN_HEIGHT / 2;
 float topY = SCREEN_HEIGHT / 2;
 
-int verticalGridSpaces = SCREEN_HEIGHT / GRID_HEIGHT;
+int verticalGridSpaces = SCREEN_HEIGHT / SM_settings::GRID_HEIGHT;
 //if we have a higher value we get a access violation error
-int horizontalGridSpaces = (SCREEN_WIDTH / GRID_WIDTH) - 4;
+int horizontalGridSpaces = (SCREEN_WIDTH / SM_settings::GRID_WIDTH) - 4;
 
 void DebugDraw::DrawDebugGrid() {
 	//vertical lines
 	for (int i = 0; i < verticalGridSpaces; i++) {
-		AddLine2D( { leftX, bottomY + (GRID_HEIGHT  * (i + 1))  - 23.5f} ,  {rightX, bottomY + (GRID_HEIGHT * (i + 1)) - 23.5f} , false);
+		AddLine2D({ leftX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { rightX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, false);
 	}
 	
 	//horizontal lines
 
 	
 	for (int i = 0; i < horizontalGridSpaces; i++) {
-		AddLine2D( {leftX + (GRID_WIDTH * (i + 1)), bottomY} ,  {leftX + (GRID_WIDTH * (i + 1)), topY} , false);
+		AddLine2D( {leftX + (SM_settings::GRID_WIDTH * (i + 1)), bottomY} ,  {leftX + (SM_settings::GRID_WIDTH * (i + 1)), topY} , false);
 	}
 	
 }
