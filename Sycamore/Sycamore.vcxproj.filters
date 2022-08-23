@@ -22,9 +22,6 @@
     <Filter Include="src\Buffers">
       <UniqueIdentifier>{A947D8FD-15FD-50F3-9EF1-4ACA0AA647F7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Camera">
-      <UniqueIdentifier>{054BA008-F102-E255-5A0A-BBB146E17C46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\ECS">
       <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
     </Filter>
@@ -62,6 +59,9 @@
   <ItemGroup>
     <ClInclude Include="Math\SM_math.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\src\matrix.h">
+      <Filter>Math\src</Filter>
     </ClInclude>
     <ClInclude Include="Math\src\vector.h">
       <Filter>Math\src</Filter>
@@ -109,6 +109,9 @@
     <ClInclude Include="src\Rendering\BatchRenderer.h">
       <Filter>src\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\DebugDraw.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="src\Rendering\Renderer.h">
       <Filter>src\Rendering</Filter>
     </ClInclude>
@@ -134,6 +137,15 @@
       <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\Logger.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\ObjectPool.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Profiler.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Settings.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Window.h">
@@ -172,14 +184,12 @@
     <ClInclude Include="vendor\STBI_IMAGE\stbi_image.h">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClInclude>
-    <ClInclude Include="src\Settings.h" />
-    <ClInclude Include="src\Utils\Profiler.h" />
-    <ClInclude Include="src\Utils\ObjectPool.h" />
-    <ClInclude Include="src\Rendering\DebugDraw.h" />
-    <ClInclude Include="Math\src\matrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="Math\src\matrix.cpp">
+      <Filter>Math\src</Filter>
+    </ClCompile>
     <ClCompile Include="Math\src\vector.cpp">
       <Filter>Math\src</Filter>
     </ClCompile>
@@ -207,6 +217,9 @@
     <ClCompile Include="src\Rendering\BatchRenderer.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\DebugDraw.cpp">
+      <Filter>src\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Rendering\Renderer.cpp">
       <Filter>src\Rendering</Filter>
     </ClCompile>
@@ -229,6 +242,12 @@
       <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\Logger.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\ObjectPool.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\Profiler.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Window.cpp">
@@ -261,17 +280,15 @@
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils\Profiler.cpp" />
-    <ClCompile Include="src\Utils\ObjectPool.cpp" />
-    <ClCompile Include="src\Rendering\DebugDraw.cpp" />
-    <ClCompile Include="Math\src\matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
+    <None Include="src\Assets\Shaders\DebugDrawing.shader">
+      <Filter>src\Assets\Shaders</Filter>
+    </None>
     <None Include="src\Assets\Shaders\Shader.shader">
       <Filter>src\Assets\Shaders</Filter>
     </None>
-    <None Include="src\Assets\Shaders\DebugDrawing.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Assets\Images\amogus.jpg">

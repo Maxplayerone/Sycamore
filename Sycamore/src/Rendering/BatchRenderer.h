@@ -22,7 +22,7 @@ private:
 
     //prints the context of the vertices array and stops the program
     //cyclesCount - how many times the function will run before assertion
-    void TestVertices(uint cyclesCount); 
+    void TestVertices(uint cyclesCount);
 
     bool oneTimeFlag = true; //ignore this please
 public:

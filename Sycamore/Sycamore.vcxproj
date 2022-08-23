@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SM_WINDOWS;SM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLM;vendor\GLFW32\include;vendor\GLEW\include;vendor\ImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW32\include;vendor\GLEW\include;vendor\ImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLEW_STATIC;SM_WINDOWS;SM_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLM;vendor\GLFW32\include;vendor\GLEW\include;vendor\ImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\GLFW32\include;vendor\GLEW\include;vendor\ImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -96,10 +96,6 @@
     <ClInclude Include="Math\SM_math.h" />
     <ClInclude Include="Math\src\matrix.h" />
     <ClInclude Include="Math\src\vector.h" />
-    <ClInclude Include="src\Rendering\DebugDraw.h" />
-    <ClInclude Include="src\Settings.h" />
-    <ClInclude Include="src\Utils\ObjectPool.h" />
-    <ClInclude Include="src\Utils\Profiler.h" />
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexArray.h" />
@@ -115,6 +111,7 @@
     <ClInclude Include="src\InputHandling\KeysHandleler.h" />
     <ClInclude Include="src\InputHandling\MouseHandleler.h" />
     <ClInclude Include="src\Rendering\BatchRenderer.h" />
+    <ClInclude Include="src\Rendering\DebugDraw.h" />
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Shader.h" />
     <ClInclude Include="src\Rendering\Texture.h" />
@@ -124,6 +121,9 @@
     <ClInclude Include="src\Utils\DataTypes.h" />
     <ClInclude Include="src\Utils\ErrorHandling.h" />
     <ClInclude Include="src\Utils\Logger.h" />
+    <ClInclude Include="src\Utils\ObjectPool.h" />
+    <ClInclude Include="src\Utils\Profiler.h" />
+    <ClInclude Include="src\Utils\Settings.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\smpch.h" />
     <ClInclude Include="vendor\ImGui\include\imgui\imconfig.h" />

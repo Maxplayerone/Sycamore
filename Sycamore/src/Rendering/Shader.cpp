@@ -2,6 +2,7 @@
 
 #include"../Utils/ErrorHandling.h"
 #include"../Utils/Logger.h"
+#include"../Utils/DataTypes.h"
 
 uint shaderID;
 

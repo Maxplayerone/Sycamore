@@ -1,7 +1,6 @@
 #pragma once
-#include"Utils/DataTypes.h"
-//this file contains important data
-//like window size that can be available from anywhere on the project
+typedef unsigned int uint;
+#include"../smpch.h"
 
 namespace SM_settings {
 	//window

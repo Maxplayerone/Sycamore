@@ -2,9 +2,8 @@
 
 #include"../smpch.h"
 
-#include"../Utils/DataTypes.h"
+typedef unsigned int uint;
 
-#include"glm/glm.hpp"
 #include"../../Math/SM_math.h"
 
 struct ShaderSources {

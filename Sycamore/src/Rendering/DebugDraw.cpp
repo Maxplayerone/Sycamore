@@ -1,7 +1,7 @@
 #include"DebugDraw.h"
 
 #include"../smpch.h"
-#include"../Settings.h"
+#include"../Utils/Settings.h"
 
 #include"../Buffers/IndexBuffer.h"
 #include"../Buffers/VertexArray.h"

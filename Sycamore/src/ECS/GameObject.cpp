@@ -19,7 +19,7 @@ void GameObject::Update(float deltaTime) {
 	}
 }
 
-void GameObject::ImGui(){
+void GameObject::ImGui() {
 	ImGui::Begin("GameObject");
 
 	//aligning the text in the center

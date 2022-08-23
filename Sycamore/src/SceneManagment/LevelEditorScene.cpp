@@ -4,9 +4,6 @@
 #include"../Rendering/Texture.h"
 #include"../Rendering/DebugDraw.h"
 
-#include"../ECS/SpriteRenderer.h"
-#include"../ECS/Transform.h"
-#include"../ECS/GameObject.h"
 #include"../ECS/SpriteSheet.h"
 
 #include"../Utils/Profiler.h"
@@ -20,7 +17,7 @@ LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();	
 
 	GameObject coloredCube;
-	coloredCube.AddComponent(new Transform({0.0f, 0.0f}, {32.0f, 32.0f}));
+	coloredCube.AddComponent(new Transform({ 0.0f, 0.0f }, { 32.0f, 32.0f }));
 	coloredCube.AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
 
@@ -28,7 +25,7 @@ LevelEditorScene::LevelEditorScene() {
 
 
 	GameObject anotherCube;
-	anotherCube.AddComponent(new Transform({64.0f, 0.0f}, {32.0f, 32.0f}));
+	anotherCube.AddComponent( new Transform({64.0f, 0.0f}, {32.0f, 32.0f}) );
 	anotherCube.AddComponent( new SpriteRenderer( sheet->GetSprite(5) ) );
 
 	AddGameObjectToScene(anotherCube);
@@ -52,31 +49,52 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 			m_sceneObjects[i].Update(deltaTime);
 		}
 	}
+	int result = -1;
+	//MouseHandleler::Get().PrintMousePosModel();
+
+	if (MouseHandleler::Get().IsMouseButtonPressed(0))
+		result = CheckForActiveGameObject();
+
 	activeGameObject.ImGui();
+	if(result > -1)
+		MoveClickedBlock(result);
 
 	DebugDraw::Render();
 	this->m_renderer->Render();	
 }
 
-void LevelEditorScene::AddGameObjectToScene(GameObject&  go) {
+int LevelEditorScene::CheckForActiveGameObject() {
+	SM_math::vec2 mouse = MouseHandleler::Get().GetMousePosModel();
+	for (uint i = 0; i < m_sceneObjectsSize; i++) {
+		SM_math::vec2 pos = m_sceneObjects[i].GetComponent<Transform>()->GetPos();
+		SM_math::vec2 scale = m_sceneObjects[i].GetComponent<Transform>()->GetScale();
+
+		if (mouse.x > pos.x && mouse.x < pos.x + scale.x && mouse.y > pos.y && mouse.y < pos.y + scale.y) {
+			activeGameObject = m_sceneObjects[i];
+
+			return i;
+		}
+	}
+	return -1;
+}
+
+void LevelEditorScene::MoveClickedBlock(uint gameObjectIndex) {
+	SM_math::vec2 pos = m_sceneObjects[gameObjectIndex].GetComponent<Transform>()->GetPos();
+}
+
+void LevelEditorScene::AddGameObjectToScene(GameObject& go) {
 	/*
 	auto itr = std::find(this->m_gameObjects.begin(), this->m_gameObjects.end(), go);
 	//the game object is already in the vector
 	if (itr != this->m_gameObjects.end()) return;
 	*/
+
 	m_sceneObjects[m_sceneObjectsSize++] = go;
-	std::stringstream ss;
-	ss << "Game object count " << m_sceneObjectsSize;
 	//we're accessing an array index, which starts at 0 (that's why we decrease by one)
 	this->m_renderer->Add(m_sceneObjects[m_sceneObjectsSize - 1]);
 }
 
-//teleports the block that was clicked by a mouse
-//to it's cursor position
-void MoveClickedBlock() {
-}
 
-static float posX = 0;
 void LevelEditorScene::ImGui() {
 	//scene color changing
 	ImGui::Begin("Level editor scene");
@@ -106,12 +124,10 @@ void LevelEditorScene::ImGui() {
 		if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr->GetTexCoords()[0], spr->GetTexCoords()[1] }, { spr->GetTexCoords()[6], spr->GetTexCoords()[7] })) {
 			
 			GameObject go;
-			//go.AddComponent(new Transform({MouseHandleler::Get().GetMousePosAbs().x, MouseHandleler::Get().GetMousePosAbs().y}));
-			go.AddComponent(new Transform({1.0f, 1.0f}));
-			//MouseHandleler::Get().DebugCheckMouesPos();
+			go.AddComponent(new Transform({0.0f, 0.0f}));
+			//MouseHandleler::Get().DebugCheckMousePosModel();
 			go.AddComponent(new SpriteRenderer(spr));
 			AddGameObjectToScene(go);
-			
 		}
 		
 		float last_button_x2 = ImGui::GetItemRectMax().x;

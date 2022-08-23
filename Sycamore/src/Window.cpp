@@ -15,10 +15,9 @@
 #include"Utils/Logger.h"
 #include"Utils/ObjectPool.h"
 #include"Utils/Profiler.h"
+#include"Utils/Settings.h"
 
-#include"Settings.h"
-
-#include"../../Math/SM_math.h"
+#include"../Math/SM_math.h"
 
 #include"Rendering/Shader.h"
 
@@ -63,20 +62,17 @@ Window::Window() {
     LOGGER_INFO("The window has been initialized");
 
     uint shaderID = SM_Pool::GetShaderID();
-    
-    //glm::mat4 modelMat = glm::mat4(1.0f);
-    //glm::mat4 viewMat = glm::mat4(1.0f);
-    //glm::mat4 projMat = glm::mat4(1.0f);
 
     SM_math::mat4 modelMat(1.0f);
     SM_math::mat4 viewMat(1.0f);
     SM_math::mat4 projMat(1.0f);
     projMat = SM_math::ortho(orthoProj.left, orthoProj.right, orthoProj.top, orthoProj.bottom, -1.0f, 100.0f);
-    //projMat = glm::ortho(orthoProj.left, orthoProj.right, orthoProj.bottom, orthoProj.top, -1.0f, 100.0f);
 
     Shader::SetUniformMat4f(shaderID, "model", modelMat);
     Shader::SetUniformMat4f(shaderID, "view", viewMat);
     Shader::SetUniformMat4f(shaderID, "projection", projMat);
+
+    MouseHandleler::Get().GetProjectionMatrix(projMat);
    
     //Setup ImGui context
     IMGUI_CHECKVERSION();
@@ -93,13 +89,6 @@ Window::Window() {
     //setup platform/renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
-
-    SM_math::mat4 matrix(1.0f);
-    SM_math::vec4 vector(1.0f);
-    SM_math::vec4 result = matrix * vector;
-    std::stringstream ss;
-    ss << result;
-    LOGGER_INFO(ss.str());
 }
 
 void Window::Run() {
@@ -114,15 +103,13 @@ void Window::Run() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         
-        if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
-        if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
+        //if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
+        //if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
           
         m_currentScene->OnUpdate(deltaTime.count());
         m_currentScene->ImGui();
         
         SM_Profiler::ImGuiRender();
-        //MouseHandleler::Get().DebugCheckMouesPosAbs();
-        MouseHandleler::Get().DebugCheckMousePosModel();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

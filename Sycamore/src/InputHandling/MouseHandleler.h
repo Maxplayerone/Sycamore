@@ -5,6 +5,8 @@
 class MouseHandleler {
 private:
 	MouseHandleler();
+
+	void SetMousePosModel();
 public:
 
 	~MouseHandleler() { delete[] mouseButtons; }
@@ -22,6 +24,7 @@ public:
 	//will change for my vector but I need
 	//glm's one for matrix multiplication
 	SM_math::vec2 position;
+	SM_math::vec2 posModel;
 
 	int ArrayLength() { return 3; }
 
@@ -37,12 +40,12 @@ public:
 	SM_math::vec2 GetMousePosAbs() const { return position; }
 	//returns the position of the mouse in model space 
 	//(used for block placing in the editor)
-	SM_math::vec4 GetMousePosModel();
+	SM_math::vec2 GetMousePosModel() { SetMousePosModel();  return posModel; }
 
-	void DebugCheckMouesPosAbs();
-	void DebugCheckMousePosModel();
+	void PrintMousePosAbs();
+	void PrintMousePosModel();
 
-	void GetProjectionMatrix(SM_math::mat4& _projMat);
+	void GetProjectionMatrix(SM_math::mat4 _projMat);
 };
 
 

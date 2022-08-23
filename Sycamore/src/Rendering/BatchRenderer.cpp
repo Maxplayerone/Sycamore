@@ -56,7 +56,7 @@ void BatchRenderer::Render() {
     }
     oneTimeFlag = false;
     //TestVertices(2);
-    
+
     if (reloadBuffers) {
         vbID = SM_Buffers::CreateVertexBuffer(gameObjectCount * VERTICES_DATA_FOR_QUAD * sizeof(float), vertices);
         vaID = SM_Buffers::CreateVertexArray();
@@ -72,7 +72,7 @@ void BatchRenderer::Render() {
         SM_Buffers::BindVertexBuffer(vbID);
         Shader::UseShader(BatchShaderID);
     }
-    
+
 
     GLCall(glDrawElements(GL_TRIANGLES, 6 * gameObjectCount, GL_UNSIGNED_INT, nullptr));
 }
@@ -127,6 +127,6 @@ void BatchRenderer::TestVertices(uint cyclesCount) {
     }
     std::cout << std::endl << std::endl << std::endl;
     cycles++;
-    if(cycles >= cyclesCount)
+    if (cycles >= cyclesCount)
         ASSERT(false);
 }

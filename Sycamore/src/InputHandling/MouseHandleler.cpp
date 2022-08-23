@@ -1,7 +1,9 @@
 #include"MouseHandleler.h"
 
 #include"../smpch.h"
+
 #include"../Utils/Logger.h"
+#include"../Utils/Settings.h"
 
 SM_math::mat4 projMat(1.0f);
 
@@ -13,7 +15,10 @@ MouseHandleler::MouseHandleler(){
 bool MouseHandleler::IsMouseButtonPressed(int button) {
 	if (button > MouseHandleler::Get().ArrayLength()) return false;
 
-	return MouseHandleler::Get().mouseButtons[button];
+	bool answer = MouseHandleler::Get().mouseButtons[button];
+	MouseHandleler::Get().mouseButtons[button] = false;
+
+	return answer;
 }
 
 void MouseHandleler::SetScrollInput(double x, double y) {
@@ -32,20 +37,26 @@ void MouseHandleler::SetMousePosAbsolute(double x, double y) {
 	position.y = y;
 }
 
-SM_math::vec4 MouseHandleler::GetMousePosModel() {
-	return projMat * SM_math::vec4(position, 1.0f, 1.0f);
-}
-
-void MouseHandleler::GetProjectionMatrix(SM_math::mat4& _projMat) {
+void MouseHandleler::GetProjectionMatrix(SM_math::mat4 _projMat) {
 	projMat = _projMat;
 }
 
-void MouseHandleler::DebugCheckMouesPosAbs() {
+void MouseHandleler::SetMousePosModel() {
+	posModel.x = position.x - ((float)SM_settings::windowWidth / 2);
+	posModel.y = -(position.y - ((float)SM_settings::windowHeight / 2));
+}
+
+void MouseHandleler::PrintMousePosAbs() {
 	std::stringstream ss;
 	ss << "Mouse position  x " << position.x << " mouse position y " << position.y;
 	LOGGER_INFO(ss.str());
 }
 
-void MouseHandleler::DebugCheckMousePosModel() {
+void MouseHandleler::PrintMousePosModel() {
+	SetMousePosModel();
+
+	std::stringstream ss;
+	ss << "Mouse position  " << posModel;
+	LOGGER_INFO(ss.str());
 }
 

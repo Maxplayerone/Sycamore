@@ -1,6 +1,10 @@
 #pragma once
 #include"Scene.h"
+
 #include"../Utils/DataTypes.h"
+
+#include"../ECS/SpriteRenderer.h"
+#include"../ECS/Transform.h"
 #include"../ECS/GameObject.h"
 
 #define MAX_OBJECT_SIZE 1000
@@ -13,6 +17,9 @@ private:
 	uint m_sceneObjectsSize = 0;
 
 	GameObject activeGameObject;
+
+	int CheckForActiveGameObject();
+	void MoveClickedBlock(uint goIndex);
 public:
 	LevelEditorScene();
 
