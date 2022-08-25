@@ -81,9 +81,35 @@ namespace SM_math {
 			}
 			return newVector;
 		}
+		
+		SM_math::vec2& operator* (const vec2& vector) {
+			SM_math::vec2 newVector;
+			float val1;
+			float val2;
+
+			for (int j = 0; j < 2; j++) {
+				val1 = m4[0][j] * vector.x;
+				val2 = m4[1][j] * vector.y;
+
+				float sum = val1 + val2;
+				switch (j) {
+				case 0:
+					newVector.x = sum;
+					break;
+				case 1:
+					newVector.y = sum;
+					break;
+				}
+			}
+			return newVector;
+		}
+		
 	};
 
 	std::ostream& operator<< (std::ostream& stream, SM_math::mat4 matrix);
 
 	SM_math::mat4 ortho(float left, float right, float top, float bottom, float zNear, float zFar);
+
+	SM_math::mat4 MatrixScale(SM_math::mat4 matrixToScale, float scaleFactor);
+	SM_math::mat4& MatrixRotation(SM_math::mat4& matrixToRotate, float angle);
 }

@@ -20,3 +20,47 @@ SM_math::mat4 SM_math::ortho(float left, float right, float top, float bottom, f
 
 	return matrix;
 }
+
+SM_math::mat4 SM_math::MatrixScale(SM_math::mat4 matrixToScale, float scaleFactor) {
+	SM_math::mat4 matrix(scaleFactor);
+	return matrixToScale * matrix;
+}
+
+SM_math::mat4& SM_math::MatrixRotation(SM_math::mat4& matrixToRotate, float _angle) {
+	float angle = _angle * 3.14159 / 180;
+
+	SM_math::mat4 rotationMatrix(1.0f);
+
+	//ECGE CASES :DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+	if (_angle == 90) {
+		rotationMatrix.m4[0][0] = 0;
+		rotationMatrix.m4[1][0] = 1;
+		rotationMatrix.m4[0][1] = -1;
+		rotationMatrix.m4[1][1] = 0;
+		LOGGER_INFO("90");
+	} 
+	else if (_angle == 180) {
+		rotationMatrix.m4[0][0] = -1;
+		rotationMatrix.m4[1][0] = 0;
+		rotationMatrix.m4[0][1] = 0;
+		rotationMatrix.m4[1][1] = 1;
+		LOGGER_INFO("180");
+	}
+	else if (_angle == 270) {
+		rotationMatrix.m4[0][0] = 0;
+		rotationMatrix.m4[1][0] = -1;
+		rotationMatrix.m4[0][1] = 1;
+ 		rotationMatrix.m4[1][1] = 0;
+		LOGGER_INFO("270");
+	}
+	else{
+
+		rotationMatrix.m4[0][0] = cos(angle);
+		rotationMatrix.m4[1][0] = sin(angle);
+		rotationMatrix.m4[0][1] = -sin(angle);
+		rotationMatrix.m4[1][1] = cos(angle);
+		LOGGER_INFO("anything");
+	}
+	//we're not caring about the argument's matrix
+	return rotationMatrix;
+}

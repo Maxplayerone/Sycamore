@@ -12,22 +12,29 @@
 #include"../Utils/ErrorHandling.h"
 #include"../Utils/Logger.h"
 #include"../Utils/DataTypes.h"
+#include"../Utils/Profiler.h"
 
 #include"../Rendering/Shader.h"
 
-const uint MAX_DEBUG_OBJECTS = 50;
-//(2 * position + 3 * colours) * 2
-const unsigned int VERTEX_PER_OBJECT = 10;
-float vertices[MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT];
 
-//should be changed to true if we added an object
-//we need to re-setup the buffers
-//because we added data to vertices array
-bool dirty = false;
+//for later deletion
+void SetupMatrices(uint shaderID) {
+	F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
+				   (float)SM_settings::windowWidth / 2 ,
+				   -((float)SM_settings::windowHeight) / 2,
+				   (float)SM_settings::windowHeight / 2
+	};
 
-uint _vbID;
-uint _vaID;
-uint debugDrawShaderID;
+	SM_math::mat4 modelMat(1.0f);
+	SM_math::mat4 viewMat(1.0f);
+	SM_math::mat4 projMat(1.0f);
+	projMat = SM_math::ortho(orthoProj.left, orthoProj.right, orthoProj.top, orthoProj.bottom, -1.0f, 100.0f);
+
+	Shader::SetUniformMat4f(shaderID, "model", modelMat);
+	Shader::SetUniformMat4f(shaderID, "view", viewMat);
+	Shader::SetUniformMat4f(shaderID, "projection", projMat);
+}
+
 
 struct DebugLine2D {
 	SM_math::vec2 start;
@@ -44,8 +51,57 @@ struct DebugLine2D {
 	bool isFree;
 };
 
+const uint MAX_DEBUG_OBJECTS = 500;
+//(2 * position + 3 * colours) * 2
+const unsigned int VERTEX_PER_OBJECT = 10;
+float vertices[MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT];
+
+//should be changed to true if we added an object
+//we need to re-setup the buffers
+//because we added data to vertices array
+bool dirty = false;
+
+uint _vbID;
+uint _vaID;
+uint debugDrawShaderID;
+
 uint debugLine2DCount = 0;
 DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
+
+static uint numOfCycles = 0;
+void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
+	uint used_space = (debugLine2DCount + 1) * VERTEX_PER_OBJECT;
+
+	if (numOfCycles == (cyclesBeforeAssertion - 1)) {
+		for (int i = 0; i < used_space; i++) {
+			if (i % VERTEX_PER_OBJECT == 0) {
+				std::stringstream ss;
+				ss << "Line number " << i / 10;
+				LOGGER_INFO(ss.str());
+			}
+
+			std::stringstream ss;
+			ss << "Line at index " << i << ": " << buffer[i];
+			LOGGER_ERROR(ss.str());
+		}
+	}
+
+	numOfCycles++;
+	if(numOfCycles >= cyclesBeforeAssertion)
+		ASSERT(false);
+}
+
+
+//---------------------------
+//		lines2D
+//---------------------------
+
+void DeleteFromVertices(uint arrayIndex) {
+	for (uint i = 0; i < VERTEX_PER_OBJECT; i++) {
+		vertices[i + (arrayIndex * VERTEX_PER_OBJECT)] = 0.0f;
+	}
+	dirty = true;
+}
 
 void PrintLine2D(DebugLine2D line) {
 	std::stringstream ss;
@@ -59,24 +115,12 @@ void PrintLine2D(DebugLine2D line) {
 	LOGGER_INFO(ss.str());
 }
 
-static uint numOfCycles = 0;
-void TestVerticesData(float buffer[], const uint USED_SPACE, uint cyclesBeforeAssertion) {
-	for (uint i = 0; i < USED_SPACE; i++) {
-		std::stringstream ss;
-		ss << i << "'th index: " << buffer[i] << '\0';
-		LOGGER_WARNING(ss.str());
-	}
-	numOfCycles++;
-	if(numOfCycles >= cyclesBeforeAssertion)
-		ASSERT(false);
-}
-
 void UpdateVerticesLine2D() {
 	//checking for the first free space for a line
 	DebugLine2D newLine;
 	uint freeBufferSpaceIndex = -1;
 	for (uint i = 0; i < MAX_DEBUG_OBJECTS; i++) {
-		if (lines2D[i].isFree == true) {		
+		if (lines2D[i].isFree == true) {
 			newLine = lines2D[i];
 			freeBufferSpaceIndex = i;
 			break;
@@ -102,20 +146,14 @@ void UpdateVerticesLine2D() {
 		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 4)] = newLine.color.b;
 	}
 
-	//TestVerticesData(vertices, (debugLine2DCount  + 1) * VERTEX_PER_OBJECT, 2);
+	//TestVerticesData(vertices, 6);
 
 	debugLine2DCount++;
 	lines2D[freeBufferSpaceIndex].isFree = false;
 	dirty = true;
 }
 
-void DeleteFromVertices(uint arrayIndex) {
-	for (uint i = 0; i < VERTEX_PER_OBJECT; i++) {
-		vertices[i + (arrayIndex * VERTEX_PER_OBJECT)] = 0.0f;
-	}
-}
-
-
+//methods with lifetime
 void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, float lifetime) {
 	DebugLine2D tmpLine;
 	tmpLine.start = start;
@@ -128,34 +166,76 @@ void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, 
 
 	UpdateVerticesLine2D();
 }
+
 void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, float lifetime) {
 	DebugDraw::AddLine2D(start, end, {1.0f, 1.0f, 1.0f}, lifetime);
 }
-void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, bool hasLifetime) {
+
+
+//methods without lifetime
+void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color) {
 	DebugLine2D tmpLine;
 	tmpLine.start = start;
 	tmpLine.end = end;
-	tmpLine.color = { 1.0f, 1.0f, 1.0f };
-	tmpLine.hasLifetime = hasLifetime;
-	tmpLine.lifetime = 1.0f;
+	tmpLine.color = color;
+	tmpLine.hasLifetime = false;
+	tmpLine.lifetime = 120.0f;
 	tmpLine.isFree = true;
 	lines2D[debugLine2DCount] = tmpLine;
 
 	UpdateVerticesLine2D();
 }
+
 void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end) {
-	DebugDraw::AddLine2D(start, end, { 0.0f, 0.0f, 0.0f }, 1.0f);
+	DebugDraw::AddLine2D(start, end, { 0.0f, 0.0f, 0.0f });
 }
 
 
-//checks if any debug object is dead
+//-------------------------------------
+//			GRID
+//---------------------------------------
+
+const int SCREEN_WIDTH = SM_settings::windowWidth;
+const int SCREEN_HEIGHT = SM_settings::windowHeight;
+
+float leftX = -SCREEN_WIDTH / 2;
+float rightX = SCREEN_WIDTH / 2;
+float bottomY = -SCREEN_HEIGHT / 2;
+float topY = SCREEN_HEIGHT / 2;
+
+const int verticalGridSpaces = SCREEN_HEIGHT / SM_settings::GRID_HEIGHT;
+//if we have a higher value we get a access violation error
+const int horizontalGridSpaces = (SCREEN_WIDTH / SM_settings::GRID_WIDTH);
+
+const int GRID_LINES_COUNT = 51;
+
+void DebugDraw::DrawDebugGrid() {
+	//vertical lines
+	int number = 0;
+
+	for (int i = 0; i < verticalGridSpaces; i++) {
+		AddLine2D({ leftX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { rightX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f });
+	}
+
+	//horizontal lines	
+	for (int i = 0; i < horizontalGridSpaces; i++) {
+		AddLine2D({ leftX + (SM_settings::GRID_WIDTH * (i + 1)), bottomY }, { leftX + (SM_settings::GRID_WIDTH * (i + 1)), topY });
+	}
+}
+
+//--------------------------------
+//        overall rendering
+//--------------------------------
+
 void UpdateFrame() {
+	SM_Profiler::SUB("debug draw update frame");
 
 	for (uint i = 0; i < debugLine2DCount; i++) {
 		if (lines2D[i].isFree) continue;
 
-		if(lines2D[i].hasLifetime)
+		if (lines2D[i].hasLifetime) {
 			lines2D[i].lifetime--;
+		}
 
 		if ((lines2D[i].lifetime <= 0.0f)) {
 			DeleteFromVertices(i);
@@ -164,10 +244,12 @@ void UpdateFrame() {
 	}
 }
 
+
 void DebugDraw::Render() {
+	SM_Profiler::MAIN("debug draw render");
+
 	UpdateFrame();
-	
-	//quick fix for now. Should probably fix it pretty soon
+
 	if(dirty) {
 		_vaID = SM_Buffers::CreateVertexArray();
 
@@ -178,9 +260,8 @@ void DebugDraw::Render() {
 		_vbID = SM_Buffers::CreateVertexBuffer(MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT * sizeof(float), vertices);
 		SM_Buffers::AddVertexBuffer(_vaID, _vbID, vbLayout);
 
-		GLCall(glLineWidth(1.0f));
-
-		debugDrawShaderID = SM_Pool::GetShaderID();
+		debugDrawShaderID = SM_Pool::GetShaderID("src/Assets/Shaders/DebugDrawing.shader");
+		SetupMatrices(debugDrawShaderID);
 		Shader::UseShader(debugDrawShaderID);
 
 		dirty = false;
@@ -190,35 +271,117 @@ void DebugDraw::Render() {
 		SM_Buffers::BindVertexBuffer(_vbID);
 		Shader::UseShader(debugDrawShaderID);
 	}
-	
-	GLCall(glDrawArrays(GL_LINES, 0, 2 * debugLine2DCount));
+
+	GLCall(glLineWidth(1.0f));
+	GLCall(glDrawArrays(GL_LINES, 0, GRID_LINES_COUNT * 2));
+
+	GLCall(glLineWidth(4.0f));
+	GLCall(glDrawArrays(GL_LINES, GRID_LINES_COUNT * 2, (debugLine2DCount - GRID_LINES_COUNT)  * 2));
 }
 
-const int SCREEN_WIDTH = SM_settings::windowWidth;
-const int SCREEN_HEIGHT = SM_settings::windowHeight;
 
-float leftX = -SCREEN_WIDTH / 2;
-float rightX = SCREEN_WIDTH / 2;
-float bottomY = -SCREEN_HEIGHT / 2;
-float topY = SCREEN_HEIGHT / 2;
+//--------------------------------
+//			boxes 2D
+//---------------------------------
 
-int verticalGridSpaces = SCREEN_HEIGHT / SM_settings::GRID_HEIGHT;
-//if we have a higher value we get a access violation error
-int horizontalGridSpaces = (SCREEN_WIDTH / SM_settings::GRID_WIDTH) - 4;
+void DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions, color3 color) {
+	float halfX = dimensions.x / 2;
+	float halfY = dimensions.y / 2;
 
-void DebugDraw::DrawDebugGrid() {
-	//vertical lines
-	for (int i = 0; i < verticalGridSpaces; i++) {
-		AddLine2D({ leftX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { rightX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, false);
+	float top = center.x + halfX;
+	float bottom = center.x - halfX;
+
+	float left = center.y - halfY;
+	float right = center.y + halfY;
+
+	AddLine2D({ top, right }, { bottom, right }, color);
+	AddLine2D({ top, left }, { bottom, left }, color);
+	AddLine2D({ top, left }, { top, right }, color);
+	AddLine2D({ bottom, left }, { bottom, right }, color);
+}
+
+void DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions) {
+	AddBox2D(center, dimensions, { 0.0f, 0.0f, 0.0f });
+}
+
+void DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color) {
+	AddBox2D(center, { length, length }, color);
+}
+
+void DebugDraw::AddBox2D(SM_math::vec2 center, float length) {
+	AddBox2D(center, {length, length}, {0.0f, 0.0f, 0.0f});
+}
+
+void DebugDraw::AddBox2D(SM_math::vec2 center, float length, float angle, float lifetime) {
+	float half = length / 2;
+
+	SM_math::mat4 matrix(1.0f);
+	matrix = SM_math::MatrixRotation(matrix, angle);
+
+	float top = (center.x + half);
+	float bottom = (center.x - half);
+
+	float left = (center.y - half);
+	float right = (center.y + half);
+
+	SM_math::vec2 TR = matrix * SM_math::vec2(top, right);
+	SM_math::vec2 TL = matrix * SM_math::vec2(top, left);
+	SM_math::vec2 BR = matrix * SM_math::vec2(bottom, right);
+	SM_math::vec2 BL = matrix * SM_math::vec2(bottom, left);
+
+	AddLine2D(TR, BR, { 0.54f, 0.95f, 0.36f }, lifetime);
+	AddLine2D(TL, BL, { 0.54f, 0.95f, 0.36f }, lifetime);
+	AddLine2D(TL, TR, { 0.54f, 0.95f, 0.36f }, lifetime);
+	AddLine2D(BL, BR, { 0.54f, 0.95f, 0.36f }, lifetime);
+}
+
+void DebugDraw::AddBox2D(SM_math::vec2 center, float length, float angle) {
+	float half = length / 2;
+
+	SM_math::mat4 matrix(1.0f);
+	matrix = SM_math::MatrixRotation(matrix, angle);
+
+	float top = (center.x + half);
+	float bottom = (center.x - half);
+
+	float left = (center.y - half);
+	float right = (center.y + half);
+
+	SM_math::vec2 TR = matrix * SM_math::vec2(top, right);
+	SM_math::vec2 TL = matrix * SM_math::vec2(top, left);
+	SM_math::vec2 BR = matrix * SM_math::vec2(bottom, right);
+	SM_math::vec2 BL = matrix * SM_math::vec2(bottom, left);
+
+	AddLine2D(TR, BR, { 0.54f, 0.95f, 0.36f});
+	AddLine2D(TL, BL, { 0.54f, 0.95f, 0.36f });
+	AddLine2D(TL, TR, { 0.54f, 0.95f, 0.36f });
+	AddLine2D(BL, BR, { 0.54f, 0.95f, 0.36f });
+}
+
+
+//---------------------------------
+//			Circles 2D
+//---------------------------------
+
+void DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color) {
+	const uint radiusCount = 20;
+	SM_math::vec2 radiuses[radiusCount];
+
+	SM_math::mat4 rotation(1.0f);
+	float angleStep = 360 / radiusCount;
+	
+	for (int i = 0; i < radiusCount; i++) {
+
+		rotation = SM_math::MatrixRotation(rotation, angleStep * i);
+
+		radiuses[i] = rotation * SM_math::vec2(center.x + radius, 0);
 	}
 	
-	//horizontal lines
-
-	
-	for (int i = 0; i < horizontalGridSpaces; i++) {
-		AddLine2D( {leftX + (SM_settings::GRID_WIDTH * (i + 1)), bottomY} ,  {leftX + (SM_settings::GRID_WIDTH * (i + 1)), topY} , false);
+	for (uint i = 0; i < radiusCount - 1; i++) {
+		AddLine2D(radiuses[i], radiuses[i + 1], color);
 	}
-	
+	//joining the last point with the first one
+	AddLine2D(radiuses[radiusCount - 1], radiuses[0], color);
 }
 
 

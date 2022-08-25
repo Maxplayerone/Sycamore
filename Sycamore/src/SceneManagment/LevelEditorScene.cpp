@@ -33,9 +33,8 @@ LevelEditorScene::LevelEditorScene() {
 	
 	activeGameObject = m_sceneObjects[0];
 
-	DebugDraw::DrawDebugGrid();
-	DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 0.0f, 0.0f, 0.0f }, 120.0f);
-	DebugDraw::AddLine2D({ -100.0f, -100.0f }, { -200.0f, -200.0f }, { 0.0f, 0.0f, 0.0f }, 240.0f);
+	//DebugDraw::AddBox2D({ 0.0f, 0.0f }, 128.0f, 45);
+	DebugDraw::AddCircle2D({ 0.0f, 00.0f }, 50.0f, { 0.54f, 0.95f, 0.36f });
 }
 int result = -2;
 

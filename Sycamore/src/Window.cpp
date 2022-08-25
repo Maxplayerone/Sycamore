@@ -20,8 +20,11 @@
 #include"../Math/SM_math.h"
 
 #include"Rendering/Shader.h"
+#include"Rendering/DebugDraw.h"
 
-Window::Window() {    
+#include"math.h"
+
+Window::Window() {
 
     F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
                             (float)SM_settings::windowWidth / 2 ,
@@ -73,7 +76,7 @@ Window::Window() {
     Shader::SetUniformMat4f(shaderID, "projection", projMat);
 
     MouseHandleler::Get().GetProjectionMatrix(projMat);
-   
+
     //Setup ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -85,10 +88,12 @@ Window::Window() {
 
     //setup style
     ImGui::StyleColorsDark();
-    
+
     //setup platform/renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
+
+    DebugDraw::DrawDebugGrid();
 }
 
 void Window::Run() {
@@ -121,14 +126,14 @@ void Window::Run() {
         deltaTime = endTime - startTime;
         startTime = endTime;
 
-        /*
+        
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(m_window);
         }
-        */
+        
         
     }
 }

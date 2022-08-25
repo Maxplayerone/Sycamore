@@ -1,14 +1,18 @@
 #type vertex
 #version 330 core
-layout(location = 0) in vec2 aPos;
-layout(location = 1) in vec3 aColor;
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec4 aColor;
 
 out vec4 fColor;
 
-void main() {
-	fColor = vec4(aColor, 1.0f);
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
-	gl_Position = vec4(aPos, 1.0f, 1.0f);
+void main() {
+	fColor = aColor;
+
+	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 }
 
 #type fragment
