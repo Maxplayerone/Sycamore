@@ -96,7 +96,9 @@
     <ClInclude Include="Math\SM_math.h" />
     <ClInclude Include="Math\src\matrix.h" />
     <ClInclude Include="Math\src\vector.h" />
+    <ClInclude Include="src\Editor\GameViewport.h" />
     <ClInclude Include="Sycamore.h" />
+    <ClInclude Include="src\Buffers\Framebuffer.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexArray.h" />
     <ClInclude Include="src\Buffers\VertexBuffer.h" />
@@ -141,10 +143,12 @@
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="Math\src\matrix.cpp" />
     <ClCompile Include="Math\src\vector.cpp" />
+    <ClCompile Include="src\Buffers\Framebuffer.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\ECS\GameObject.cpp" />
+    <ClCompile Include="src\Editor\GameViewport.cpp" />
     <ClCompile Include="src\InputHandling\InputCallbacks.cpp" />
     <ClCompile Include="src\InputHandling\KeysHandleler.cpp" />
     <ClCompile Include="src\InputHandling\MouseHandleler.cpp" />

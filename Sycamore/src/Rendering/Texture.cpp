@@ -1,9 +1,10 @@
 #include"Texture.h"
 
-#include"../STBI_IMAGE/stbi_image.h"
+#include"../../STBI_IMAGE/stbi_image.h"
 
 #include"../Utils/ErrorHandling.h"
 #include"../Utils/Logger.h"
+#include"../Utils/ObjectPool.h"
 
 Texture::Texture(const std::string& path)
 	: m_TextureID(0), m_FilePath(path), m_imageBuffer(nullptr),
@@ -64,6 +65,26 @@ Texture::Texture(const std::string& path, unsigned int slot)
 
 	AssignTextureSlot(slot);
 }
+
+Texture::Texture(uint width, uint height)
+	: m_TextureID(0), m_FilePath("Generated"), m_imageBuffer(nullptr),
+	m_width(width), m_height(height), m_channels(0)
+{
+
+	GLCall(glGenTextures(1, &m_TextureID));
+	GLCall(glBindTexture(GL_TEXTURE_2D, m_TextureID));
+
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, height, width, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, nullptr));
+
+	uint currentTexIndex = SM_Pool::GetTexIndex();
+	AssignTextureSlot(currentTexIndex);
+	SM_Pool::SetTexIndex(currentTexIndex + 1);
+}
+
 
 Texture::~Texture() {
 	GLCall(glDeleteTextures(1, &m_TextureID));

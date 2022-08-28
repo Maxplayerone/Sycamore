@@ -1,6 +1,8 @@
 #pragma once
 #include"../smpch.h"
 
+typedef unsigned int uint;
+
 class Texture {
 private:
 	unsigned int m_TextureID;
@@ -16,6 +18,8 @@ public:
 	Texture(const std::string& path);
 	Texture(const std::string& path, unsigned int slot);
 
+	Texture(uint width, uint height);
+
 	~Texture();
 
 	void Bind() const;
@@ -23,6 +27,9 @@ public:
 
 	inline int GetWidth() const { return m_width; }
 	inline int GetHeight() const { return m_height; }
+
 	unsigned int GetSlot() const { return m_slot; }
+	unsigned int GetOpenGLTexID() const { return m_TextureID; }
+
 	Texture* GetTexture() { return this; }
 };

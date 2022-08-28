@@ -5,6 +5,8 @@
 #include"../Utils/Logger.h"
 #include"../Utils/Settings.h"
 
+#include"imgui/imgui.h"
+
 SM_math::mat4 projMat(1.0f);
 
 MouseHandleler::MouseHandleler(){
@@ -58,5 +60,32 @@ void MouseHandleler::PrintMousePosModel() {
 	std::stringstream ss;
 	ss << "Mouse position  " << posModel;
 	LOGGER_INFO(ss.str());
+}
+
+bool MouseHandleler::IsMouseOnWindow(SM_math::vec2 windowSize, SM_math::vec2 windowPos) {
+	float leftOffsetX = 130.0f;
+	float topOffsetY = 150.0f;
+	float rightOffsetX = 130.0f;
+	float bottomOffsetY = 20.0f;
+
+	/*
+	if (position.x > windowPos.x + leftOffsetX && position.x < windowPos.x + windowSize.x + rightOffsetX && position.y > windowPos.y + topOffsetY && position.y < windowPos.y + windowSize.y + bottomOffsetY) {
+		float leftBorder = windowPos.x + leftOffsetX;
+		float rightBorder = windowPos.x + windowSize.x + rightOffsetX;
+		std::stringstream ss;
+		ss << "left border " << leftBorder << " right border " << rightBorder;
+		LOGGER_INFO(ss.str());
+
+		return true;
+	}
+	*/
+
+	std::stringstream ss;
+	ss << "Mous pos x " << posModel.x - windowPos.x << "and y " << posModel.y - windowPos.y;
+	LOGGER_INFO(ss.str());
+	//-480 = windowPos.x + leftOffsetX
+	//480 = windowPos.x + windowSize.x + rightOffsetX
+	
+	return false;
 }
 

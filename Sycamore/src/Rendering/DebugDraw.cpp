@@ -271,7 +271,6 @@ void DebugDraw::Render() {
 		SM_Buffers::BindVertexBuffer(_vbID);
 		Shader::UseShader(debugDrawShaderID);
 	}
-
 	GLCall(glLineWidth(1.0f));
 	GLCall(glDrawArrays(GL_LINES, 0, GRID_LINES_COUNT * 2));
 

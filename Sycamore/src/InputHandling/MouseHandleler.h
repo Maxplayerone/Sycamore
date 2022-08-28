@@ -2,6 +2,8 @@
 
 #include"../../Math/SM_math.h"
 
+typedef unsigned int uint;
+
 class MouseHandleler {
 private:
 	MouseHandleler();
@@ -46,6 +48,8 @@ public:
 	void PrintMousePosModel();
 
 	void GetProjectionMatrix(SM_math::mat4 _projMat);
+
+	bool IsMouseOnWindow(SM_math::vec2 windowSize, SM_math::vec2 windowPos);
 };
 
 

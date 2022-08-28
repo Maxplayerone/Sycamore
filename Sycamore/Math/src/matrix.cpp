@@ -37,21 +37,18 @@ SM_math::mat4& SM_math::MatrixRotation(SM_math::mat4& matrixToRotate, float _ang
 		rotationMatrix.m4[1][0] = 1;
 		rotationMatrix.m4[0][1] = -1;
 		rotationMatrix.m4[1][1] = 0;
-		LOGGER_INFO("90");
 	} 
 	else if (_angle == 180) {
 		rotationMatrix.m4[0][0] = -1;
 		rotationMatrix.m4[1][0] = 0;
 		rotationMatrix.m4[0][1] = 0;
 		rotationMatrix.m4[1][1] = 1;
-		LOGGER_INFO("180");
 	}
 	else if (_angle == 270) {
 		rotationMatrix.m4[0][0] = 0;
 		rotationMatrix.m4[1][0] = -1;
 		rotationMatrix.m4[0][1] = 1;
  		rotationMatrix.m4[1][1] = 0;
-		LOGGER_INFO("270");
 	}
 	else{
 
@@ -59,7 +56,6 @@ SM_math::mat4& SM_math::MatrixRotation(SM_math::mat4& matrixToRotate, float _ang
 		rotationMatrix.m4[1][0] = sin(angle);
 		rotationMatrix.m4[0][1] = -sin(angle);
 		rotationMatrix.m4[1][1] = cos(angle);
-		LOGGER_INFO("anything");
 	}
 	//we're not caring about the argument's matrix
 	return rotationMatrix;

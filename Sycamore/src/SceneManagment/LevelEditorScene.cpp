@@ -57,7 +57,7 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 		else
 			result = CheckForActiveGameObject();
 	}
-		
+
 	activeGameObject.ImGui();
 
 	if (result > -1)
@@ -83,10 +83,9 @@ int LevelEditorScene::CheckForActiveGameObject() {
 }
 
 void LevelEditorScene::MoveClickedBlock(uint gameObjectIndex) {
-	SM_math::vec2 offset(16.0f, 16.0f);
 
 	SM_math::vec2 mousePos = MouseHandleler::Get().GetMousePosModel();
-	m_sceneObjects[gameObjectIndex].GetComponent<Transform>()->SetPosition(mousePos - offset);
+	m_sceneObjects[gameObjectIndex].GetComponent<Transform>()->SetPosition(mousePos);
 }
 
 void LevelEditorScene::SnapBlockToGrid() {

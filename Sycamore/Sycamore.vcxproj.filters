@@ -67,6 +67,9 @@
       <Filter>Math\src</Filter>
     </ClInclude>
     <ClInclude Include="Sycamore.h" />
+    <ClInclude Include="src\Buffers\Framebuffer.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Buffers\IndexBuffer.h">
       <Filter>src\Buffers</Filter>
     </ClInclude>
@@ -184,6 +187,7 @@
     <ClInclude Include="vendor\STBI_IMAGE\stbi_image.h">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GameViewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -192,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="Math\src\vector.cpp">
       <Filter>Math\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffers\Framebuffer.cpp">
+      <Filter>src\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffers\IndexBuffer.cpp">
       <Filter>src\Buffers</Filter>
@@ -280,6 +287,7 @@
     <ClCompile Include="vendor\STBI_IMAGE\stbi_image.cpp">
       <Filter>vendor\STBI_IMAGE</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GameViewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

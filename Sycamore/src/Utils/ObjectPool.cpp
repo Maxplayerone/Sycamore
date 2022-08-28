@@ -2,8 +2,11 @@
 
 #include"Logger.h"
 #include"ErrorHandling.h"
+#include"DataTypes.h"
 
 #include"../Rendering/Shader.h"
+
+#include"../Buffers/Framebuffer.h"
 
 #define SHADER_ARRAY_SIZE 8
 
@@ -64,6 +67,14 @@ Texture* SM_Pool::GetTexture(const std::string& fileName) {
 	return tempTex;
 }
 
+uint SM_Pool::GetTexIndex() {
+	return textureIndex;
+}
+
+void SM_Pool::SetTexIndex(uint index) {
+	textureIndex = index;
+}
+
 std::unordered_map<Texture*, SpriteSheet*> spriteSheets;
 
 SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& fileName, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing) {
@@ -90,4 +101,39 @@ SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& fileName, unsigned int s
 	spriteSheets.insert(std::make_pair(texture, spriteSheet));
 
 	return spriteSheet;
+}
+
+//In my implementation there can only be one framebuffer
+//change it if you need it yo
+
+FramebufferData fboData;
+bool fboRegistered = false;
+
+int SM_Pool::GetFramebufferID(uint width, uint height) {
+	if (fboRegistered) return fboData.fboID;
+
+	fboData = SM_Buffers::CreateFramebuffer(width, height);
+	fboRegistered = true;
+	return fboData.fboID;
+}
+
+int SM_Pool::GetFramebufferTexID() {
+	if (fboRegistered) return fboData.tex->GetOpenGLTexID();
+
+	LOGGER_WARNING("No framebuffer has been created yet");
+	return -1;
+}
+
+Texture SM_Pool::GetFramebufferTexture() {
+	if (fboRegistered) return (*fboData.tex);
+
+	LOGGER_WARNING("No framebuffer has been created yet");
+	return nullptr;
+}
+
+int SM_Pool::GetFramebufferTexSlot() {
+	if (fboRegistered) return fboData.tex->GetSlot();
+
+	LOGGER_WARNING("No framebuffer has been created yet");
+	return -1;
 }

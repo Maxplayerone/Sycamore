@@ -22,7 +22,11 @@
 #include"Rendering/Shader.h"
 #include"Rendering/DebugDraw.h"
 
-#include"math.h"
+#include"Editor/GameViewport.h"
+
+#include"Buffers/Framebuffer.h"
+
+uint _fboID = 0;
 
 Window::Window() {
 
@@ -94,6 +98,8 @@ Window::Window() {
     ImGui_ImplOpenGL3_Init("#version 410");
 
     DebugDraw::DrawDebugGrid();
+
+    _fboID = SM_Pool::GetFramebufferID(SM_settings::windowWidth, SM_settings::windowHeight);
 }
 
 void Window::Run() {
@@ -110,17 +116,33 @@ void Window::Run() {
         
         //if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
         //if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
-          
+                
+        SM_Buffers::BindFramebuffer(_fboID);
+
         m_currentScene->OnUpdate(deltaTime.count());
+
+        SM_Buffers::UnbindFramebuffer();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearDepth(0);
+
         m_currentScene->ImGui();
         
         SM_Profiler::ImGuiRender();
+        MouseHandleler::Get().PrintMousePosModel();
+      
+        //ImGui();
+        ImGui::Begin("framebuffer test 2");
 
+        ImVec2 windowSize = ImGui::GetContentRegionAvail();
+        ImGui::Image((ImTextureID)SM_Pool::GetFramebufferTexID(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::End();
+        
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-      
-        glfwSwapBuffers(m_window);
+
         glfwPollEvents();
+        glfwSwapBuffers(m_window);
 
         endTime = std::chrono::high_resolution_clock::now();
         deltaTime = endTime - startTime;
@@ -158,6 +180,10 @@ Window::~Window() {
     delete m_currentScene;
 
     glfwTerminate();
+}
+
+void Window::ImGui() {
+    SM_Viewport::ImGui();
 }
 
 void Window::ImGuiTheme() {
