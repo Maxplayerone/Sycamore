@@ -117,23 +117,11 @@ int SM_Pool::GetFramebufferID(uint width, uint height) {
 	return fboData.fboID;
 }
 
-int SM_Pool::GetFramebufferTexID() {
-	if (fboRegistered) return fboData.tex->GetOpenGLTexID();
+int SM_Pool::GetFramebufferColorAttachment() {
+	if (!fboRegistered) {
+		LOGGER_WARNING("The framebuffer is not initialized yet (Use GetFramebufferID method to initialize it");
+		return - 1;
+	}
 
-	LOGGER_WARNING("No framebuffer has been created yet");
-	return -1;
-}
-
-Texture SM_Pool::GetFramebufferTexture() {
-	if (fboRegistered) return (*fboData.tex);
-
-	LOGGER_WARNING("No framebuffer has been created yet");
-	return nullptr;
-}
-
-int SM_Pool::GetFramebufferTexSlot() {
-	if (fboRegistered) return fboData.tex->GetSlot();
-
-	LOGGER_WARNING("No framebuffer has been created yet");
-	return -1;
+	return fboData.colorAttachment;
 }

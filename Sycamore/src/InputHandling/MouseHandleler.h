@@ -9,6 +9,9 @@ private:
 	MouseHandleler();
 
 	void SetMousePosModel();
+
+	SM_math::vec2 viewportSize;
+	SM_math::vec2 viewportPos;
 public:
 
 	~MouseHandleler() { delete[] mouseButtons; }
@@ -27,6 +30,7 @@ public:
 	//glm's one for matrix multiplication
 	SM_math::vec2 position;
 	SM_math::vec2 posModel;
+	SM_math::vec2 viewportAbsPos;
 
 	int ArrayLength() { return 3; }
 
@@ -46,6 +50,7 @@ public:
 
 	void PrintMousePosAbs();
 	void PrintMousePosModel();
+	void PrintMousePosViewport();
 
 	void GetProjectionMatrix(SM_math::mat4 _projMat);
 

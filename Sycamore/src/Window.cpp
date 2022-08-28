@@ -129,14 +129,10 @@ void Window::Run() {
         m_currentScene->ImGui();
         
         SM_Profiler::ImGuiRender();
+        MouseHandleler::Get().PrintMousePosViewport();
         MouseHandleler::Get().PrintMousePosModel();
       
-        //ImGui();
-        ImGui::Begin("framebuffer test 2");
-
-        ImVec2 windowSize = ImGui::GetContentRegionAvail();
-        ImGui::Image((ImTextureID)SM_Pool::GetFramebufferTexID(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
-        ImGui::End();
+        ImGui();
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -55,6 +55,7 @@ ImVec2 windowPos;
 ImVec2 topLeft;
 
 void SM_Viewport::ImGui() {
+	/*
 	//add flags for scrolling
 	ImGui::Begin("Game viewport", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	
@@ -71,10 +72,28 @@ void SM_Viewport::ImGui() {
 		initializedFbo = true;
 	}
 
-	ImGui::Image((ImTextureID)SM_Pool::GetFramebufferTexSlot(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)SM_Pool::GetFramebufferColorAttachment(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
+
 	bool result = MouseHandleler::Get().IsMouseOnWindow(SM_math::vec2(windowSize.x, windowSize.y), SM_math::vec2(topLeft.x, topLeft.y));
 	if (result) LOGGER_INFO("The mouse is on the window");
 	else LOGGER_WARNING("The mouse is not on the window");
+
+	ImGui::End();
+	*/
+
+	ImGui::Begin("Game viewport", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+	ImVec2 windowSize = ImGui::GetContentRegionAvail();
+	ImVec2 topLeft = ImGui::GetWindowPos();
+
+	if (!initializedFbo) {
+		framebufferID = SM_Pool::GetFramebufferID(SM_settings::windowWidth, SM_settings::windowHeight);
+		initializedFbo = true;
+	}
+
+	ImGui::Image((ImTextureID)SM_Pool::GetFramebufferColorAttachment(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
+
+	bool result = MouseHandleler::Get().IsMouseOnWindow(SM_math::vec2(windowSize.x, windowSize.y), SM_math::vec2(topLeft.x, topLeft.y));
 
 	ImGui::End();
 }

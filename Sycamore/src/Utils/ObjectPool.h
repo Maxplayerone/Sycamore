@@ -18,7 +18,5 @@ namespace SM_Pool {
 	SpriteSheet* GetSpriteSheet(const std::string& fileName, unsigned int spriteDimensions, unsigned int numOfSprites);
 
 	int GetFramebufferID(uint width, uint height);
-	int GetFramebufferTexID();
-	int GetFramebufferTexSlot();
-	Texture GetFramebufferTexture();
+	int GetFramebufferColorAttachment();
 }

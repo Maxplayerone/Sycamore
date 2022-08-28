@@ -1,12 +1,10 @@
 #pragma once
 typedef unsigned int uint;
-class Texture;
 
 struct FramebufferData {
 	uint fboID = -1;
-	uint rboID = -1;
-
-	Texture* tex;
+	uint colorAttachment;
+	uint depthAttachment;
 };
 
 namespace SM_Buffers {

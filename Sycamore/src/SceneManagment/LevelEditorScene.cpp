@@ -119,7 +119,7 @@ void LevelEditorScene::SnapBlockToGrid() {
 	canSnapBlock = false;
 	result = -1;
 }
-void LevelEditorScene::AddGameObjectToScene(GameObject& go) {
+int LevelEditorScene::AddGameObjectToScene(GameObject& go) {
 	/*
 	auto itr = std::find(this->m_gameObjects.begin(), this->m_gameObjects.end(), go);
 	//the game object is already in the vector
@@ -129,6 +129,9 @@ void LevelEditorScene::AddGameObjectToScene(GameObject& go) {
 	m_sceneObjects[m_sceneObjectsSize++] = go;
 	//we're accessing an array index, which starts at 0 (that's why we decrease by one)
 	this->m_renderer->Add(m_sceneObjects[m_sceneObjectsSize - 1]);
+
+	//current objectIndex;
+	return m_sceneObjectsSize - 1;
 }
 
 

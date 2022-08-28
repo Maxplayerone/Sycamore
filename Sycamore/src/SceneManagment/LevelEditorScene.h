@@ -28,7 +28,7 @@ public:
 	LevelEditorScene();
 
 	void OnUpdate(float deltaTime) override;
-	void AddGameObjectToScene(GameObject& go) override;
+	int AddGameObjectToScene(GameObject& go);
 
 	void ImGui() override;
 };

@@ -44,8 +44,8 @@ void MouseHandleler::GetProjectionMatrix(SM_math::mat4 _projMat) {
 }
 
 void MouseHandleler::SetMousePosModel() {
-	posModel.x = position.x - ((float)SM_settings::windowWidth / 2);
-	posModel.y = -(position.y - ((float)SM_settings::windowHeight / 2));
+	posModel.x = (viewportAbsPos.x - ((float)SM_settings::windowWidth / 2));
+	posModel.y = -((viewportAbsPos.y - ((float)SM_settings::windowHeight / 2)));
 }
 
 void MouseHandleler::PrintMousePosAbs() {
@@ -62,30 +62,37 @@ void MouseHandleler::PrintMousePosModel() {
 	LOGGER_INFO(ss.str());
 }
 
-bool MouseHandleler::IsMouseOnWindow(SM_math::vec2 windowSize, SM_math::vec2 windowPos) {
-	float leftOffsetX = 130.0f;
-	float topOffsetY = 150.0f;
-	float rightOffsetX = 130.0f;
-	float bottomOffsetY = 20.0f;
+void MouseHandleler::PrintMousePosViewport() {
+	viewportAbsPos = position;
 
-	/*
-	if (position.x > windowPos.x + leftOffsetX && position.x < windowPos.x + windowSize.x + rightOffsetX && position.y > windowPos.y + topOffsetY && position.y < windowPos.y + windowSize.y + bottomOffsetY) {
-		float leftBorder = windowPos.x + leftOffsetX;
-		float rightBorder = windowPos.x + windowSize.x + rightOffsetX;
-		std::stringstream ss;
-		ss << "left border " << leftBorder << " right border " << rightBorder;
-		LOGGER_INFO(ss.str());
+	float scaleFactorX = (float)SM_settings::windowWidth / viewportSize.x;
+	float scaleFactorY = (float)SM_settings::windowHeight / viewportSize.y;
 
-		return true;
-	}
-	*/
+	//made to combat the padding of imgui window
+	float offsetX = 10.0f;
+	float offsetY = 30.0f;
+
+	viewportAbsPos.x = (viewportAbsPos.x - viewportPos.x - offsetX) * scaleFactorX;
+	viewportAbsPos.y = (viewportAbsPos.y - viewportPos.y - offsetY) * scaleFactorY;
 
 	std::stringstream ss;
-	ss << "Mous pos x " << posModel.x - windowPos.x << "and y " << posModel.y - windowPos.y;
-	LOGGER_INFO(ss.str());
-	//-480 = windowPos.x + leftOffsetX
-	//480 = windowPos.x + windowSize.x + rightOffsetX
+	ss << "Mouse position  x " << viewportAbsPos.x << " mouse position y " << viewportAbsPos.y;
+	//LOGGER_INFO(ss.str());
+}
+
+bool MouseHandleler::IsMouseOnWindow(SM_math::vec2 windowSize, SM_math::vec2 windowPos) {
+	viewportPos = SM_math::vec2(windowPos.x, windowPos.y);
+	viewportSize = SM_math::vec2(windowSize.x, windowSize.y);
 	
+	if (position.x > windowPos.x && position.x < windowPos.x + windowSize.x && position.y > windowPos.y && position.y < windowPos.y + windowSize.y) {
+		/*
+		std::stringstream ss;
+		ss << "window pos x " << windowPos.x << " and y " << windowPos.y << std::endl;
+		ss << "window size x " << windowSize.x << "and y " << windowSize.y << std::endl;
+		LOGGER_INFO(ss.str());
+		*/
+		return true;
+	}	
 	return false;
 }
 
