@@ -16,6 +16,9 @@
 
 #include"../Rendering/Shader.h"
 
+uint debugShaderID;
+uint _vbID;
+uint _vaID;
 
 //for later deletion
 void SetupMatrices(uint shaderID) {
@@ -30,9 +33,9 @@ void SetupMatrices(uint shaderID) {
 	SM_math::mat4 projMat(1.0f);
 	projMat = SM_math::ortho(orthoProj.left, orthoProj.right, orthoProj.top, orthoProj.bottom, -1.0f, 100.0f);
 
-	Shader::SetUniformMat4f(shaderID, "model", modelMat);
-	Shader::SetUniformMat4f(shaderID, "view", viewMat);
-	Shader::SetUniformMat4f(shaderID, "projection", projMat);
+	Shader::SetUniformMat4f(debugShaderID, "model", modelMat);
+	Shader::SetUniformMat4f(debugShaderID, "view", viewMat);
+	Shader::SetUniformMat4f(debugShaderID, "projection", projMat);
 }
 
 
@@ -52,18 +55,14 @@ struct DebugLine2D {
 };
 
 const uint MAX_DEBUG_OBJECTS = 500;
-//(2 * position + 3 * colours) * 2
-const unsigned int VERTEX_PER_OBJECT = 10;
+//(2 * position + 3 * colours + texIndex) * 2
+const unsigned int VERTEX_PER_OBJECT = 12;
 float vertices[MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT];
 
 //should be changed to true if we added an object
 //we need to re-setup the buffers
 //because we added data to vertices array
 bool dirty = false;
-
-uint _vbID;
-uint _vaID;
-uint debugDrawShaderID;
 
 uint debugLine2DCount = 0;
 DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
@@ -138,12 +137,13 @@ void UpdateVerticesLine2D() {
 			break;
 		}
 
-		//that 5 is a number of unique vertex data (aka 2 * position and 3 * color)
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 0)] = xValue;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 1)] = yValue;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 2)] = newLine.color.r;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 3)] = newLine.color.g;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 4)] = newLine.color.b;
+		//that 6 is a number of unique vertex data (aka 2 * position and 3 * color and texIndex)
+		vertices[(i * 6) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 0)] = xValue;
+		vertices[(i * 6) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 1)] = yValue;
+		vertices[(i * 6) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 2)] = newLine.color.r;
+		vertices[(i * 6) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 3)] = newLine.color.g;
+		vertices[(i * 6) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 4)] = newLine.color.b;
+		vertices[(i * 6) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 5)] = 0; //texture index
 	}
 
 	//TestVerticesData(vertices, 6);
@@ -209,6 +209,11 @@ const int horizontalGridSpaces = (SCREEN_WIDTH / SM_settings::GRID_WIDTH);
 
 const int GRID_LINES_COUNT = 51;
 
+//if we use a DrawDebugGrid method
+//we change it to true
+//and we have two batches in the render function
+bool usingGrid = false;
+
 void DebugDraw::DrawDebugGrid() {
 	//vertical lines
 	int number = 0;
@@ -221,6 +226,8 @@ void DebugDraw::DrawDebugGrid() {
 	for (int i = 0; i < horizontalGridSpaces; i++) {
 		AddLine2D({ leftX + (SM_settings::GRID_WIDTH * (i + 1)), bottomY }, { leftX + (SM_settings::GRID_WIDTH * (i + 1)), topY });
 	}
+
+	usingGrid = true;
 }
 
 //--------------------------------
@@ -256,26 +263,34 @@ void DebugDraw::Render() {
 		VertexBufferLayout vbLayout;
 		vbLayout.AddFloat(2); // position
 		vbLayout.AddFloat(3); // colour
+		vbLayout.AddFloat(1); // tex index
+
+		debugShaderID = SM_Pool::GetShader("debugDrawing.shader");
 
 		_vbID = SM_Buffers::CreateVertexBuffer(MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT * sizeof(float), vertices);
 		SM_Buffers::AddVertexBuffer(_vaID, _vbID, vbLayout);
-
-		debugDrawShaderID = SM_Pool::GetShaderID("src/Assets/Shaders/DebugDrawing.shader");
-		SetupMatrices(debugDrawShaderID);
-		Shader::UseShader(debugDrawShaderID);
+		SetupMatrices(debugShaderID);
+		Shader::UseShader(debugShaderID);
 
 		dirty = false;
 	}
 	else {
 		SM_Buffers::BindVertexArray(_vaID);;
 		SM_Buffers::BindVertexBuffer(_vbID);
-		Shader::UseShader(debugDrawShaderID);
+		Shader::UseShader(debugShaderID);
 	}
-	GLCall(glLineWidth(1.0f));
-	GLCall(glDrawArrays(GL_LINES, 0, GRID_LINES_COUNT * 2));
 
-	GLCall(glLineWidth(4.0f));
-	GLCall(glDrawArrays(GL_LINES, GRID_LINES_COUNT * 2, (debugLine2DCount - GRID_LINES_COUNT)  * 2));
+	if (usingGrid) {
+		GLCall(glLineWidth(1.0f));
+		GLCall(glDrawArrays(GL_LINES, 0, GRID_LINES_COUNT * 2));
+
+		GLCall(glLineWidth(4.0f));
+		GLCall(glDrawArrays(GL_LINES, GRID_LINES_COUNT * 2, (debugLine2DCount - GRID_LINES_COUNT) * 2));
+	}
+	else {
+		GLCall(glLineWidth(4.0f));
+		GLCall(glDrawArrays(GL_LINES, 0, debugLine2DCount * 2));
+	}
 }
 
 
@@ -382,5 +397,4 @@ void DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color) {
 	//joining the last point with the first one
 	AddLine2D(radiuses[radiusCount - 1], radiuses[0], color);
 }
-
 

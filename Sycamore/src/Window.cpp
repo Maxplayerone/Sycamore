@@ -16,6 +16,7 @@
 #include"Utils/ObjectPool.h"
 #include"Utils/Profiler.h"
 #include"Utils/Settings.h"
+#include"Utils/Serializer.h"
 
 #include"../Math/SM_math.h"
 
@@ -68,7 +69,7 @@ Window::Window() {
 
     LOGGER_INFO("The window has been initialized");
 
-    uint shaderID = SM_Pool::GetShaderID();
+    int shaderID = SM_Pool::GetShader();
 
     SM_math::mat4 modelMat(1.0f);
     SM_math::mat4 viewMat(1.0f);
@@ -100,39 +101,34 @@ Window::Window() {
     DebugDraw::DrawDebugGrid();
 
     _fboID = SM_Pool::GetFramebufferID(SM_settings::windowWidth, SM_settings::windowHeight);
+
+    m_levelEditorScene = new LevelEditorScene();
+
+    SM_Serializer::Deserialize(m_levelEditorScene);
 }
 
 void Window::Run() {
     //default scene
-    ChangeScene(1);
     ImGuiTheme();
-
+    
     while (!glfwWindowShouldClose(m_window)) {
         SM_Profiler::MAIN("Main loop");
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        
-        //if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_U)) ChangeScene(1);
-        //if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_I)) ChangeScene(0);
+
+        glClear(GL_COLOR_BUFFER_BIT);       
                 
         SM_Buffers::BindFramebuffer(_fboID);
 
-        m_currentScene->OnUpdate(deltaTime.count());
+        m_levelEditorScene->OnUpdate(deltaTime.count());         
 
         SM_Buffers::UnbindFramebuffer();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        glClearDepth(0);
-
-        m_currentScene->ImGui();
         
-        SM_Profiler::ImGuiRender();
-        MouseHandleler::Get().PrintMousePosViewport();
-        MouseHandleler::Get().PrintMousePosModel();
-      
-        ImGui();
+        SM_Profiler::ImGuiRender(); 
+        m_levelEditorScene->ImGui();
+        ImGui();       
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -144,38 +140,24 @@ void Window::Run() {
         deltaTime = endTime - startTime;
         startTime = endTime;
 
-        
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(m_window);
-        }
-        
-        
+        }        
     }
+    
 }
 
-void Window::ChangeScene(int sceneIndex) {
-    switch (sceneIndex) {
-    case 0:
-        m_currentScene = new LevelScene();
-        break;
-    case 1:
-        m_currentScene = new LevelEditorScene();
-        break;
-    default:
-        LOGGER_WARNING("Cannot load scene with index %d", sceneIndex);
-    }
-}
 
 Window::~Window() {   
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();   
-    delete m_currentScene;
 
     glfwTerminate();
+    SM_Serializer::Serialize();
 }
 
 void Window::ImGui() {

@@ -63,6 +63,15 @@ void MouseHandleler::PrintMousePosModel() {
 }
 
 void MouseHandleler::PrintMousePosViewport() {
+	std::stringstream ss;
+	ss << "Mouse position  x " << viewportAbsPos.x << " mouse position y " << viewportAbsPos.y;
+	//LOGGER_INFO(ss.str());
+}
+
+void MouseHandleler::SetMousePosViewport(SM_math::vec2 windowSize, SM_math::vec2 windowPos) {
+	viewportPos = SM_math::vec2(windowPos.x, windowPos.y);
+	viewportSize = SM_math::vec2(windowSize.x, windowSize.y);
+
 	viewportAbsPos = position;
 
 	float scaleFactorX = (float)SM_settings::windowWidth / viewportSize.x;
@@ -74,25 +83,5 @@ void MouseHandleler::PrintMousePosViewport() {
 
 	viewportAbsPos.x = (viewportAbsPos.x - viewportPos.x - offsetX) * scaleFactorX;
 	viewportAbsPos.y = (viewportAbsPos.y - viewportPos.y - offsetY) * scaleFactorY;
-
-	std::stringstream ss;
-	ss << "Mouse position  x " << viewportAbsPos.x << " mouse position y " << viewportAbsPos.y;
-	//LOGGER_INFO(ss.str());
-}
-
-bool MouseHandleler::IsMouseOnWindow(SM_math::vec2 windowSize, SM_math::vec2 windowPos) {
-	viewportPos = SM_math::vec2(windowPos.x, windowPos.y);
-	viewportSize = SM_math::vec2(windowSize.x, windowSize.y);
-	
-	if (position.x > windowPos.x && position.x < windowPos.x + windowSize.x && position.y > windowPos.y && position.y < windowPos.y + windowSize.y) {
-		/*
-		std::stringstream ss;
-		ss << "window pos x " << windowPos.x << " and y " << windowPos.y << std::endl;
-		ss << "window size x " << windowSize.x << "and y " << windowSize.y << std::endl;
-		LOGGER_INFO(ss.str());
-		*/
-		return true;
-	}	
-	return false;
 }
 

@@ -6,6 +6,10 @@ private:
 	Texture* m_texture;
 	float m_TexCoords[8];
 
+	//it's used to 1) know if the sprite comes from the spritesheet
+	//and 2) to know on which index the sprite is the the sheet
+	int spritesheetIndex = -1;
+
 public:
 	Sprite(Texture* _texture)
 		: m_texture(_texture)
@@ -42,5 +46,8 @@ public:
 	float* GetTexCoords() { return m_TexCoords; }
 	Texture* GetTexture() const { if (m_texture != nullptr) return m_texture; }
 	unsigned int GetTexSlot() const { return m_texture->GetSlot(); }
+
+	void SetSpritesheetIndex(int index) { spritesheetIndex = index; }
+	int GetSpritesheetIndex() const { return spritesheetIndex; }
 };
 

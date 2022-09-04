@@ -24,14 +24,19 @@ project "Sycamore"
         "vendor/STBI_IMAGE/*.h",
 
         "vendor/ImGui/include/imgui/**.h",
-        "vendor/ImGui/lib/**.cpp"
+        "vendor/ImGui/lib/**.cpp",
+
+        "vendor/yaml-cpp/src/**.h",
+        "vendor/yaml-cpp/src/**.cpp",
+        "vendor/yaml-cpp/include/**.h"
     }
 
     includedirs{
         "vendor/spdlog/include",
         "vendor/GLFW32/include",
         "vendor/GLEW/include",
-        "vendor/ImGui/include"
+        "vendor/ImGui/include",
+        "vendor/yaml-cpp/include"
     }
 
     libdirs{

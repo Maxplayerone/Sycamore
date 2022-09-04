@@ -2,8 +2,8 @@
 #version 330 core
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec4 aColor;
-layout(location = 2) in vec2 aTexCoords;
-layout(location = 3) in float aTexIndex;
+layout(location = 2) in float aTexIndex;
+layout(location = 3) in vec2 aTexCoords;
 
 out vec4 fColor;
 out vec2 fTexCoords;
@@ -34,10 +34,10 @@ out vec4 color;
 
 void main() {
 	int index = int(fTexIndex);
-	if (index == 0) {
-		color = fColor;
+	if(index > 0) {
+		color = texture(u_Textures[index], fTexCoords);
 	}
 	else {
-		color = texture(u_Textures[index], fTexCoords);
+		color = fColor;
 	}
 }

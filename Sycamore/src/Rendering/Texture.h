@@ -32,4 +32,6 @@ public:
 	unsigned int GetOpenGLTexID() const { return m_TextureID; }
 
 	Texture* GetTexture() { return this; }
+
+	std::string& GetTextureFilepath() { return m_FilePath; }
 };

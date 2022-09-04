@@ -8,48 +8,24 @@
 
 #include"../Buffers/Framebuffer.h"
 
-#define SHADER_ARRAY_SIZE 8
+std::unordered_map<std::string, uint> shaders;
 
-struct shaderInfo {
-	std::string filepath;
-	uint id;
-};
-shaderInfo shaders[SHADER_ARRAY_SIZE];
-int shaderIndex = 0;
+int SM_Pool::GetShader(const std::string& filename){
+	auto itr = shaders.find(filename);
+	if (itr != shaders.end()) return itr->second;
 
-//(used mostly to find already in-use ID's)
-//returns an index for found item or -1 if the item is not found
-int FindShader(std::string searchingItem) {
-	for (int i = 0; i < shaderIndex; i++) {
-		if ((searchingItem.compare(shaders[i].filepath)) == 0) {
-			return i;
-		}
-	}
-	return -1;
+	int id = Shader::CreateShader(filename, 420);
+	shaders.insert(std::make_pair(filename, id));
+	return id;
 }
-
-uint SM_Pool::GetShaderID(const std::string& filepath) {
-	int itemIndex = FindShader(filepath);
-
-	//item is in the array
-	if (itemIndex > -1) return shaders[itemIndex].id;
-
-	uint newShader = Shader::CreateShader(filepath);
-	shaders[shaderIndex].filepath = filepath;
-	shaders[shaderIndex].id = newShader;
-	shaderIndex++;
-
-	return newShader;
-}
-
 
 std::unordered_map<std::string, Texture*> textures;
 uint textureIndex = 1;
 
-Texture* SM_Pool::GetTexture(const std::string& fileName) {
-	std::stringstream ss;
-	ss << "src/Assets/Images/" << fileName;
-	std::string filepath = ss.str();
+Texture* SM_Pool::GetTexture(const std::string& filepath) {
+	//std::stringstream ss;
+	//ss << "src/Assets/Images/" << fileName;
+	//std::string filepath = ss.str();
 
 	auto itr = textures.find(filepath);
 	if (itr != textures.end()) return itr->second;
@@ -62,8 +38,9 @@ Texture* SM_Pool::GetTexture(const std::string& fileName) {
 	Texture* tempTex = new Texture(filepath, textureIndex++);
 	textures.insert(std::make_pair(filepath, tempTex));
 
-	uint shaderID = SM_Pool::GetShaderID();
-	Shader::SetUniform1iv(shaderID, "u_Textures");
+	//we use the main shader because it's the only one who uses textures
+	uint id = SM_Pool::GetShader();
+	Shader::SetUniform1iv(id, "u_Textures");
 	return tempTex;
 }
 
@@ -71,15 +48,11 @@ uint SM_Pool::GetTexIndex() {
 	return textureIndex;
 }
 
-void SM_Pool::SetTexIndex(uint index) {
-	textureIndex = index;
-}
-
 std::unordered_map<Texture*, SpriteSheet*> spriteSheets;
 
-SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& fileName, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing) {
+SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& filepath, unsigned int spriteWidth, unsigned int spriteHeight, unsigned int numOfSprites, unsigned int spacing) {
 	
-	Texture* texture = GetTexture(fileName);
+	Texture* texture = GetTexture(filepath);
 
 	auto itr = spriteSheets.find(texture);
 	if (itr != spriteSheets.end()) return itr->second;
@@ -90,9 +63,9 @@ SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& fileName, unsigned int s
 	return spriteSheet;
 }
 
-SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& fileName, unsigned int spriteDimensions, unsigned int numOfSprites) {
+SpriteSheet* SM_Pool::GetSpriteSheet(const std::string& filepath, unsigned int spriteDimensions, unsigned int numOfSprites) {
 	
-	Texture* texture = GetTexture(fileName);
+	Texture* texture = GetTexture(filepath);
 
 	auto itr = spriteSheets.find(texture);
 	if (itr != spriteSheets.end()) return itr->second;
@@ -124,4 +97,11 @@ int SM_Pool::GetFramebufferColorAttachment() {
 	}
 
 	return fboData.colorAttachment;
+}
+
+
+int gameObjectIDCount = -1;
+int SM_Pool::GetGameObjectID() {
+	gameObjectIDCount += 1;
+	return gameObjectIDCount;
 }

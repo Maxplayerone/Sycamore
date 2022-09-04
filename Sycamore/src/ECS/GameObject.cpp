@@ -2,13 +2,20 @@
 
 #include"../smpch.h"
 
+#include"../Utils/ObjectPool.h"
+
 GameObject::GameObject() {
-	//m_ID = AssetsPool::Get().GetGameObjectID();
+	m_ID = SM_Pool::GetGameObjectID();
 	m_name = GetRandomName();
 }
 
 GameObject::GameObject(std::string& name) {
-	//m_ID = AssetsPool::Get().GetGameObjectID();
+	m_ID = SM_Pool::GetGameObjectID();
+	m_name = name;
+}
+
+GameObject::GameObject(const std::string& name, uint id) {
+	m_ID = id;
 	m_name = name;
 }
 

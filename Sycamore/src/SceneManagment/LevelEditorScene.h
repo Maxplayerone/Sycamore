@@ -22,8 +22,10 @@ private:
 	int CheckForActiveGameObject();
 	void MoveClickedBlock(uint goIndex);
 
-	bool canSnapBlock = false;
+	bool canSnapObject = false;
 	void SnapBlockToGrid();
+
+	void DrawCubeOnMousePos();
 public:
 	LevelEditorScene();
 

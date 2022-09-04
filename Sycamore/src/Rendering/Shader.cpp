@@ -4,8 +4,6 @@
 #include"../Utils/Logger.h"
 #include"../Utils/DataTypes.h"
 
-uint shaderID;
-
 ShaderSources ParseShader(const std::string& filepath) {
     std::ifstream stream(filepath);
     if (stream.fail()) {
@@ -90,38 +88,45 @@ int GetUniformLocation(uint shaderID, const std::string& name) {
     return uniLocation;
 }
 
-uint Shader::CreateShader(const std::string& filepath)
+uint Shader::CreateShader(const std::string& filename, int flag)
 {
-    ShaderSources sources = ParseShader(filepath);
-    shaderID = CreateProgram(sources.vertexShader, sources.fragmentShader);
+    if (flag != 420) {
+        LOGGER_ERROR("The shader should only be created by the object pool");
+        ASSERT(false);
+    }
+
+    std::stringstream filepath;
+    filepath << "src/Assets/Shaders/" << filename;
+    ShaderSources sources = ParseShader(filepath.str());
+    int shaderID = CreateProgram(sources.vertexShader, sources.fragmentShader);
 
     GLCall(glUseProgram(shaderID));
 
     return shaderID;
 }
 
-void Shader::DeleteShader(uint shaderID) {
-    GLCall(glDeleteProgram(shaderID));
+void Shader::DeleteShader(uint id) {
+    GLCall(glDeleteProgram(id));
 }
 
-void Shader::UseShader(uint shaderID) {
-    GLCall(glUseProgram(shaderID));
+void Shader::UseShader(uint id) {
+    GLCall(glUseProgram(id));
 }
 
 void Shader::UnuseShader() {
     GLCall(glUseProgram(0));
 }
 
-void Shader::SetUniformMat4f(uint shaderID, const std::string& uniformName, SM_math::mat4 matrix) {
-    glUniformMatrix4fv(GetUniformLocation(shaderID, uniformName), 1, GL_FALSE, &matrix.m4[0][0]);
+void Shader::SetUniformMat4f(uint id, const std::string& uniformName, SM_math::mat4 matrix) {
+    glUniformMatrix4fv(GetUniformLocation(id, uniformName), 1, GL_FALSE, &matrix.m4[0][0]);
 }
 
-void Shader::SetUniform1i(uint shaderID, const std::string& name, int value) {
-    GLCall(glUniform1i(GetUniformLocation(shaderID, name), value));
+void Shader::SetUniform1i(uint id, const std::string& name, int value) {
+    GLCall(glUniform1i(GetUniformLocation(id, name), value));
 }
 
-void Shader::SetUniform1iv(uint shaderID, const std::string& name) {
-    int location = GetUniformLocation(shaderID, name);
+void Shader::SetUniform1iv(uint id, const std::string& name) {
+    int location = GetUniformLocation(id, name);
     int sampler[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
     GLCall(glUniform1iv(location, 8, sampler));
 }

@@ -15,6 +15,8 @@ private:
 
 	bool dirty;
 
+	bool hasTexture;
+
 	Sprite* GetDummySprite() {
 		float texCoords[8] = {
 			0.0f, 0.0f,
@@ -36,6 +38,7 @@ public:
 		m_TextureIndex = 0;
 
 		dirty = true;
+		hasTexture = false;
 	}
 
 	SpriteRenderer(Sprite* sprite) {
@@ -48,6 +51,7 @@ public:
 		m_TextureIndex = sprite->GetTexSlot();
 
 		dirty = true;
+		hasTexture = true;
 	}
 
 	SpriteRenderer(Texture* tex) {
@@ -61,6 +65,7 @@ public:
 		m_Sprite = GetDummySprite();
 
 		dirty = true;
+		hasTexture = true;
 	}
 
 	SpriteRenderer(SpriteSheet* sheet, uint spriteIndex) {
@@ -73,12 +78,16 @@ public:
 		m_Sprite = sheet->GetSprite(spriteIndex);
 
 		dirty = true;
+		hasTexture = true;
 	}
 
 	unsigned int GetTexIndex() const { return m_TextureIndex; }
 	float* GetTexCoords() const { return m_Sprite->GetTexCoords(); }
 	Texture* GetTexture() const { return m_Sprite->GetTexture(); }
+	bool HasTexture() const { return hasTexture; }
 	color4 GetColor4() const { return color; }
+
+	Sprite* GetSprite() const { return m_Sprite; }
 
 	void SetColor4(color4 _color) {
 		color.r = _color.r;

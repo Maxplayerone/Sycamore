@@ -9,6 +9,7 @@
 #include"../Utils/Profiler.h"
 #include"../Utils/ObjectPool.h"
 #include"../Utils/Settings.h"
+#include"../Utils/Serializer.h"
 
 #include"../InputHandling/MouseHandleler.h"
 
@@ -16,25 +17,27 @@
 
 LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();	
-
+	/*
 	GameObject coloredCube;
 	coloredCube.AddComponent(new Transform({ 0.0f, 0.0f }, { 32.0f, 32.0f }));
 	coloredCube.AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
 	AddGameObjectToScene(coloredCube);
-
-	SpriteSheet* sheet = SM_Pool::GetSpriteSheet("blocks.png", 16, 81);
-
+	*/
+	
+	//SpriteSheet* sheet = SM_Pool::GetSpriteSheet("blocks.png", 16, 81);
+	/*
+	Texture* tex = SM_Pool::GetTexture("amogus.jpg");
 
 	GameObject anotherCube;
 	anotherCube.AddComponent( new Transform({64.0f, 0.0f}, {32.0f, 32.0f}) );
-	anotherCube.AddComponent( new SpriteRenderer( sheet->GetSprite(5) ) );
+	anotherCube.AddComponent(new SpriteRenderer(tex));
 
 	AddGameObjectToScene(anotherCube);
+	*/
+	//activeGameObject = m_sceneObjects[0];
 	
-	activeGameObject = m_sceneObjects[0];
-
 	//DebugDraw::AddBox2D({ 0.0f, 0.0f }, 128.0f, 45);
-	DebugDraw::AddCircle2D({ 0.0f, 00.0f }, 50.0f, { 0.54f, 0.95f, 0.36f });
+	//DebugDraw::AddCircle2D({ 0.0f, 00.0f }, 50.0f, { 0.54f, 0.95f, 0.36f });
 }
 int result = -2;
 
@@ -52,21 +55,41 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 	}
 
 	if (MouseHandleler::Get().IsMouseButtonPressed(0)) {
-		if (canSnapBlock)
+		if (canSnapObject)
 			SnapBlockToGrid();
 		else
 			result = CheckForActiveGameObject();
 	}
 
+	//DrawCubeOnMousePos();
 	activeGameObject.ImGui();
 
 	if (result > -1)
 		MoveClickedBlock(result);	
 
+	
 	DebugDraw::Render();
 	this->m_renderer->Render();	
 }
 
+bool first = true;
+int goIndex = -1;
+void LevelEditorScene::DrawCubeOnMousePos() {
+	if (first) {
+		SM_math::vec2 mousePos = MouseHandleler::Get().GetMousePosModel();
+		GameObject tmp;
+		tmp.AddComponent(new Transform(mousePos, { 32.0f, 32.0f }));
+		tmp.AddComponent(new SpriteRenderer({ 0.8f, 0.32f, 0.92f, 1.0f }));
+		goIndex = AddGameObjectToScene(tmp);
+
+		first = false;
+	}
+	else {
+		MoveClickedBlock(goIndex);
+	}
+}
+
+//function returns the index of the clicked object
 int LevelEditorScene::CheckForActiveGameObject() {
 	SM_math::vec2 mouse = MouseHandleler::Get().GetMousePosModel();
 	for (uint i = 0; i < m_sceneObjectsSize; i++) {
@@ -75,8 +98,8 @@ int LevelEditorScene::CheckForActiveGameObject() {
 
 		if (mouse.x > pos.x && mouse.x < pos.x + scale.x && mouse.y > pos.y && mouse.y < pos.y + scale.y) {
 			activeGameObject = m_sceneObjects[i];
-			canSnapBlock = true;
-			return i;
+				canSnapObject = true;
+				return i;	
 		}
 	}
 	return -1;
@@ -116,7 +139,7 @@ void LevelEditorScene::SnapBlockToGrid() {
 
 	activeGameObject.GetComponent<Transform>()->SetPosition({ (float)finalX,  (float)finalY});
 
-	canSnapBlock = false;
+	canSnapObject = false;
 	result = -1;
 }
 int LevelEditorScene::AddGameObjectToScene(GameObject& go) {
@@ -129,6 +152,7 @@ int LevelEditorScene::AddGameObjectToScene(GameObject& go) {
 	m_sceneObjects[m_sceneObjectsSize++] = go;
 	//we're accessing an array index, which starts at 0 (that's why we decrease by one)
 	this->m_renderer->Add(m_sceneObjects[m_sceneObjectsSize - 1]);
+	SM_Serializer::Push(go);
 
 	//current objectIndex;
 	return m_sceneObjectsSize - 1;
@@ -147,21 +171,30 @@ void LevelEditorScene::ImGui() {
 	ImGui::Begin("Blocks");	
 	unsigned int spriteNum = 81;
 
-	SpriteSheet* sheet = SM_Pool::GetSpriteSheet("blocks.png", 16, 81);
-
 	ImVec2 buttonSize(40, 40);
 	ImGui::Text("Manually wrapping:");
 
+	SpriteSheet* sheet = SM_Pool::GetSpriteSheet("src/Assets/Images/blocks.png", 16, 81);
+
 	ImGuiStyle& style = ImGui::GetStyle();
 	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+	bool oneTimeFlag = true;
 
 	for (int i = 0; i < spriteNum; i++)
 	{
 		ImGui::PushID(i);
 
+		/*
+		if (oneTimeFlag) {
+			ImGui::Button("Normal block", ImVec2(40, 40));
+			oneTimeFlag = false;
+			continue;
+		}
+		*/
+
 		Sprite* spr = sheet->GetSprite(i);
-		
-		if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr->GetTexCoords()[0], spr->GetTexCoords()[1] }, { spr->GetTexCoords()[6], spr->GetTexCoords()[7] })) {
+		if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr->GetTexCoords()[0], spr->GetTexCoords()[1] }, { spr->GetTexCoords()[6], spr->GetTexCoords()[7] })){
 			
 			GameObject go;
 			go.AddComponent(new Transform({0.0f, 0.0f}));

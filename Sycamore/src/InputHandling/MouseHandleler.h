@@ -26,8 +26,7 @@ public:
 
 	bool* mouseButtons = new bool[3];
 	SM_math::vec2 offset;
-	//will change for my vector but I need
-	//glm's one for matrix multiplication
+
 	SM_math::vec2 position;
 	SM_math::vec2 posModel;
 	SM_math::vec2 viewportAbsPos;
@@ -54,7 +53,7 @@ public:
 
 	void GetProjectionMatrix(SM_math::mat4 _projMat);
 
-	bool IsMouseOnWindow(SM_math::vec2 windowSize, SM_math::vec2 windowPos);
+	void SetMousePosViewport(SM_math::vec2 windowSize, SM_math::vec2 windowPos);
 };
 
 

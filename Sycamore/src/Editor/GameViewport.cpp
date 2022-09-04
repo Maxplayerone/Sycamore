@@ -81,7 +81,7 @@ void SM_Viewport::ImGui() {
 	ImGui::End();
 	*/
 
-	ImGui::Begin("Game viewport", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin("Game viewport", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove);
 
 	ImVec2 windowSize = ImGui::GetContentRegionAvail();
 	ImVec2 topLeft = ImGui::GetWindowPos();
@@ -93,7 +93,7 @@ void SM_Viewport::ImGui() {
 
 	ImGui::Image((ImTextureID)SM_Pool::GetFramebufferColorAttachment(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
 
-	bool result = MouseHandleler::Get().IsMouseOnWindow(SM_math::vec2(windowSize.x, windowSize.y), SM_math::vec2(topLeft.x, topLeft.y));
+	MouseHandleler::Get().SetMousePosViewport({ windowSize.x, windowSize.y }, { topLeft.x, topLeft.y });
 
 	ImGui::End();
 }

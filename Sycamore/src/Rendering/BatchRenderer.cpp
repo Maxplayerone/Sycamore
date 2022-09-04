@@ -17,7 +17,7 @@
 uint vaID;
 uint vbID;
 uint ibID;
-uint BatchShaderID;
+uint batchShaderID;
 
 VertexBufferLayout vertexBufferLayout;
 
@@ -28,8 +28,10 @@ BatchRenderer::BatchRenderer() {
 
     vertexBufferLayout.AddFloat(2); //position vertex
     vertexBufferLayout.AddFloat(3); //color vertex
-    vertexBufferLayout.AddFloat(2); //texture vertex
     vertexBufferLayout.AddFloat(1); //texture index
+    vertexBufferLayout.AddFloat(2); //texture coords
+
+    batchShaderID = SM_Pool::GetShader();
 }
 
 void BatchRenderer::Add(GameObject& go) {
@@ -62,19 +64,19 @@ void BatchRenderer::Render() {
         vaID = SM_Buffers::CreateVertexArray();
         SM_Buffers::AddVertexBuffer(vaID, vbID, vertexBufferLayout);
         ibID = SM_Buffers::CreateIndexBuffer(6 * gameObjectCount);
-        BatchShaderID = SM_Pool::GetShaderID();
-
+        Shader::UseShader(batchShaderID);
         reloadBuffers = false;
     }
     else {
         SM_Buffers::BindVertexArray(vaID);;
         SM_Buffers::BindIndexBuffer(ibID);
         SM_Buffers::BindVertexBuffer(vbID);
-        Shader::UseShader(BatchShaderID);
+        Shader::UseShader(batchShaderID);
     }
 
 
     GLCall(glDrawElements(GL_TRIANGLES, 6 * gameObjectCount, GL_UNSIGNED_INT, nullptr));
+    //Shader::UnuseShader();
 }
 
 void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
@@ -109,9 +111,9 @@ void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
         vertices[(2 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().r;
         vertices[(3 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().g;
         vertices[(4 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().b;
-        vertices[(5 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
+        vertices[(5 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexIndex();
         vertices[(6 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
-        vertices[(7 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexIndex();
+        vertices[(7 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetTexCoords()[texCoordsIndex++];
     }
 }
 

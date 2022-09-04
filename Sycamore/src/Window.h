@@ -15,7 +15,7 @@ class Window
 private:
 	GLFWwindow* m_window;
 
-	Scene* m_currentScene = nullptr;
+	LevelEditorScene* m_levelEditorScene;
 
 	//delta time
 	//maybe should use floats instead of this thingy?
@@ -23,7 +23,6 @@ private:
 	std::chrono::steady_clock::time_point endTime;
 	std::chrono::duration<float> deltaTime;
 
-	void ChangeScene(int sceneIndex);
 public:
 	Window();
 	~Window();

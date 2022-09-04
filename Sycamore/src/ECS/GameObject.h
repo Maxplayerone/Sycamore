@@ -2,6 +2,8 @@
 #include"Component.h"
 #include"../Utils/Logger.h"
 
+typedef unsigned int uint;
+
 class GameObject {
 private:
 	std::vector<Component*> m_components;
@@ -13,13 +15,14 @@ private:
 		return dynamic_cast<const Base*>(ptr) != nullptr;
 	}
 
-	unsigned int m_ID;
+	uint m_ID;
 
 	std::string GetRandomName();
 public:
 
 	GameObject();
 	GameObject(std::string& name);
+	GameObject(const std::string& name, uint m_ID);
 
 	//adds a component to the game object
 	template<typename T>
@@ -68,4 +71,6 @@ public:
 	void ImGui();
 
 	unsigned int GetID() const { return m_ID; }
+
+	std::string GetName() { return m_name; }
 };

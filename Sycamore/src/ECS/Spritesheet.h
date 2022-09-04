@@ -33,6 +33,7 @@ public:
 			};
 
 			Sprite* sprite = new Sprite(m_texture, texCoords);
+			sprite->SetSpritesheetIndex(i);
 			m_sprites.push_back(sprite);
 
 			currentX += (spriteWidth + spacing);
