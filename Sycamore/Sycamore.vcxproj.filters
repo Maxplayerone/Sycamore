@@ -598,10 +598,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
+    <None Include="src\Assets\Shaders\debugDrawing.shader">
+      <Filter>src\Assets\Shaders</Filter>
+    </None>
     <None Include="src\Assets\Shaders\main.shader">
       <Filter>src\Assets\Shaders</Filter>
     </None>
-    <None Include="src\Assets\Shaders\debugDrawing.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Assets\Images\amogus.jpg">
@@ -619,8 +621,5 @@
     <Image Include="src\Assets\Images\trollface.png">
       <Filter>src\Assets\Images</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\Assets\scenes\Example.txt" />
   </ItemGroup>
 </Project>

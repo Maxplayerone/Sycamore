@@ -36,11 +36,18 @@ public:
 		}
 	}
 
-	Sprite(float texCoords[8]) {
+	//used in spriteRenderer when we make an object than has color and no texture
+	Sprite() {
 		m_texture = nullptr;
-		for (int i = 0; i < 8; i++) {
-			m_TexCoords[i] = texCoords[i];
-		}
+
+		m_TexCoords[0] = 0;
+		m_TexCoords[1] = 0;
+		m_TexCoords[2] = 1;
+		m_TexCoords[3] = 0;
+		m_TexCoords[4] = 0;
+		m_TexCoords[5] = 1;
+		m_TexCoords[6] = 1;
+		m_TexCoords[7] = 1;
 	}
 
 	float* GetTexCoords() { return m_TexCoords; }

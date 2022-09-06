@@ -166,6 +166,9 @@ bool SM_Serializer::Deserialize(LevelEditorScene* scene) {
 			auto rendNode = entity["Sprite renderer component"];
 			bool hasTexture = false;
 
+
+			//FOR NOW WE DON'T SUPPORT TEXTURES THAT ARE NOT FROM A SPRITESHEET
+
 			if (rendNode) {
 				color4 color = rendNode["Color"].as<color4>();
 				uint texIndex = rendNode["Texture index"].as<uint>();
@@ -231,14 +234,14 @@ void SerializeEntity(YAML::Emitter& out, GameObject go) {
 		out << YAML::Value << rend->GetColor4();
 
 		out << YAML::Key << "Texture index";
-		out << YAML::Value << rend->GetTexIndex();
+		out << YAML::Value << rend->GetSprite().GetTexSlot();
 
 		if (rend->HasTexture()) {
 			out << YAML::Key << "Texture file name";
-			out << YAML::Value << rend->GetTexture()->GetTextureFilepath(); 
+			out << YAML::Value << rend->GetSprite().GetTexture()->GetTextureFilepath();
 
 			out << YAML::Key << "spritesheet index";
-			out << YAML::Value << rend->GetSprite()->GetSpritesheetIndex();
+			out << YAML::Value << rend->GetSprite().GetSpritesheetIndex();
 		}
 
 		out << YAML::EndMap;

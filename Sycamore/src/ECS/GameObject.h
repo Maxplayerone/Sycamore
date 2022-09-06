@@ -21,7 +21,7 @@ private:
 public:
 
 	GameObject();
-	GameObject(std::string& name);
+	GameObject(const std::string& name);
 	GameObject(const std::string& name, uint m_ID);
 
 	//adds a component to the game object

@@ -8,7 +8,7 @@
 class SpriteSheet {
 private:
 	Texture* m_texture;
-	std::vector<Sprite*> m_sprites;
+	std::vector<Sprite> m_sprites;
 public:
 
 	SpriteSheet(Texture* texture, unsigned int spriteHeight, unsigned int spriteWidth, unsigned int numOfSprites, unsigned int spacing) {
@@ -32,8 +32,8 @@ public:
 				rightX, topY
 			};
 
-			Sprite* sprite = new Sprite(m_texture, texCoords);
-			sprite->SetSpritesheetIndex(i);
+			Sprite sprite(m_texture, texCoords);
+			sprite.SetSpritesheetIndex(i);
 			m_sprites.push_back(sprite);
 
 			currentX += (spriteWidth + spacing);
@@ -46,7 +46,7 @@ public:
 
 	SpriteSheet() : m_texture() {}
 
-	Sprite* GetSprite(unsigned int index) {
+	Sprite GetSprite(unsigned int index) {
 		return m_sprites[index];
 	}
 

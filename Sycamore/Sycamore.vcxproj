@@ -279,9 +279,6 @@
     <Image Include="src\Assets\Images\testSheet.png" />
     <Image Include="src\Assets\Images\trollface.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\Assets\scenes\Example.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

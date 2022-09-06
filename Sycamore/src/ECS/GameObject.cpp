@@ -9,7 +9,7 @@ GameObject::GameObject() {
 	m_name = GetRandomName();
 }
 
-GameObject::GameObject(std::string& name) {
+GameObject::GameObject(const std::string& name) {
 	m_ID = SM_Pool::GetGameObjectID();
 	m_name = name;
 }

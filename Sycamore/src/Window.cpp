@@ -98,7 +98,7 @@ Window::Window() {
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
 
-    DebugDraw::DrawDebugGrid();
+    //DebugDraw::DrawDebugGrid();
 
     _fboID = SM_Pool::GetFramebufferID(SM_settings::windowWidth, SM_settings::windowHeight);
 

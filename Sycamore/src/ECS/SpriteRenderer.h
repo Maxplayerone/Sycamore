@@ -8,24 +8,12 @@
 
 class SpriteRenderer : public Component {
 private:
-	unsigned int m_TextureIndex;
-	Sprite* m_Sprite;
 
+	Sprite m_Sprite;
 	color4 color;
 
 	bool dirty;
-
 	bool hasTexture;
-
-	Sprite* GetDummySprite() {
-		float texCoords[8] = {
-			0.0f, 0.0f,
-			1.0f, 0.0f,
-			0.0f, 1.0f,
-			1.0f, 1.0f
-		};
-		return new Sprite(texCoords);
-	}
 public:
 
 	SpriteRenderer(color4 _color) {
@@ -34,60 +22,24 @@ public:
 		color.b = _color.b;
 		color.a = _color.a;
 
-		m_Sprite = GetDummySprite();
-		m_TextureIndex = 0;
-
 		dirty = true;
 		hasTexture = false;
 	}
 
-	SpriteRenderer(Sprite* sprite) {
+	SpriteRenderer(Sprite& sprite) {
 		color.r = 1.0f;
 		color.g = 1.0f;
 		color.b = 1.0f;
 		color.a = 1.0f;
 
 		m_Sprite = sprite;
-		m_TextureIndex = sprite->GetTexSlot();
-
 		dirty = true;
 		hasTexture = true;
 	}
-
-	SpriteRenderer(Texture* tex) {
-		color.r = 1.0f;
-		color.g = 1.0f;
-		color.b = 1.0f;
-		color.a = 1.0f;
-
-
-		m_TextureIndex = tex->GetSlot();
-		m_Sprite = GetDummySprite();
-
-		dirty = true;
-		hasTexture = true;
-	}
-
-	SpriteRenderer(SpriteSheet* sheet, uint spriteIndex) {
-		color.r = 1.0f;
-		color.g = 1.0f;
-		color.b = 1.0f;
-		color.a = 1.0f;
-
-		m_TextureIndex = sheet->GetSprite(spriteIndex)->GetTexSlot();
-		m_Sprite = sheet->GetSprite(spriteIndex);
-
-		dirty = true;
-		hasTexture = true;
-	}
-
-	unsigned int GetTexIndex() const { return m_TextureIndex; }
-	float* GetTexCoords() const { return m_Sprite->GetTexCoords(); }
-	Texture* GetTexture() const { return m_Sprite->GetTexture(); }
-	bool HasTexture() const { return hasTexture; }
+	
 	color4 GetColor4() const { return color; }
-
-	Sprite* GetSprite() const { return m_Sprite; }
+	Sprite GetSprite() const { return m_Sprite; }
+	bool HasTexture() const { return hasTexture; }
 
 	void SetColor4(color4 _color) {
 		color.r = _color.r;
@@ -98,7 +50,7 @@ public:
 		dirty = true;
 	}
 
-	void SetSprite(Sprite* _sprite) {
+	void SetSprite(Sprite& _sprite) {
 		m_Sprite = _sprite;
 		dirty = true;
 	}
