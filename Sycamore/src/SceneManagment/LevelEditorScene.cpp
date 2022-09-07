@@ -38,6 +38,9 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 		SM_Profiler::MAIN("LevelEditorScene gameObject updating");
 		for (int i = 0; i < m_sceneObjectsSize; i++) {
 
+			std::stringstream ss;
+			ss << "Object id " << m_sceneObjects[i].GetID();
+			LOGGER_INFO(ss.str());
 			m_sceneObjects[i].Update(deltaTime);
 		}
 	}

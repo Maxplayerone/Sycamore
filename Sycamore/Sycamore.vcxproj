@@ -96,6 +96,7 @@
     <ClInclude Include="Math\SM_math.h" />
     <ClInclude Include="Math\src\matrix.h" />
     <ClInclude Include="Math\src\vector.h" />
+    <ClInclude Include="src\Utils\UUID.h" />
     <ClInclude Include="Sycamore.h" />
     <ClInclude Include="src\Buffers\Framebuffer.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="src\Utils\ObjectPool.cpp" />
     <ClCompile Include="src\Utils\Profiler.cpp" />
     <ClCompile Include="src\Utils\Serializer.cpp" />
+    <ClCompile Include="src\Utils\UUID.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\smpch.cpp" />
     <ClCompile Include="vendor\ImGui\lib\imgui.cpp" />

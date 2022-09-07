@@ -19,6 +19,4 @@ namespace SM_Pool {
 
 	int GetFramebufferID(uint width, uint height);
 	int GetFramebufferColorAttachment();
-
-	int GetGameObjectID();
 }

@@ -2,6 +2,8 @@
 #include"Component.h"
 #include"../Utils/Logger.h"
 
+#include<xhash>
+
 typedef unsigned int uint;
 
 class GameObject {
@@ -15,14 +17,15 @@ private:
 		return dynamic_cast<const Base*>(ptr) != nullptr;
 	}
 
-	uint m_ID;
+	uint64_t uuid;
 
 	std::string GetRandomName();
 public:
 
 	GameObject();
 	GameObject(const std::string& name);
-	GameObject(const std::string& name, uint m_ID);
+	GameObject(const std::string& name, uint64_t _uuid);
+	GameObject(uint64_t _uuid);
 
 	//adds a component to the game object
 	template<typename T>
@@ -70,7 +73,7 @@ public:
 	void Update(float deltaTime);
 	void ImGui();
 
-	unsigned int GetID() const { return m_ID; }
+	unsigned int GetID() const { return uuid; }
 
 	std::string GetName() { return m_name; }
 };

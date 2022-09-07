@@ -98,10 +98,3 @@ int SM_Pool::GetFramebufferColorAttachment() {
 
 	return fboData.colorAttachment;
 }
-
-
-int gameObjectIDCount = -1;
-int SM_Pool::GetGameObjectID() {
-	gameObjectIDCount += 1;
-	return gameObjectIDCount;
-}

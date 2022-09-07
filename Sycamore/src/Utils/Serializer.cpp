@@ -14,6 +14,8 @@
 
 #include"../SceneManagment/LevelEditorScene.h"
 
+#include<xhash>
+
 namespace YAML {
 
 	template<>
@@ -151,10 +153,10 @@ bool SM_Serializer::Deserialize(LevelEditorScene* scene) {
 	
 	if (entities) {
 		for (auto entity : entities) {
-			unsigned int id = entity["Entity"].as<unsigned int>();
+			uint64_t uuid = entity["Entity"].as<uint64_t>();
 			std::string name = entity["Entity name"].as<std::string>();
 			
-			GameObject tmpGo(name, id);
+			GameObject tmpGo(name, uuid);
 			
 			auto transNode = entity["Transform component"];
 			if (transNode) {

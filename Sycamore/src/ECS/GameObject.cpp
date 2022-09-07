@@ -2,21 +2,27 @@
 
 #include"../smpch.h"
 
-#include"../Utils/ObjectPool.h"
+#include"../Utils/UUID.h"
+
 
 GameObject::GameObject() {
-	m_ID = SM_Pool::GetGameObjectID();
+	uuid = SM_UUID::GetUUID();
 	m_name = GetRandomName();
 }
 
 GameObject::GameObject(const std::string& name) {
-	m_ID = SM_Pool::GetGameObjectID();
+	uuid = SM_UUID::GetUUID();
 	m_name = name;
 }
 
-GameObject::GameObject(const std::string& name, uint id) {
-	m_ID = id;
+GameObject::GameObject(const std::string& name, uint64_t _uuid) {
+	uuid = _uuid;
 	m_name = name;
+}
+
+GameObject::GameObject(uint64_t _uuid) {
+	uuid = _uuid;
+	m_name = GetRandomName();
 }
 
 
