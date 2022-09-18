@@ -7,8 +7,6 @@
 
 #include"imgui/imgui.h"
 
-SM_math::mat4 projMat(1.0f);
-
 MouseHandleler::MouseHandleler(){
 	for (int i = 0; i < 3; i++)
 		mouseButtons[i] = false;
@@ -37,10 +35,6 @@ bool MouseHandleler::IsScrolling() {
 void MouseHandleler::SetMousePosAbsolute(double x, double y) {
 	position.x = x;
 	position.y = y;
-}
-
-void MouseHandleler::GetProjectionMatrix(SM_math::mat4 _projMat) {
-	projMat = _projMat;
 }
 
 void MouseHandleler::SetMousePosModel() {

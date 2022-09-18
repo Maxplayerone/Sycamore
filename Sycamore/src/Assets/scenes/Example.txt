@@ -1,0 +1,12 @@
+Scene: Title of the scene
+Entities:
+  - Entity: 1196015376
+    Entity name: Illuvium
+    Transform component:
+      Position: [192, 32]
+      Scale: [32, 32]
+    Sprite renderer component:
+      Color: [1, 1, 1, 1]
+      Texture index: 2
+      Texture file name: src/Assets/Images/amogus.jpg
+      spritesheet index: -1

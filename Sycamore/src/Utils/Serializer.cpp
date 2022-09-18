@@ -167,20 +167,23 @@ bool SM_Serializer::Deserialize(LevelEditorScene* scene) {
 			
 			auto rendNode = entity["Sprite renderer component"];
 			bool hasTexture = false;
-
-
-			//FOR NOW WE DON'T SUPPORT TEXTURES THAT ARE NOT FROM A SPRITESHEET
-
+			
 			if (rendNode) {
 				color4 color = rendNode["Color"].as<color4>();
 				uint texIndex = rendNode["Texture index"].as<uint>();
 
 				//texture thingy
-				int sprIndex = rendNode["spritesheet index"].as<int>();
-				auto texNode = rendNode["Texture file name"];
+				//used to get a texture at a specific index in a spritesheet
+				auto sprIndexNode = rendNode["spritesheet index"];
+				int sprIndex = -1;
+				if (sprIndexNode) {
+					sprIndex = sprIndexNode.as<int>();
+				}
+
+				auto texFilepathNode = rendNode["Texture file name"];
 				std::string filepath = "";
-				if (texNode) {
-					filepath = rendNode["Texture file name"].as<std::string>();
+				if (texFilepathNode) {
+					filepath = texFilepathNode.as<std::string>();
 					hasTexture = true;
 				}
 
@@ -197,7 +200,7 @@ bool SM_Serializer::Deserialize(LevelEditorScene* scene) {
 		}
 		
 	}
-	
+	LOGGER_INFO("Deserialization finished successfully");
 	return true;
 }
 

@@ -18,7 +18,7 @@ public:
 		float rightX = m_texture->GetWidth();
 		float topY = m_texture->GetHeight();
 		float bottomY = 0.0f;
-
+		/*
 		m_TexCoords[0] = leftX;
 		m_TexCoords[1] = bottomY;
 		m_TexCoords[2] = rightX;
@@ -27,6 +27,19 @@ public:
 		m_TexCoords[5] = topY;
 		m_TexCoords[6] = rightX;
 		m_TexCoords[7] = topY;
+		*/
+
+		m_TexCoords[0] = 0.0f;
+		m_TexCoords[1] = 0.0f;
+
+		m_TexCoords[2] = 1.0f;
+		m_TexCoords[3] = 0.0f;
+
+		m_TexCoords[4] = 0.0f;
+		m_TexCoords[5] = 1.0f;
+
+		m_TexCoords[6] = 1.0f;
+		m_TexCoords[7] = 1.0f;
 	}
 
 	Sprite(Texture* _texture, float texCoords[8]) {
@@ -52,7 +65,7 @@ public:
 
 	float* GetTexCoords() { return m_TexCoords; }
 	Texture* GetTexture() const { if (m_texture != nullptr) return m_texture; }
-	unsigned int GetTexSlot() const { return m_texture->GetSlot(); }
+	unsigned int GetTexSlot() const { if (m_texture == nullptr) return 0; else return m_texture->GetSlot();  }
 
 	void SetSpritesheetIndex(int index) { spritesheetIndex = index; }
 	int GetSpritesheetIndex() const { return spritesheetIndex; }

@@ -101,10 +101,11 @@ void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
 //---------------------------
 
 void DeleteFromVertices(uint arrayIndex) {
+	/*
 	std::stringstream ss;
 	ss << "Deleted line at index " << arrayIndex;
 	LOGGER_INFO(ss.str());
-
+	*/
 	for (uint i = 0; i < VERTEX_PER_OBJECT; i++) {
 		vertices[i + (arrayIndex * VERTEX_PER_OBJECT)] = 0.0f;
 	}
@@ -345,10 +346,11 @@ int DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions, color3 c
 	int third = AddLine2D({ top, left }, { top, right }, color);
 	int fourth = AddLine2D({ bottom, left }, { bottom, right }, color);
 
+	
 	std::stringstream ss;
 	ss << "First " << firstLineIndex << " second " << second << " third " << third << " fourth " << fourth;
 	LOGGER_WARNING(ss.str());
-
+	
 	return firstLineIndex;
 }
 

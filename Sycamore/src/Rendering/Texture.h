@@ -18,8 +18,6 @@ public:
 	Texture(const std::string& path);
 	Texture(const std::string& path, unsigned int slot);
 
-	Texture(uint width, uint height);
-
 	~Texture();
 
 	void Bind() const;
@@ -30,8 +28,6 @@ public:
 
 	unsigned int GetSlot() const { return m_slot; }
 	unsigned int GetOpenGLTexID() const { return m_TextureID; }
-
-	Texture* GetTexture() { return this; }
 
 	std::string& GetTextureFilepath() { return m_FilePath; }
 };

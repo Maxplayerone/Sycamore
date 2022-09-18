@@ -30,21 +30,16 @@ int result = -1;
 
 void LevelEditorScene::OnUpdate(float deltaTime) {
 	SM_Profiler::MAIN("LevelEditorScene update");
-	
 
 	this->m_renderer->ChangeBGColor(bgColor);
 
 	{
 		SM_Profiler::MAIN("LevelEditorScene gameObject updating");
 		for (int i = 0; i < m_sceneObjectsSize; i++) {
-
-			std::stringstream ss;
-			ss << "Object id " << m_sceneObjects[i].GetID();
-			LOGGER_INFO(ss.str());
 			m_sceneObjects[i].Update(deltaTime);
 		}
 	}
-
+	
 	if (MouseHandleler::Get().IsMouseButtonPressed(0)) {
 		result = CheckForClickedObject();
 	}
@@ -58,11 +53,9 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 			SM_math::vec2 center(activeGameObject->GetComponent<Transform>()->GetPos().x + activeGameObject->GetComponent<Transform>()->GetScale().x / 2, activeGameObject->GetComponent<Transform>()->GetPos().y + activeGameObject->GetComponent<Transform>()->GetScale().y / 2);
 			firstBoxIndex = DebugDraw::AddBox2D(center, activeGameObject->GetComponent<Transform>()->GetScale().x, {1, 0.2, 0.3});
 
-			//firstBoxIndex = DebugDraw::AddLine2D({ 0.0f, 0.0f }, { 100.0f, 100.0f }, { 0.54f, 0.95f, 0.36f });
 			result = -1;
 		}
 	}
-
 
 	activeGameObject->ImGui();
 	DebugDraw::Render();
@@ -149,38 +142,81 @@ void LevelEditorScene::SnapBlockToGrid() {
 
 void LevelEditorScene::ImGui() {
 	//cool blocks
-	ImGui::Begin("Blocks");	
-	unsigned int spriteNum = 81;
-
-	ImVec2 buttonSize(40, 40);
-	ImGui::Text("Manually wrapping:");
-
-	SpriteSheet* sheet = SM_Pool::GetSpriteSheet("src/Assets/Images/blocks.png", 16, 81);
-
-	ImGuiStyle& style = ImGui::GetStyle();
-	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-	for (int i = 0; i < spriteNum; i++)
+	ImGui::Begin("Palette");	
+	//normal shapes and texture
 	{
-		ImGui::PushID(i);
+		unsigned int spriteNum = 2;
 
-		Sprite spr = sheet->GetSprite(i);
-		if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetSlot(), ImVec2(40, 40), { spr.GetTexCoords()[0], spr.GetTexCoords()[1] }, { spr.GetTexCoords()[6], spr.GetTexCoords()[7] })){
-			
-			GameObject go;
-			go.AddComponent(new Transform({0.0f, 0.0f}));
-			//MouseHandleler::Get().DebugCheckMousePosModel();
-			go.AddComponent(new SpriteRenderer(spr));
-			AddGameObjectToScene(go);
+		ImVec2 buttonSize(40, 40);
+		ImGui::Text("Textures:");
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		Texture* whiteSquare = SM_Pool::GetTexture("src/Assets/Images/WhiteSquare.png");
+		Texture* amogus = SM_Pool::GetTexture("src/Assets/Images/amogus.jpg");
+		for (int i = 0; i < spriteNum; i++)
+		{
+			ImGui::PushID(i);
+
+			//probably should implement something better in the future
+			if (i == 0) {
+				if (ImGui::ImageButton((ImTextureID)whiteSquare->GetOpenGLTexID(), ImVec2(40, 40))) {
+					GameObject go;
+					go.AddComponent(new Transform({ 0.0f, 0.0f }));
+					go.AddComponent(new SpriteRenderer({ 1.0f, 1.0f, 1.0f, 1.0f }));
+					AddGameObjectToScene(go);
+				}
+			}
+			else {
+				if (ImGui::ImageButton((ImTextureID)amogus->GetOpenGLTexID(), ImVec2(40, 40), ImVec2(0,1), ImVec2(1, 0))) {
+					GameObject go;
+					go.AddComponent(new Transform({ 0.0f, 0.0f }));
+					go.AddComponent(new SpriteRenderer(Sprite(amogus)));
+					AddGameObjectToScene(go);
+				}
+			}
+
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + buttonSize.x; // Expected position if next button was on same line
+
+			if (i + 1 < spriteNum && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+
+			ImGui::PopID();
 		}
-		
-		float last_button_x2 = ImGui::GetItemRectMax().x;
-		float next_button_x2 = last_button_x2 + style.ItemSpacing.x + buttonSize.x; // Expected position if next button was on same line
+	}
+	//spritesheets
+	{
+		unsigned int spriteNum = 81;
+		SpriteSheet* sheet = SM_Pool::GetSpriteSheet("src/Assets/Images/blocks.png", 16, spriteNum);
 
-		if (i + 1 < spriteNum && next_button_x2 < window_visible_x2)
-			ImGui::SameLine();
+		ImVec2 buttonSize(40, 40);
+		ImGui::Text("Spritesheeet:");
 
-		ImGui::PopID();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		for (int i = 0; i < spriteNum; i++)
+		{
+			ImGui::PushID(i);
+
+			Sprite spr = sheet->GetSprite(i);
+			if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetOpenGLTexID(), ImVec2(40, 40), { spr.GetTexCoords()[0], spr.GetTexCoords()[1] }, { spr.GetTexCoords()[6], spr.GetTexCoords()[7] })) {
+				GameObject go;
+				go.AddComponent(new Transform({ 0.0f, 0.0f }));
+				go.AddComponent(new SpriteRenderer(spr));
+				AddGameObjectToScene(go);
+			}
+
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + buttonSize.x; // Expected position if next button was on same line
+
+			if (i + 1 < spriteNum && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+
+			ImGui::PopID();
+		}
 	}
 	ImGui::End();
 }

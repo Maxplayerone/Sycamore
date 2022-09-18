@@ -80,8 +80,6 @@ Window::Window() {
     Shader::SetUniformMat4f(shaderID, "view", viewMat);
     Shader::SetUniformMat4f(shaderID, "projection", projMat);
 
-    MouseHandleler::Get().GetProjectionMatrix(projMat);
-
     //Setup ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -104,7 +102,7 @@ Window::Window() {
 
     m_levelEditorScene = new LevelEditorScene();
 
-    SM_Serializer::Deserialize(m_levelEditorScene);
+    //SM_Serializer::Deserialize(m_levelEditorScene);
 }
 
 void Window::Run() {
@@ -128,7 +126,7 @@ void Window::Run() {
         
         SM_Profiler::ImGuiRender(); 
         m_levelEditorScene->ImGui();
-        ImGui();       
+        SM_Viewport::ImGui();       
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -158,10 +156,6 @@ Window::~Window() {
 
     glfwTerminate();
     SM_Serializer::Serialize();
-}
-
-void Window::ImGui() {
-    SM_Viewport::ImGui();
 }
 
 void Window::ImGuiTheme() {

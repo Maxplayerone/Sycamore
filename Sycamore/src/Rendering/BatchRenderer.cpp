@@ -76,7 +76,6 @@ void BatchRenderer::Render() {
 
 
     GLCall(glDrawElements(GL_TRIANGLES, 6 * gameObjectCount, GL_UNSIGNED_INT, nullptr));
-    //Shader::UnuseShader();
 }
 
 void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
@@ -120,7 +119,7 @@ void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
 static uint cycles = 0;
 void BatchRenderer::TestVertices(uint cyclesCount) {
     LOGGER_INFO("Vertices buffer");
-    for (int i = 0; i < 2 * VERTICES_DATA_FOR_QUAD; i++) {
+    for (int i = 0; i < VERTICES_DATA_FOR_QUAD; i++) {
         if (i % DATA_IN_ONE_VERTEX == 0) LOGGER_WARNING("New vertex");
         if (i % VERTICES_DATA_FOR_QUAD == 0) LOGGER_ERROR("New game object");
         std::stringstream ss;

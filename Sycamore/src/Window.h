@@ -31,6 +31,4 @@ public:
 
 	//sets the imGui style
 	void ImGuiTheme();
-
-	void ImGui();
 };

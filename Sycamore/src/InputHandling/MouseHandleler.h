@@ -51,8 +51,6 @@ public:
 	void PrintMousePosModel();
 	void PrintMousePosViewport();
 
-	void GetProjectionMatrix(SM_math::mat4 _projMat);
-
 	void SetMousePosViewport(SM_math::vec2 windowSize, SM_math::vec2 windowPos);
 };
 
