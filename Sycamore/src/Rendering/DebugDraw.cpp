@@ -39,26 +39,6 @@ void SetupMatrices(uint shaderID) {
 }
 
 
-struct DebugLine2D {
-	SM_math::vec2 start;
-	SM_math::vec2 end;
-	color3 color;
-
-	bool ignoreLifetime;
-	float lifetime;
-
-	//when the lifetime of the object
-	//is 0 then the object is dead
-	//and the bool is true
-	//(other objects can you it's space
-	//in the vertices buffer)
-
-	//it is set to true at the beginning because if the array has no
-	//linse then all lines are "dead"
-	bool isDead = true;
-	//should not be changed by any outside code
-};
-
 const uint MAX_DEBUG_OBJECTS = 500;
 //(2 * position + 3 * colours) * 2
 const unsigned int VERTEX_PER_OBJECT = 10;
@@ -70,7 +50,7 @@ float vertices[MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT];
 bool dirty = false;
 
 uint debugLine2DCount = 0;
-DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
+DebugDraw::DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
 
 static uint numOfCycles = 0;
 void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
@@ -101,11 +81,8 @@ void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
 //---------------------------
 
 void DeleteFromVertices(uint arrayIndex) {
-	/*
-	std::stringstream ss;
-	ss << "Deleted line at index " << arrayIndex;
-	LOGGER_INFO(ss.str());
-	*/
+
+	
 	for (uint i = 0; i < VERTEX_PER_OBJECT; i++) {
 		vertices[i + (arrayIndex * VERTEX_PER_OBJECT)] = 0.0f;
 	}
@@ -114,7 +91,7 @@ void DeleteFromVertices(uint arrayIndex) {
 	dirty = true;
 }
 
-void PrintLine2D(DebugLine2D line) {
+void PrintLine2D(DebugDraw::DebugLine2D line) {
 	std::stringstream ss;
 
 	//new lines don't work
@@ -126,7 +103,7 @@ void PrintLine2D(DebugLine2D line) {
 	LOGGER_INFO(ss.str());
 }
 
-int UpdateVerticesLine2D(DebugLine2D& line2D) {
+int UpdateVerticesLine2D(DebugDraw::DebugLine2D &line2D) {
 	float xValue = line2D.start.x;
 	float yValue = line2D.start.y;
 
@@ -165,6 +142,10 @@ int UpdateVerticesLine2D(DebugLine2D& line2D) {
 
 	lines2D[freeBufferSpaceIndex] = line2D;
 	lines2D[freeBufferSpaceIndex].isDead = false;
+
+	//std::stringstream ss;
+	//ss << "Line at index " << freeBufferSpaceIndex << " is " << lines2D[freeBufferSpaceIndex].isDead;
+	//LOGGER_INFO(ss.str());
 
 	debugLine2DCount++;
 	dirty = true;
@@ -235,7 +216,6 @@ bool usingGrid = false;
 
 void DebugDraw::DrawDebugGrid() {
 	//vertical lines
-	int number = 0;
 
 	for (int i = 0; i < verticalGridSpaces; i++) {
 		AddLine2D({ leftX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { rightX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f });
@@ -346,11 +326,11 @@ int DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions, color3 c
 	int third = AddLine2D({ top, left }, { top, right }, color);
 	int fourth = AddLine2D({ bottom, left }, { bottom, right }, color);
 
-	
+	/*
 	std::stringstream ss;
 	ss << "First " << firstLineIndex << " second " << second << " third " << third << " fourth " << fourth;
 	LOGGER_WARNING(ss.str());
-	
+	*/
 	return firstLineIndex;
 }
 

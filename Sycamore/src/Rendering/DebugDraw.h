@@ -3,6 +3,27 @@
 #include"../Utils/DataTypes.h"
 
 namespace DebugDraw {
+
+	struct DebugLine2D {
+		SM_math::vec2 start;
+		SM_math::vec2 end;
+		color3 color;
+
+		bool ignoreLifetime;
+		float lifetime;
+
+		//when the lifetime of the object
+		//is 0 then the object is dead
+		//and the bool is true
+		//(other objects can you it's space
+		//in the vertices buffer)
+
+		//it is set to true at the beginning because if the array has no
+		//linse then all lines are "dead"
+		bool isDead = true;
+		//should not be changed by any outside code
+	};
+
 	void Render();
 
 	void DrawDebugGrid();

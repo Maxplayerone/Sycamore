@@ -3,10 +3,48 @@ Entities:
   - Entity: 1196015376
     Entity name: Illuvium
     Transform component:
-      Position: [192, 32]
+      Position: [0, 96]
+      Scale: [32, 32]
+    Sprite renderer component:
+      Color: [1, 1, 1, 1]
+      Texture index: 1
+      Texture file name: src/Assets/Images/amogus.jpg
+      spritesheet index: -1
+  - Entity: 1185579032
+    Entity name: Illuvium
+    Transform component:
+      Position: [671.492676, 397.656891]
+      Scale: [32, 32]
+    Sprite renderer component:
+      Color: [1, 1, 1, 1]
+      Texture index: 1
+      Texture file name: src/Assets/Images/amogus.jpg
+      spritesheet index: -1
+  - Entity: 4074328443
+    Entity name: Togated
+    Transform component:
+      Position: [32, 32]
+      Scale: [32, 32]
+    Sprite renderer component:
+      Color: [0.574000001, 1, 1, 1]
+      Texture index: 0
+  - Entity: 967791651
+    Entity name: Illuvium
+    Transform component:
+      Position: [256, 0]
       Scale: [32, 32]
     Sprite renderer component:
       Color: [1, 1, 1, 1]
       Texture index: 2
-      Texture file name: src/Assets/Images/amogus.jpg
-      spritesheet index: -1
+      Texture file name: src/Assets/Images/blocks.png
+      spritesheet index: 1
+  - Entity: 3578303040
+    Entity name: Illuvium
+    Transform component:
+      Position: [256, 32]
+      Scale: [32, 32]
+    Sprite renderer component:
+      Color: [1, 1, 1, 1]
+      Texture index: 2
+      Texture file name: src/Assets/Images/blocks.png
+      spritesheet index: 0

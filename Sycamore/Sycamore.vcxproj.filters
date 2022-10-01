@@ -398,6 +398,17 @@
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\UUID.h" />
+    <ClInclude Include="Physics\Primitives\Primitives.h" />
+    <ClInclude Include="Physics\Rigidbody\IntersectionDetection.h" />
+    <ClInclude Include="Math\src\Utils.h" />
+    <ClInclude Include="Physics\Rigidbody\Rigidbody.h" />
+    <ClInclude Include="Unit tests\Master.h" />
+    <ClInclude Include="Unit tests\Physics\Tests_Physics.h" />
+    <ClInclude Include="Unit tests\Physics\Test_Intersection_LineAndPoint.h" />
+    <ClInclude Include="Unit tests\Utils.h" />
+    <ClInclude Include="Unit tests\Physics\PointAndCircle.h" />
+    <ClInclude Include="Unit tests\Physics\PointAndAABB.h" />
+    <ClInclude Include="Unit tests\Physics\PointAndOOBB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -597,6 +608,15 @@
       <Filter>vendor\yaml-cpp\src</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\UUID.cpp" />
+    <ClCompile Include="Physics\Rigidbody\IntersectionDetection.cpp" />
+    <ClCompile Include="Math\src\Utils.cpp" />
+    <ClCompile Include="Unit tests\Master.cpp" />
+    <ClCompile Include="Unit tests\Physics\Test_Intersection_LineAndPoint.cpp" />
+    <ClCompile Include="Unit tests\Physics\Test_Physics.cpp" />
+    <ClCompile Include="Unit tests\Utils.cpp" />
+    <ClCompile Include="Unit tests\Physics\PointAndCircle.cpp" />
+    <ClCompile Include="Unit tests\Physics\PointAndAABB.cpp" />
+    <ClCompile Include="Unit tests\Physics\PointAndOOBB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

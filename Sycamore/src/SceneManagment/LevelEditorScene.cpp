@@ -79,9 +79,10 @@ int LevelEditorScene::AddGameObjectToScene(GameObject& go) {
 //or -1 if no object has been clicked
 int LevelEditorScene::CheckForClickedObject() {
 	//deleting the gizmos on active game object
-	
-	for (int i = 0; i < 4; i++) {
-		DebugDraw::SetLine2DIgnoreLifetime(firstBoxIndex + i , false);
+	if (firstBoxIndex > -1) {
+		for (int i = 0; i < 4; i++) {
+			DebugDraw::SetLine2DIgnoreLifetime(firstBoxIndex + i, false);
+		}
 	}
 	
 	SM_math::vec2 mouse = MouseHandleler::Get().GetMousePosModel();
@@ -162,18 +163,22 @@ void LevelEditorScene::ImGui() {
 			//probably should implement something better in the future
 			if (i == 0) {
 				if (ImGui::ImageButton((ImTextureID)whiteSquare->GetOpenGLTexID(), ImVec2(40, 40))) {
+					/*
 					GameObject go;
 					go.AddComponent(new Transform({ 0.0f, 0.0f }));
 					go.AddComponent(new SpriteRenderer({ 1.0f, 1.0f, 1.0f, 1.0f }));
 					AddGameObjectToScene(go);
+					*/
 				}
 			}
 			else {
 				if (ImGui::ImageButton((ImTextureID)amogus->GetOpenGLTexID(), ImVec2(40, 40), ImVec2(0,1), ImVec2(1, 0))) {
+					/*
 					GameObject go;
 					go.AddComponent(new Transform({ 0.0f, 0.0f }));
 					go.AddComponent(new SpriteRenderer(Sprite(amogus)));
 					AddGameObjectToScene(go);
+					*/
 				}
 			}
 
@@ -203,10 +208,12 @@ void LevelEditorScene::ImGui() {
 
 			Sprite spr = sheet->GetSprite(i);
 			if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetOpenGLTexID(), ImVec2(40, 40), { spr.GetTexCoords()[0], spr.GetTexCoords()[1] }, { spr.GetTexCoords()[6], spr.GetTexCoords()[7] })) {
+				/*
 				GameObject go;
 				go.AddComponent(new Transform({ 0.0f, 0.0f }));
 				go.AddComponent(new SpriteRenderer(spr));
 				AddGameObjectToScene(go);
+				*/
 			}
 
 			float last_button_x2 = ImGui::GetItemRectMax().x;

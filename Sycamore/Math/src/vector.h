@@ -2,7 +2,7 @@
 #include"../../src/smpch.h"
 
 namespace SM_math {
-
+	
 	struct vec2 {
 		float x;
 		float y;
@@ -10,6 +10,11 @@ namespace SM_math {
 		vec2() {
 			x = 0.0f;
 			y = 0.0f;
+		}
+
+		vec2(float num) {
+			x = num;
+			y = num;
 		}
 
 		vec2(float _x, float _y) {
@@ -49,11 +54,23 @@ namespace SM_math {
 			return vec2(x * num, y * num);
 		}
 
+		vec2 operator/(float num) {
+			return vec2(x / num, y / num);
+		}
+
+		float operator*(SM_math::vec2& other) {
+			return x * other.x + y * other.y;
+		}
+
+		int Lengthquared();
+
 		friend std::ostream& operator<< (std::ostream& stream, const SM_math::vec2& vector) {
 			stream << "[" << vector.x << " , " << vector.y << "]";
 			return stream;
 		}
 	};
+
+	vec2& Rotate(SM_math::vec2& vector, float angleInDegrees, SM_math::vec2& origin);
 
 	struct vec3 {
 		float x;

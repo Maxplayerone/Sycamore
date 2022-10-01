@@ -187,9 +187,12 @@ bool SM_Serializer::Deserialize(LevelEditorScene* scene) {
 					hasTexture = true;
 				}
 
-				//to-do add support for textures
 				if (!hasTexture)
 					tmpGo.AddComponent(new SpriteRenderer(color));
+				else if (hasTexture && sprIndex == -1) {
+					Texture* tex = SM_Pool::GetTexture(filepath);
+					tmpGo.AddComponent(new SpriteRenderer(Sprite(tex)));
+				}
 				else {
 					SpriteSheet* sheet = SM_Pool::GetSpriteSheet(filepath, 16, 81);
 					tmpGo.AddComponent( new SpriteRenderer( sheet->GetSprite(sprIndex) ) );

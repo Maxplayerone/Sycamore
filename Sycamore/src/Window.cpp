@@ -27,6 +27,8 @@
 
 #include"Buffers/Framebuffer.h"
 
+#include"../Unit tests/Master.h"
+
 uint _fboID = 0;
 
 Window::Window() {
@@ -96,13 +98,19 @@ Window::Window() {
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
 
-    //DebugDraw::DrawDebugGrid();
+    //checking the uint tests
+    SM_Tests::Init();
+
+    DebugDraw::DrawDebugGrid();
 
     _fboID = SM_Pool::GetFramebufferID(SM_settings::windowWidth, SM_settings::windowHeight);
 
     m_levelEditorScene = new LevelEditorScene();
 
-    //SM_Serializer::Deserialize(m_levelEditorScene);
+    SM_Serializer::Deserialize(m_levelEditorScene);
+
+
+    
 }
 
 void Window::Run() {

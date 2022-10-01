@@ -26,7 +26,9 @@ SM_math::mat4 SM_math::MatrixScale(SM_math::mat4 matrixToScale, float scaleFacto
 	return matrixToScale * matrix;
 }
 
+//angle in degrees
 SM_math::mat4& SM_math::MatrixRotation(SM_math::mat4& matrixToRotate, float _angle) {
+	//angle in radians
 	float angle = _angle * 3.14159 / 180;
 
 	SM_math::mat4 rotationMatrix(1.0f);
