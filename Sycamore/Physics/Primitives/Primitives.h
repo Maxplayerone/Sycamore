@@ -4,19 +4,24 @@
 
 namespace SM_Physics {
 	struct Circle {
+	private:
 		float radius = 1.0f;
+	public:
 		Rigidbody rb = Rigidbody();
 
 		Circle(float r, SM_math::vec2 center)
 			: radius(r) {
-			rb.pos = center;
+			rb.SetPos(center);
 		}
 
 
 		Circle(SM_math::vec2 center)
 			: radius(1.0f) {
-			rb.pos = center;
+			rb.SetPos(center);
 		}
+
+		void SetRadius(float length) { radius = length; }
+		float GetRadius() { return radius; }
 	};
 
 	struct AABB {
@@ -34,7 +39,7 @@ namespace SM_Physics {
 			diagonalLength = topRight - bottomLeft;
 			boxDimensionsHalf = diagonalLength / 2;
 
-			rb.pos = SM_math::vec2(bottomLeft.x + boxDimensionsHalf.x, bottomLeft.y + boxDimensionsHalf.y);
+			rb.SetPos(SM_math::vec2(bottomLeft.x + boxDimensionsHalf.x, bottomLeft.y + boxDimensionsHalf.y));
 		}
 	};
 
@@ -52,6 +57,7 @@ namespace SM_Physics {
 			:bottomLeft(bottomLeft), topRight(topRight) {
 			diagonalLength = topRight - bottomLeft;
 			halfLen = diagonalLength / 2;
+			rb.SetRotation(0.0f);
 		}
 
 
@@ -59,7 +65,11 @@ namespace SM_Physics {
 			:bottomLeft(bottomLeft), topRight(topRight) {
 			diagonalLength = topRight - bottomLeft;
 			halfLen = diagonalLength / 2;
-			rb.rotation = angle;
+			rb.SetRotation(angle);
+		}
+
+		SM_math::vec2& GetCenter() {
+			return halfLen;
 		}
 	};
 }

@@ -8,4 +8,7 @@ namespace SM_math {
 
 	bool Compare(float x, float y);
 	bool Compare(SM_math::vec2& vec, SM_math::vec2& vec2);
+
+	float MaxValue(float a, float b);
+	float MinValue(float a, float b);
 }

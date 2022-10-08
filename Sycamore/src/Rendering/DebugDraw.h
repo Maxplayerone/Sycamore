@@ -22,6 +22,8 @@ namespace DebugDraw {
 		//linse then all lines are "dead"
 		bool isDead = true;
 		//should not be changed by any outside code
+
+		int LengthSquared();
 	};
 
 	void Render();

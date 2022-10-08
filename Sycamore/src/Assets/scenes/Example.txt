@@ -3,7 +3,7 @@ Entities:
   - Entity: 1196015376
     Entity name: Illuvium
     Transform component:
-      Position: [0, 96]
+      Position: [160, 160]
       Scale: [32, 32]
     Sprite renderer component:
       Color: [1, 1, 1, 1]
@@ -23,7 +23,7 @@ Entities:
   - Entity: 4074328443
     Entity name: Togated
     Transform component:
-      Position: [32, 32]
+      Position: [-64, -64]
       Scale: [32, 32]
     Sprite renderer component:
       Color: [0.574000001, 1, 1, 1]
@@ -41,7 +41,7 @@ Entities:
   - Entity: 3578303040
     Entity name: Illuvium
     Transform component:
-      Position: [256, 32]
+      Position: [32, 64]
       Scale: [32, 32]
     Sprite renderer component:
       Color: [1, 1, 1, 1]

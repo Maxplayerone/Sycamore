@@ -6,7 +6,7 @@ namespace SM_Tests {
 	int totalTestsSession = 0;
 	int correctTestsSession = 0;
 
-	void PrintTestResult(bool testValidation, const std::string& functionName) {
+	void PrintResultForTest(bool testValidation, const std::string& functionName) {
 		totalTests++;
 		totalTestsSession++;
 

@@ -409,6 +409,13 @@
     <ClInclude Include="Unit tests\Physics\PointAndCircle.h" />
     <ClInclude Include="Unit tests\Physics\PointAndAABB.h" />
     <ClInclude Include="Unit tests\Physics\PointAndOOBB.h" />
+    <ClInclude Include="Unit tests\Physics\LineAndCircle.h" />
+    <ClInclude Include="Unit tests\Physics\LineAndAABB.h" />
+    <ClInclude Include="Unit tests\Physics\LineAndOOBB.h" />
+    <ClInclude Include="Unit tests\Physics\CircleAndCircle.h" />
+    <ClInclude Include="Unit tests\Physics\CircleAndAABB.h" />
+    <ClInclude Include="Unit tests\Physics\AABBAndAABB.h" />
+    <ClInclude Include="Unit tests\Physics\AABBAndOOBB.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -617,6 +624,13 @@
     <ClCompile Include="Unit tests\Physics\PointAndCircle.cpp" />
     <ClCompile Include="Unit tests\Physics\PointAndAABB.cpp" />
     <ClCompile Include="Unit tests\Physics\PointAndOOBB.cpp" />
+    <ClCompile Include="Unit tests\Physics\LineAndCircle.cpp" />
+    <ClCompile Include="Unit tests\Physics\LineAndAABB.cpp" />
+    <ClCompile Include="Unit tests\Physics\LineAndOOBB.cpp" />
+    <ClCompile Include="Unit tests\Physics\CircleAndCircle.cpp" />
+    <ClCompile Include="Unit tests\Physics\CircleAndAABB.cpp" />
+    <ClCompile Include="Unit tests\Physics\AABBAndAABB.cpp" />
+    <ClCompile Include="Unit tests\Physics\AABBAndOOBB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

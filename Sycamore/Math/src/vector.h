@@ -63,6 +63,9 @@ namespace SM_math {
 		}
 
 		int Lengthquared();
+		//normalizes the vector
+		//(that means it's magnitude is 1)
+		void Normalize();
 
 		friend std::ostream& operator<< (std::ostream& stream, const SM_math::vec2& vector) {
 			stream << "[" << vector.x << " , " << vector.y << "]";

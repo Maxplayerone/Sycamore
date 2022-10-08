@@ -13,7 +13,7 @@
 namespace SM_Tests {
 
 	//function that only unit tests functions that return boolean
-	void PrintTestResult(bool testValidation, const std::string& functionName);
+	void PrintResultForTest(bool testValidation, const std::string& functionName);
 
 	class CheckingSession {
 	public:
@@ -25,5 +25,5 @@ namespace SM_Tests {
 	SM_Tests::CheckingSession session = SM_Tests::CheckingSession()
 
 #define CHECK(FUNCTION);  \
-	PrintTestResult(FUNCTION(), #FUNCTION)
+	PrintResultForTest(FUNCTION(), #FUNCTION)
 }

@@ -38,6 +38,11 @@ void SetupMatrices(uint shaderID) {
 	Shader::SetUniformMat4f(debugShaderID, "projection", projMat);
 }
 
+int DebugDraw::DebugLine2D::LengthSquared() {
+	SM_math::vec2 vec = end - start;
+	return vec.Lengthquared();
+}
+
 
 const uint MAX_DEBUG_OBJECTS = 500;
 //(2 * position + 3 * colours) * 2
