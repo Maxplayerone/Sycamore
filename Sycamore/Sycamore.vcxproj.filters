@@ -402,20 +402,11 @@
     <ClInclude Include="Physics\Rigidbody\IntersectionDetection.h" />
     <ClInclude Include="Math\src\Utils.h" />
     <ClInclude Include="Physics\Rigidbody\Rigidbody.h" />
-    <ClInclude Include="Unit tests\Master.h" />
-    <ClInclude Include="Unit tests\Physics\Tests_Physics.h" />
-    <ClInclude Include="Unit tests\Physics\Test_Intersection_LineAndPoint.h" />
-    <ClInclude Include="Unit tests\Utils.h" />
-    <ClInclude Include="Unit tests\Physics\PointAndCircle.h" />
-    <ClInclude Include="Unit tests\Physics\PointAndAABB.h" />
-    <ClInclude Include="Unit tests\Physics\PointAndOOBB.h" />
-    <ClInclude Include="Unit tests\Physics\LineAndCircle.h" />
-    <ClInclude Include="Unit tests\Physics\LineAndAABB.h" />
-    <ClInclude Include="Unit tests\Physics\LineAndOOBB.h" />
-    <ClInclude Include="Unit tests\Physics\CircleAndCircle.h" />
-    <ClInclude Include="Unit tests\Physics\CircleAndAABB.h" />
-    <ClInclude Include="Unit tests\Physics\AABBAndAABB.h" />
-    <ClInclude Include="Unit tests\Physics\AABBAndOOBB.h" />
+    <ClInclude Include="Physics\Forces\ForceGenerator.h" />
+    <ClInclude Include="Physics\Forces\ForceRegistry.h" />
+    <ClInclude Include="Physics\PhysicsSystem.h" />
+    <ClInclude Include="Physics\Forces\Gravity.h" />
+    <ClInclude Include="Physics\Rigidbody\Collisions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
@@ -617,20 +608,11 @@
     <ClCompile Include="src\Utils\UUID.cpp" />
     <ClCompile Include="Physics\Rigidbody\IntersectionDetection.cpp" />
     <ClCompile Include="Math\src\Utils.cpp" />
-    <ClCompile Include="Unit tests\Master.cpp" />
-    <ClCompile Include="Unit tests\Physics\Test_Intersection_LineAndPoint.cpp" />
-    <ClCompile Include="Unit tests\Physics\Test_Physics.cpp" />
-    <ClCompile Include="Unit tests\Utils.cpp" />
-    <ClCompile Include="Unit tests\Physics\PointAndCircle.cpp" />
-    <ClCompile Include="Unit tests\Physics\PointAndAABB.cpp" />
-    <ClCompile Include="Unit tests\Physics\PointAndOOBB.cpp" />
-    <ClCompile Include="Unit tests\Physics\LineAndCircle.cpp" />
-    <ClCompile Include="Unit tests\Physics\LineAndAABB.cpp" />
-    <ClCompile Include="Unit tests\Physics\LineAndOOBB.cpp" />
-    <ClCompile Include="Unit tests\Physics\CircleAndCircle.cpp" />
-    <ClCompile Include="Unit tests\Physics\CircleAndAABB.cpp" />
-    <ClCompile Include="Unit tests\Physics\AABBAndAABB.cpp" />
-    <ClCompile Include="Unit tests\Physics\AABBAndOOBB.cpp" />
+    <ClCompile Include="Physics\Forces\ForceRegistry.cpp" />
+    <ClCompile Include="Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="Physics\Forces\Gravity.cpp" />
+    <ClCompile Include="Physics\Rigidbody\Rigidbody.cpp" />
+    <ClCompile Include="Physics\Rigidbody\Collissions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

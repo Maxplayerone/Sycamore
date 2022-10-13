@@ -22,7 +22,7 @@ namespace SM_math {
 			y = _y;
 		}
 
-		vec2 operator+(vec2& _vector) {
+		vec2& operator+(vec2& _vector) {
 			return vec2(x + _vector.x, y + _vector.y);
 		}
 

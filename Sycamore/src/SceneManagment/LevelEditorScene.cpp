@@ -17,14 +17,32 @@
 
 #include"imgui/imgui.h"
 
+#include"../../Physics/PhysicsSystem.h"
+
 int firstBoxIndex = -1;
+
+SM_Physics::PhysicsSystem* physicsSystem;
+Transform* trans1 = new Transform(SM_math::vec2(30.0f, 256.0f));
+Transform* trans2 = new Transform(SM_math::vec2(120.0f, 256.0));
 
 LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();	
 	activeGameObject = new GameObject("NULL");
 
-	//DebugDraw::AddBox2D({ 0.0f, 0.0f }, 128.0f, 45);
-	//DebugDraw::AddCircle2D({ 0.0f, 00.0f }, 50.0f, { 0.54f, 0.95f, 0.36f });
+	
+	physicsSystem = new SM_Physics::PhysicsSystem(1 / 60.0f, 1000);
+
+	SM_Physics::Rigidbody* r1 = new SM_Physics::Rigidbody();
+	r1->SetMass(10.0f);
+	r1->SetRenderingPos(trans1);
+	SM_Physics::Rigidbody* r2 = new SM_Physics::Rigidbody();
+	r2->SetMass(20.0f);
+	r2->SetRenderingPos(trans2);
+	
+	physicsSystem->AddRigidbody(r1);
+	physicsSystem->AddRigidbody(r2);
+
+	DebugDraw::AddBox2D(trans1->GetPos(), 32.0f, { 0.3f, 0.8f, 0.15f });
 }
 int result = -1;
 
@@ -57,6 +75,11 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 		}
 	}
 
+	physicsSystem->FixedUpdate();
+	
+	DebugDraw::AddBox2D(trans1->GetPos(), 32.0f, { 0.3f, 0.8f, 0.15f }, DebugDraw::DESTROY_ON_FRAME);
+	DebugDraw::AddBox2D(trans2->GetPos(), 32.0f, { 0.9f, 0.1f, 0.15f }, DebugDraw::DESTROY_ON_FRAME);
+	
 	activeGameObject->ImGui();
 	DebugDraw::Render();
 	this->m_renderer->Render();	
@@ -81,7 +104,7 @@ int LevelEditorScene::CheckForClickedObject() {
 	//deleting the gizmos on active game object
 	if (firstBoxIndex > -1) {
 		for (int i = 0; i < 4; i++) {
-			DebugDraw::SetLine2DIgnoreLifetime(firstBoxIndex + i, false);
+			DebugDraw::SetLine2DIgnoreLifetime(firstBoxIndex + i, DebugDraw::IGNORE_LIFETIME);
 		}
 	}
 	
@@ -163,22 +186,22 @@ void LevelEditorScene::ImGui() {
 			//probably should implement something better in the future
 			if (i == 0) {
 				if (ImGui::ImageButton((ImTextureID)whiteSquare->GetOpenGLTexID(), ImVec2(40, 40))) {
-					/*
+					
 					GameObject go;
-					go.AddComponent(new Transform({ 0.0f, 0.0f }));
+					go.AddComponent(new Transform(SM_math::vec2(0.0f, 0.0f )));
 					go.AddComponent(new SpriteRenderer({ 1.0f, 1.0f, 1.0f, 1.0f }));
 					AddGameObjectToScene(go);
-					*/
+					
 				}
 			}
 			else {
 				if (ImGui::ImageButton((ImTextureID)amogus->GetOpenGLTexID(), ImVec2(40, 40), ImVec2(0,1), ImVec2(1, 0))) {
-					/*
+					
 					GameObject go;
-					go.AddComponent(new Transform({ 0.0f, 0.0f }));
+					go.AddComponent(new Transform(SM_math::vec2(0.0f, 0.0f )));
 					go.AddComponent(new SpriteRenderer(Sprite(amogus)));
 					AddGameObjectToScene(go);
-					*/
+					
 				}
 			}
 

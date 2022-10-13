@@ -24,3 +24,16 @@ float SM_math::MaxValue(float a, float b) {
 float SM_math::MinValue(float a, float b) {
 	return (a < b) ? a : b;
 }
+
+float SM_math::Abs(float x) {
+	return (x < 0) ? -x : x;
+}
+
+
+float SM_math::Length(SM_math::vec2& vec) {
+	return sqrtf(vec.x * vec.x + vec.y * vec.y);
+}
+
+SM_math::vec2& SM_math::Normalize(SM_math::vec2& vec, float length) {
+	return SM_math::vec2(vec.x / length, vec.y / length);
+}

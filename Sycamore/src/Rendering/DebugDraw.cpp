@@ -92,7 +92,7 @@ void DeleteFromVertices(uint arrayIndex) {
 		vertices[i + (arrayIndex * VERTEX_PER_OBJECT)] = 0.0f;
 	}
 	lines2D[arrayIndex].isDead = true;
-	lines2D[arrayIndex].ignoreLifetime = true;
+	lines2D[arrayIndex].lifetimeFlag = DebugDraw::HAS_LIFETIME;
 	dirty = true;
 }
 
@@ -165,7 +165,7 @@ void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, 
 	tmpLine.end = end;
 	tmpLine.color = color;
 
-	tmpLine.ignoreLifetime = false;
+	tmpLine.lifetimeFlag = IGNORE_LIFETIME;
 	tmpLine.lifetime = lifetime;
 
 	UpdateVerticesLine2D(tmpLine);
@@ -175,25 +175,25 @@ void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, float lifetime
 }
 
 //methods without lifetime
-int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color) {
+int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, flag _flag) {
 	DebugLine2D tmpLine;
 	tmpLine.start = start;
 	tmpLine.end = end;
 	tmpLine.color = color;
 
-	tmpLine.ignoreLifetime = true;
+	tmpLine.lifetimeFlag = _flag;
 	tmpLine.lifetime = 0.0f;
 
 	int index = UpdateVerticesLine2D(tmpLine);
 
 	return index;
 }
-int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end) {
-	return AddLine2D(start, end, { 0.0f, 0.0f, 0.0f });
+int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, flag _flag) {
+	return AddLine2D(start, end, { 0.0f, 0.0f, 0.0f }, _flag);
 }
 
-void DebugDraw::SetLine2DIgnoreLifetime(int index, bool ignoreLifetime) {
-	lines2D[index].ignoreLifetime = ignoreLifetime;
+void DebugDraw::SetLine2DIgnoreLifetime(int index, flag _lifetimeFlag) {
+	lines2D[index].lifetimeFlag = _lifetimeFlag;
 }
 
 //-------------------------------------
@@ -242,8 +242,10 @@ void CheckForDeadLines() {
 	SM_Profiler::SUB("debug draw update frame");
 
 	for (uint i = 0; i < debugLine2DCount; i++) {
-
-		if (lines2D[i].ignoreLifetime == false) {
+		if (lines2D[i].lifetimeFlag == DebugDraw::DESTROY_ON_FRAME) {
+			DeleteFromVertices(i);
+		}
+		else if(lines2D[i].lifetimeFlag == DebugDraw::IGNORE_LIFETIME) {
 			lines2D[i].lifetime--;
 
 			if ((lines2D[i].lifetime <= 0.0f)) {

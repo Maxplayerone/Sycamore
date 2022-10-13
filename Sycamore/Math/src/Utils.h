@@ -11,4 +11,10 @@ namespace SM_math {
 
 	float MaxValue(float a, float b);
 	float MinValue(float a, float b);
+
+	float Abs(float x);
+
+	float Length(SM_math::vec2& vec);
+
+	SM_math::vec2& Normalize(SM_math::vec2& vec, float length);
 }

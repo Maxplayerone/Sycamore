@@ -176,7 +176,7 @@ interval& GetInterval(SM_Physics::Box2D& box, SM_math::vec2 axis) {
 	};
 
 	if (box.rb.GetRotation() != 0.0f) {
-		for (int i = 0; i > 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			points[i] = SM_math::Rotate(points[i], box.rb.GetRotation(), box.rb.GetPos());
 		}
 	}
