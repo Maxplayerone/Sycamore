@@ -73,7 +73,7 @@ namespace SM_math {
 		}
 	};
 
-	vec2& Rotate(SM_math::vec2& vector, float angleInDegrees, SM_math::vec2& origin);
+	vec2& Rotate(SM_math::vec2& vector, float angle, SM_math::vec2& origin);
 
 	struct vec3 {
 		float x;

@@ -7,17 +7,25 @@ namespace SM_Physics {
 	private:
 		float radius = 1.0f;
 	public:
-		Rigidbody rb = Rigidbody();
+		Rigidbody* rb;
 
 		Circle(float r, SM_math::vec2 center)
 			: radius(r) {
-			rb.SetPos(center);
+			rb->SetPos(center);
+			rb->SetCollider(this);
 		}
 
 
 		Circle(SM_math::vec2 center)
 			: radius(1.0f) {
-			rb.SetPos(center);
+			rb->SetPos(center);
+			rb->SetCollider(this);
+		}
+
+		Circle(float r, Rigidbody* _rb)
+			: radius(r) {
+			rb= _rb;
+			rb->SetCollider(this);
 		}
 
 		void SetRadius(float length) { radius = length; }

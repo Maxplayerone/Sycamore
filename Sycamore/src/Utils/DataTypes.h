@@ -15,7 +15,21 @@ struct color3 {
 	float r;
 	float g;
 	float b;
+
+	color3(float a, float c, float d) {
+		r = a;
+		g = c;
+		b = d;
+	}
+
+	color3() {
+		r = 0.0f;
+		g = 0.0f;
+		b = 0.0f;
+	}
 };
+
+color3& RandomColor();
 
 std::ostream& operator<< (std::ostream& stream, const color3 color);
 

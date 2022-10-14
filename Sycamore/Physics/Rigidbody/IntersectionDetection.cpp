@@ -28,7 +28,7 @@ bool SM_Physics::Intersection_LineAndPoint(SM_math::vec2& point, DebugDraw::Debu
 
 bool SM_Physics::Intersection_PointAndCircle(SM_math::vec2& point, Circle& circle) {
 	//idk how the rb knows the center of the circle but ok
-	SM_math::vec2 circleCenter = circle.rb.GetPos();
+	SM_math::vec2 circleCenter = circle.rb->GetPos();
 	SM_math::vec2 pointToCenter =  point - circleCenter;
 
 	return pointToCenter.Lengthquared() < circle.GetRadius() * circle.GetRadius();
@@ -48,7 +48,7 @@ bool SM_Physics::Intersection_LineAndCircle(DebugDraw::DebugLine2D& line, Circle
 	//if the end point or the start point is already in the circle
 	if (Intersection_PointAndCircle(line.start, circle) || Intersection_PointAndCircle(line.end, circle)) return true;
 
-	SM_math::vec2 vectorToCenter = circle.rb.GetPos() - line.start;
+	SM_math::vec2 vectorToCenter = circle.rb->GetPos() - line.start;
 	float scalingFactor = (vectorToCenter * line.end) / (vectorToCenter * vectorToCenter);
 	SM_math::vec2 closestPointToCenter = line.start + (line.end * scalingFactor);
 	return Intersection_PointAndCircle(closestPointToCenter, circle);
@@ -106,14 +106,14 @@ bool SM_Physics::Intersection_LineAndOOBB(DebugDraw::DebugLine2D& line, Box2D& o
 bool SM_Physics::Intersection_CircleAndCircle(Circle& c1, Circle& c2) {
 	//there is no difference which circle pos is first because the difference is a negative sign
 	//which we get rid of while squaring the distance
-	float distFromCenters = (c2.rb.GetPos() - c1.rb.GetPos()).Lengthquared();
+	float distFromCenters = (c2.rb->GetPos() - c1.rb->GetPos()).Lengthquared();
 	float sumOfRadiuses = (c2.GetRadius() + c1.GetRadius()) * (c2.GetRadius() + c1.GetRadius());
 
 	return sumOfRadiuses >= distFromCenters;
 }
 
 bool SM_Physics::Intersection_CircleAndAABB(Circle& circle, AABB& aabb) {
-	SM_math::vec2 closest = circle.rb.GetPos();
+	SM_math::vec2 closest = circle.rb->GetPos();
 	SM_math::vec2 min = aabb.bottomLeft;
 	SM_math::vec2 max = aabb.topRight;
 
@@ -131,7 +131,7 @@ bool SM_Physics::Intersection_CircleAndAABB(Circle& circle, AABB& aabb) {
 		closest.y = max.y;
 	}
 
-	SM_math::vec2 boxToCircle = closest - circle.rb.GetPos();
+	SM_math::vec2 boxToCircle = closest - circle.rb->GetPos();
 	return boxToCircle.Lengthquared() <= circle.GetRadius() * circle.GetRadius();
 
 }

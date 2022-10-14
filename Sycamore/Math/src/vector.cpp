@@ -1,20 +1,23 @@
 #include"vector.h"
 
-SM_math::vec2& SM_math::Rotate(SM_math::vec2& vector, float angleInDegrees, SM_math::vec2& origin) {
-	//angle in radians
-	float angle = angleInDegrees * 3.14159 / 180;
-	//float angle = angleInDegrees;
-	SM_math::vec2 rotatedVector(1.0f);
-	float translatedX =  vector.x - origin.x;
-	float translatedY = vector.y - origin.y;
+SM_math::vec2& SM_math::Rotate(SM_math::vec2& vector, float angleDegrees, SM_math::vec2& origin)
+{
+	float angle = angleDegrees * (3.1415f / 180.0f);
+	float s = sin(angle);
+	float c = cos(angle);
 
-	rotatedVector.x = (translatedX * cos(angle)) - (translatedX  * sin(angle));
-	rotatedVector.y = (translatedY * sin(angle)) + (translatedY * cos(angle));
+	// translate point back to origin:
+	vector.x -= origin.x;
+	vector.y -= origin.y;
 
-	rotatedVector.x += origin.x;
-	rotatedVector.y += origin.y;
+	// rotate point
+	float xnew = vector.x * c - vector.y * s;
+	float ynew = vector.x * s + vector.y * c;
 
-	return rotatedVector;
+	// translate point back:
+	vector.x = xnew + origin.x;
+	vector.y = ynew + origin.y;
+	return vector;
 }
 
 int SM_math::vec2::Lengthquared() {

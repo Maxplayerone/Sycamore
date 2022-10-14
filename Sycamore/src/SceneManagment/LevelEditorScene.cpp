@@ -18,12 +18,19 @@
 #include"imgui/imgui.h"
 
 #include"../../Physics/PhysicsSystem.h"
+#include"../../Physics/Primitives/Primitives.h"
 
 int firstBoxIndex = -1;
 
 SM_Physics::PhysicsSystem* physicsSystem;
-Transform* trans1 = new Transform(SM_math::vec2(30.0f, 256.0f));
-Transform* trans2 = new Transform(SM_math::vec2(120.0f, 256.0));
+Transform* trans1 = new Transform(SM_math::vec2(0.0f, 200.0f));
+Transform* trans2 = new Transform(SM_math::vec2(0.0f, -250.0f));
+
+SM_Physics::Circle* c1;
+SM_Physics::Circle* c2;
+
+color3 color;
+color3 color2;
 
 LevelEditorScene::LevelEditorScene() {
 	this->m_renderer = new Renderer();	
@@ -35,14 +42,20 @@ LevelEditorScene::LevelEditorScene() {
 	SM_Physics::Rigidbody* r1 = new SM_Physics::Rigidbody();
 	r1->SetMass(10.0f);
 	r1->SetRenderingPos(trans1);
+	c1 = new SM_Physics::Circle(50.0f, r1);
+
+	
 	SM_Physics::Rigidbody* r2 = new SM_Physics::Rigidbody();
 	r2->SetMass(20.0f);
 	r2->SetRenderingPos(trans2);
+	c2 = new SM_Physics::Circle(75, r2);
 	
-	physicsSystem->AddRigidbody(r1);
-	physicsSystem->AddRigidbody(r2);
 
-	DebugDraw::AddBox2D(trans1->GetPos(), 32.0f, { 0.3f, 0.8f, 0.15f });
+	physicsSystem->AddRigidbody(r1);
+	physicsSystem->AddRigidbody(r2, false);
+
+	color = RandomColor();
+	color2 = RandomColor();
 }
 int result = -1;
 
@@ -76,9 +89,9 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 	}
 
 	physicsSystem->FixedUpdate();
-	
-	DebugDraw::AddBox2D(trans1->GetPos(), 32.0f, { 0.3f, 0.8f, 0.15f }, DebugDraw::DESTROY_ON_FRAME);
-	DebugDraw::AddBox2D(trans2->GetPos(), 32.0f, { 0.9f, 0.1f, 0.15f }, DebugDraw::DESTROY_ON_FRAME);
+
+	DebugDraw::AddCircle2D(c1->rb->GetPos(), c1->GetRadius(), color, DebugDraw::DESTROY_ON_FRAME);
+	DebugDraw::AddCircle2D(c2->rb->GetPos(), c2->GetRadius(), color2, DebugDraw::DESTROY_ON_FRAME);
 	
 	activeGameObject->ImGui();
 	DebugDraw::Render();
@@ -104,7 +117,7 @@ int LevelEditorScene::CheckForClickedObject() {
 	//deleting the gizmos on active game object
 	if (firstBoxIndex > -1) {
 		for (int i = 0; i < 4; i++) {
-			DebugDraw::SetLine2DIgnoreLifetime(firstBoxIndex + i, DebugDraw::IGNORE_LIFETIME);
+			DebugDraw::SetLine2DLifetimeFlag(firstBoxIndex + i, DebugDraw::DESTROY_ON_FRAME);
 		}
 	}
 	
@@ -231,12 +244,12 @@ void LevelEditorScene::ImGui() {
 
 			Sprite spr = sheet->GetSprite(i);
 			if (ImGui::ImageButton((ImTextureID)sheet->GetTexture()->GetOpenGLTexID(), ImVec2(40, 40), { spr.GetTexCoords()[0], spr.GetTexCoords()[1] }, { spr.GetTexCoords()[6], spr.GetTexCoords()[7] })) {
-				/*
+				
 				GameObject go;
-				go.AddComponent(new Transform({ 0.0f, 0.0f }));
+				go.AddComponent(new Transform(SM_math::vec2( 0.0f, 0.0f )));
 				go.AddComponent(new SpriteRenderer(spr));
 				AddGameObjectToScene(go);
-				*/
+				
 			}
 
 			float last_button_x2 = ImGui::GetItemRectMax().x;

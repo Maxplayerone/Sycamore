@@ -19,6 +19,6 @@ namespace SM_Physics {
 	public:
 		PhysicsSystem(float deltaTime, float gravityStrength);
 		void FixedUpdate();
-		void AddRigidbody(Rigidbody* rb);
+		void AddRigidbody(Rigidbody* rb, bool gravity=true);
 	};
 }

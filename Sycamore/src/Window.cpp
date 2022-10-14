@@ -32,6 +32,7 @@
 uint _fboID = 0;
 
 Window::Window() {
+    srand(static_cast <unsigned> (time(0)));
 
     F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
                             (float)SM_settings::windowWidth / 2 ,

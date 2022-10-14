@@ -2,6 +2,8 @@
 #include"../../Math/SM_math.h"
 #include"../../src/ECS/Transform.h"
 
+class Circle;
+
 namespace SM_Physics {
 
 	class Rigidbody {
@@ -15,6 +17,8 @@ namespace SM_Physics {
 
 		SM_math::vec2 m_velocity = SM_math::vec2(0.0f, 0.0f);
 		Transform* m_renderingTrans = nullptr;
+
+		Circle* collider = nullptr;
 
 		void ClearAccum();
 		void SyncWithRenderingPos();
@@ -46,5 +50,8 @@ namespace SM_Physics {
 
 		void SetMass(float mass);
 		void SetRenderingPos(Transform* trans);
+
+		void SetCollider(SM_Physics::Circle* _collider);
+		Circle* GetCollider();
 	};
 }

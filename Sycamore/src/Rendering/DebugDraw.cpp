@@ -20,7 +20,8 @@ uint debugShaderID;
 uint _vbID;
 uint _vaID;
 
-//for later deletion
+//used to setup camera
+//maybe will change later
 void SetupMatrices(uint shaderID) {
 	F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
 				   (float)SM_settings::windowWidth / 2 ,
@@ -38,12 +39,17 @@ void SetupMatrices(uint shaderID) {
 	Shader::SetUniformMat4f(debugShaderID, "projection", projMat);
 }
 
+//computes the squared magnitude of the line 
+//(used mostly in the physics engine)
 int DebugDraw::DebugLine2D::LengthSquared() {
 	SM_math::vec2 vec = end - start;
 	return vec.Lengthquared();
 }
 
 
+//---------------------------------
+//		DATA FOR BATCH CONTANTS
+//----------------------------------
 const uint MAX_DEBUG_OBJECTS = 500;
 //(2 * position + 3 * colours) * 2
 const unsigned int VERTEX_PER_OBJECT = 10;
@@ -54,12 +60,16 @@ float vertices[MAX_DEBUG_OBJECTS * VERTEX_PER_OBJECT];
 //because we added data to vertices array
 bool dirty = false;
 
-uint debugLine2DCount = 0;
+uint lineCount = 0;
 DebugDraw::DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
 
+
+//--------------------------------
+//			DEBUG
+//----------------------------------
 static uint numOfCycles = 0;
 void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
-	uint used_space = (debugLine2DCount + 1) * VERTEX_PER_OBJECT;
+	uint used_space = (lineCount + 1) * VERTEX_PER_OBJECT;
 
 	if (numOfCycles == (cyclesBeforeAssertion - 1)) {
 		for (int i = 0; i < used_space; i++) {
@@ -80,22 +90,6 @@ void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
 		ASSERT(false);
 }
 
-
-//---------------------------
-//		lines2D
-//---------------------------
-
-void DeleteFromVertices(uint arrayIndex) {
-
-	
-	for (uint i = 0; i < VERTEX_PER_OBJECT; i++) {
-		vertices[i + (arrayIndex * VERTEX_PER_OBJECT)] = 0.0f;
-	}
-	lines2D[arrayIndex].isDead = true;
-	lines2D[arrayIndex].lifetimeFlag = DebugDraw::HAS_LIFETIME;
-	dirty = true;
-}
-
 void PrintLine2D(DebugDraw::DebugLine2D line) {
 	std::stringstream ss;
 
@@ -103,7 +97,6 @@ void PrintLine2D(DebugDraw::DebugLine2D line) {
 	ss << "Start vector: " << line.start << std::endl;
 	ss << "End vector: " << line.end << std::endl;
 	ss << "Color: " << line.color << std::endl;
-	ss << "Lifetime: " << line.lifetime << std::endl;
 
 	LOGGER_INFO(ss.str());
 }
@@ -148,33 +141,15 @@ int UpdateVerticesLine2D(DebugDraw::DebugLine2D &line2D) {
 	lines2D[freeBufferSpaceIndex] = line2D;
 	lines2D[freeBufferSpaceIndex].isDead = false;
 
-	//std::stringstream ss;
-	//ss << "Line at index " << freeBufferSpaceIndex << " is " << lines2D[freeBufferSpaceIndex].isDead;
-	//LOGGER_INFO(ss.str());
-
-	debugLine2DCount++;
 	dirty = true;
-
+	lineCount = lineCount + 1;
 	return freeBufferSpaceIndex;
 }
 
-//methods with lifetime
-void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, float lifetime) {
-	DebugLine2D tmpLine;
-	tmpLine.start = start;
-	tmpLine.end = end;
-	tmpLine.color = color;
+//---------------------------------------
+//		Adding primitives to the batch
+//----------------------------------------
 
-	tmpLine.lifetimeFlag = IGNORE_LIFETIME;
-	tmpLine.lifetime = lifetime;
-
-	UpdateVerticesLine2D(tmpLine);
-}
-void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, float lifetime) {
-	DebugDraw::AddLine2D(start, end, {1.0f, 1.0f, 1.0f}, lifetime);
-}
-
-//methods without lifetime
 int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, flag _flag) {
 	DebugLine2D tmpLine;
 	tmpLine.start = start;
@@ -182,19 +157,71 @@ int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, f
 	tmpLine.color = color;
 
 	tmpLine.lifetimeFlag = _flag;
-	tmpLine.lifetime = 0.0f;
 
 	int index = UpdateVerticesLine2D(tmpLine);
-
 	return index;
 }
-int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, flag _flag) {
-	return AddLine2D(start, end, { 0.0f, 0.0f, 0.0f }, _flag);
+
+
+int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, flag _flag) {
+	float half = length / 2;
+
+	float top = (center.x + half);
+	float bottom = (center.x - half);
+
+	float left = (center.y - half);
+	float right = (center.y + half);
+
+	int firstLineIndex = AddLine2D({ top, right }, { bottom, right }, color, _flag);
+	AddLine2D({ top, left }, { bottom, left }, color, _flag);
+	AddLine2D({ top, left }, { top, right }, color, _flag);
+	AddLine2D({ bottom, left }, { bottom, right }, color, _flag);
+
+	return firstLineIndex;
 }
 
-void DebugDraw::SetLine2DIgnoreLifetime(int index, flag _lifetimeFlag) {
-	lines2D[index].lifetimeFlag = _lifetimeFlag;
+#define DRAW_RADIUS_LINES 0
+
+char DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color, flag _flag) {
+#if DRAW_RADIUS_LINES == 0
+	const uint radiusCount = 20;
+	SM_math::vec2 radiuses[radiusCount];
+
+	//after angleStep angle we have a point (ex. 30, 60, 90, 120...)
+	float angleStep = 360 / radiusCount;
+
+	for (int i = 0; i < radiusCount; i++) {
+		SM_math::vec2 centerAndRadius = SM_math::vec2(center.x + radius, center.y);
+		radiuses[i] = SM_math::Rotate(centerAndRadius, angleStep * i, center);
+	}
+
+	for (uint i = 0; i < radiusCount - 1; i++) {
+		AddLine2D(radiuses[i], radiuses[i + 1], color, _flag);
+	}
+	//joining the last point with the first one
+	AddLine2D(radiuses[radiusCount - 1], radiuses[0], color, _flag);
+
+	return 69;
+#elif DRAW_RADIUS_LINES == 1
+	const uint radiusCount = 20;
+	SM_math::vec2 radiuses[radiusCount];
+
+	//after angleStep angle we have a point (ex. 30, 60, 90, 120...)
+	float angleStep = 360 / radiusCount;
+
+	for (int i = 0; i < radiusCount; i++) {
+		SM_math::vec2 centerAndRadius = SM_math::vec2(center.x + radius, center.y);
+		radiuses[i] = SM_math::Rotate(centerAndRadius, angleStep * i, center);
+	}
+
+	for (uint i = 0; i < radiusCount; i++) {
+		AddLine2D(center, radiuses[i], color, _flag);
+	}
+
+	return 69;
+#endif
 }
+
 
 //-------------------------------------
 //			GRID
@@ -223,12 +250,12 @@ void DebugDraw::DrawDebugGrid() {
 	//vertical lines
 
 	for (int i = 0; i < verticalGridSpaces; i++) {
-		AddLine2D({ leftX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { rightX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f });
+		AddLine2D({ leftX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { rightX, bottomY + (SM_settings::GRID_HEIGHT * (i + 1)) - 23.5f }, { 0.0f, 0.0f, 0.0f });
 	}
 
 	//horizontal lines	
 	for (int i = 0; i < horizontalGridSpaces; i++) {
-		AddLine2D({ leftX + (SM_settings::GRID_WIDTH * (i + 1)), bottomY }, { leftX + (SM_settings::GRID_WIDTH * (i + 1)), topY });
+		AddLine2D({ leftX + (SM_settings::GRID_WIDTH * (i + 1)), bottomY }, { leftX + (SM_settings::GRID_WIDTH * (i + 1)), topY }, {0.0f, 0.0f, 0.0f});
 	}
 
 	usingGrid = true;
@@ -238,28 +265,20 @@ void DebugDraw::DrawDebugGrid() {
 //        overall rendering
 //--------------------------------
 
-void CheckForDeadLines() {
-	SM_Profiler::SUB("debug draw update frame");
+void EmptyLineArray() {
+	for (uint i = 0; i < lineCount; i++) {
+		if (lines2D[i].lifetimeFlag == DebugDraw::IGNORE_LIFETIME) continue;
 
-	for (uint i = 0; i < debugLine2DCount; i++) {
-		if (lines2D[i].lifetimeFlag == DebugDraw::DESTROY_ON_FRAME) {
-			DeleteFromVertices(i);
+		for (uint j = 0; j < VERTEX_PER_OBJECT; j++) {
+			vertices[(i * 10) + j] = 0.0f;
 		}
-		else if(lines2D[i].lifetimeFlag == DebugDraw::IGNORE_LIFETIME) {
-			lines2D[i].lifetime--;
-
-			if ((lines2D[i].lifetime <= 0.0f)) {
-				DeleteFromVertices(i);
-			}
-		}
+		lines2D[i].isDead = true;
 	}
 }
 
 
 void DebugDraw::Render() {
 	SM_Profiler::MAIN("debug draw render");
-
-	CheckForDeadLines();
 
 	if(dirty) {
 		_vaID = SM_Buffers::CreateVertexArray();
@@ -288,141 +307,31 @@ void DebugDraw::Render() {
 		GLCall(glDrawArrays(GL_LINES, 0, GRID_LINES_COUNT * 2));
 
 		GLCall(glLineWidth(4.0f));
-		GLCall(glDrawArrays(GL_LINES, GRID_LINES_COUNT * 2, (debugLine2DCount - GRID_LINES_COUNT) * 2));
+		GLCall(glDrawArrays(GL_LINES, GRID_LINES_COUNT * 2, (lineCount - GRID_LINES_COUNT) * 2));
 	}
 	else {
 		GLCall(glLineWidth(4.0f));
-		GLCall(glDrawArrays(GL_LINES, 0, debugLine2DCount * 2));
+		GLCall(glDrawArrays(GL_LINES, 0, lineCount * 2));
 	}
-}
 
-
-//--------------------------------
-//			boxes 2D
-//---------------------------------
-void DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions, color3 color, float lifetime) {
-	float halfX = dimensions.x / 2;
-	float halfY = dimensions.y / 2;
-
-	float top = center.x + halfX;
-	float bottom = center.x - halfX;
-
-	float left = center.y - halfY;
-	float right = center.y + halfY;
-
-	AddLine2D({ top, right }, { bottom, right }, color, lifetime);
-	AddLine2D({ top, left }, { bottom, left }, color, lifetime);
-	AddLine2D({ top, left }, { top, right }, color, lifetime);
-	AddLine2D({ bottom, left }, { bottom, right }, color, lifetime);
+	EmptyLineArray();
 }
 
 
 
-int DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions, color3 color) {
-	float halfX = dimensions.x / 2;
-	float halfY = dimensions.y / 2;
-
-	float top = center.x + halfX;
-	float bottom = center.x - halfX;
-
-	float left = center.y - halfY;
-	float right = center.y + halfY;
-
-	int firstLineIndex = AddLine2D({ top, right }, { bottom, right }, color);
-	int second = AddLine2D({ top, left }, { bottom, left }, color);
-	int third = AddLine2D({ top, left }, { top, right }, color);
-	int fourth = AddLine2D({ bottom, left }, { bottom, right }, color);
-
-	/*
-	std::stringstream ss;
-	ss << "First " << firstLineIndex << " second " << second << " third " << third << " fourth " << fourth;
-	LOGGER_WARNING(ss.str());
-	*/
-	return firstLineIndex;
-}
-
-int DebugDraw::AddBox2D(SM_math::vec2 center, SM_math::vec2 dimensions) {
-	return AddBox2D(center, dimensions, { 0.0f, 0.0f, 0.0f });
-}
-
-int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color) {
-	return AddBox2D(center, { length, length }, color);
-}
-
-int DebugDraw::AddBox2D(SM_math::vec2 center, float length) {
-	return AddBox2D(center, {length, length}, {0.0f, 0.0f, 0.0f});
-}
-
-void DebugDraw::AddBox2D(SM_math::vec2 center, float length, float angle, float lifetime) {
-	float half = length / 2;
-
-	SM_math::mat4 matrix(1.0f);
-	matrix = SM_math::MatrixRotation(matrix, angle);
-
-	float top = (center.x + half);
-	float bottom = (center.x - half);
-
-	float left = (center.y - half);
-	float right = (center.y + half);
-
-	SM_math::vec2 TR = matrix * SM_math::vec2(top, right);
-	SM_math::vec2 TL = matrix * SM_math::vec2(top, left);
-	SM_math::vec2 BR = matrix * SM_math::vec2(bottom, right);
-	SM_math::vec2 BL = matrix * SM_math::vec2(bottom, left);
-
-	AddLine2D(TR, BR, { 0.54f, 0.95f, 0.36f }, lifetime);
-	AddLine2D(TL, BL, { 0.54f, 0.95f, 0.36f }, lifetime);
-	AddLine2D(TL, TR, { 0.54f, 0.95f, 0.36f }, lifetime);
-	AddLine2D(BL, BR, { 0.54f, 0.95f, 0.36f }, lifetime);
-}
-
-int DebugDraw::AddBox2D(SM_math::vec2 center, float length, float angle) {
-	float half = length / 2;
-
-	SM_math::mat4 matrix(1.0f);
-	matrix = SM_math::MatrixRotation(matrix, angle);
-
-	float top = (center.x + half);
-	float bottom = (center.x - half);
-
-	float left = (center.y - half);
-	float right = (center.y + half);
-
-	SM_math::vec2 TR = matrix * SM_math::vec2(top, right);
-	SM_math::vec2 TL = matrix * SM_math::vec2(top, left);
-	SM_math::vec2 BR = matrix * SM_math::vec2(bottom, right);
-	SM_math::vec2 BL = matrix * SM_math::vec2(bottom, left);
-
-	int firstIndex = AddLine2D(TR, BR, { 0.54f, 0.95f, 0.36f});
-	AddLine2D(TL, BL, { 0.54f, 0.95f, 0.36f });
-	AddLine2D(TL, TR, { 0.54f, 0.95f, 0.36f });
-	AddLine2D(BL, BR, { 0.54f, 0.95f, 0.36f });
-
-	return firstIndex;
-}
 
 
-//---------------------------------
-//			Circles 2D
-//---------------------------------
 
-void DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color) {
-	const uint radiusCount = 20;
-	SM_math::vec2 radiuses[radiusCount];
 
-	SM_math::mat4 rotation(1.0f);
-	float angleStep = 360 / radiusCount;
-	
-	for (int i = 0; i < radiusCount; i++) {
 
-		rotation = SM_math::MatrixRotation(rotation, angleStep * i);
 
-		radiuses[i] = rotation * SM_math::vec2(center.x + radius, 0);
-	}
-	
-	for (uint i = 0; i < radiusCount - 1; i++) {
-		AddLine2D(radiuses[i], radiuses[i + 1], color);
-	}
-	//joining the last point with the first one
-	AddLine2D(radiuses[radiusCount - 1], radiuses[0], color);
+
+
+
+
+
+
+
+void DebugDraw::SetLine2DLifetimeFlag(int index, flag _lifetimeFlag) {
+	lines2D[index].lifetimeFlag = _lifetimeFlag;
 }
