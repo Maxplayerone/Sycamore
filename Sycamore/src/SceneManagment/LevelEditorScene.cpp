@@ -42,13 +42,15 @@ LevelEditorScene::LevelEditorScene() {
 	SM_Physics::Rigidbody* r1 = new SM_Physics::Rigidbody();
 	r1->SetMass(10.0f);
 	r1->SetRenderingPos(trans1);
-	c1 = new SM_Physics::Circle(50.0f, r1);
+	c1 = new SM_Physics::Circle(50.0f);
+	r1->SetCollider(c1);
 
 	
 	SM_Physics::Rigidbody* r2 = new SM_Physics::Rigidbody();
 	r2->SetMass(20.0f);
 	r2->SetRenderingPos(trans2);
-	c2 = new SM_Physics::Circle(75, r2);
+	c2 = new SM_Physics::Circle(75);
+	r2->SetCollider(c2);
 	
 
 	physicsSystem->AddRigidbody(r1);
@@ -90,8 +92,8 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 
 	physicsSystem->FixedUpdate();
 
-	DebugDraw::AddCircle2D(c1->rb->GetPos(), c1->GetRadius(), color, DebugDraw::DESTROY_ON_FRAME);
-	DebugDraw::AddCircle2D(c2->rb->GetPos(), c2->GetRadius(), color2, DebugDraw::DESTROY_ON_FRAME);
+	DebugDraw::AddCircle2D(c1->GetPos(), c1->GetRadius(), color, DebugDraw::DESTROY_ON_FRAME);
+	DebugDraw::AddCircle2D(c2->GetPos(), c2->GetRadius(), color2, DebugDraw::DESTROY_ON_FRAME);
 	
 	activeGameObject->ImGui();
 	DebugDraw::Render();

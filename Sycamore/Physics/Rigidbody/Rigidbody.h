@@ -1,8 +1,7 @@
 #pragma once
 #include"../../Math/SM_math.h"
 #include"../../src/ECS/Transform.h"
-
-class Circle;
+#include"../Primitives/Primitives.h"
 
 namespace SM_Physics {
 
@@ -10,15 +9,19 @@ namespace SM_Physics {
 	private:
 		SM_math::vec2 pos = SM_math::vec2(0.0f, 0.0f);
 		float rotation = 0.0f;
+		Collider* collider;
+
+
 		SM_math::vec2 m_forceAccum;
-
-		float m_mass = 0.0f;
-		float m_inverseMass = 0.0f;
-
 		SM_math::vec2 m_velocity = SM_math::vec2(0.0f, 0.0f);
 		Transform* m_renderingTrans = nullptr;
 
-		Circle* collider = nullptr;
+		float m_mass = 0.0f;
+		float m_inverseMass = 0.0f;
+		//aka the bouncyness level
+		//0.0f is no bouncyness
+		//1.0f is max bouncyness
+		float cor = 1.0f;
 
 		void ClearAccum();
 		void SyncWithRenderingPos();
@@ -49,9 +52,16 @@ namespace SM_Physics {
 		void Update(float dt);
 
 		void SetMass(float mass);
+		float GetInverseMass();
+
 		void SetRenderingPos(Transform* trans);
 
-		void SetCollider(SM_Physics::Circle* _collider);
-		Circle* GetCollider();
+		Collider* GetCollider();
+		void SetCollider(Collider* c);
+
+		SM_math::vec2& GetVelocity();
+		void SetVelocity(SM_math::vec2& vel);
+
+		float GetCor();
 	};
 }

@@ -1,38 +1,40 @@
 #pragma once
 #include"../../Math/SM_math.h"
-#include"../Rigidbody/Rigidbody.h"
 
 namespace SM_Physics {
-	struct Circle {
-	private:
-		float radius = 1.0f;
+	struct Collider {
 	public:
-		Rigidbody* rb;
+		virtual void SetPosition(SM_math::vec2& _pos) = 0;
+		virtual SM_math::vec2& GetPos() = 0;
 
-		Circle(float r, SM_math::vec2 center)
-			: radius(r) {
-			rb->SetPos(center);
-			rb->SetCollider(this);
-		}
-
-
-		Circle(SM_math::vec2 center)
-			: radius(1.0f) {
-			rb->SetPos(center);
-			rb->SetCollider(this);
-		}
-
-		Circle(float r, Rigidbody* _rb)
-			: radius(r) {
-			rb= _rb;
-			rb->SetCollider(this);
-		}
-
-		void SetRadius(float length) { radius = length; }
-		float GetRadius() { return radius; }
+		virtual float GetRadius() = 0;
 	};
 
-	struct AABB {
+	struct Circle : public Collider {
+	private:
+		float radius = 1.0f;
+		//the circle only gets position from the rigidbody
+		SM_math::vec2 pos;
+	public:
+
+		Circle(float r)
+			: radius(r) {
+			pos = SM_math::vec2(0.0f, 0.0f);
+		}
+		void SetRadius(float length) { radius = length; }
+		float GetRadius() override{ return radius; }
+
+		void SetPosition(SM_math::vec2& _pos) override {
+			pos = _pos;
+		}
+
+		SM_math::vec2& GetPos() override {
+			return pos;
+		}
+	};
+
+	/*
+	struct AABB : Collider{
 		//honestly I have no ided what this is used for
 		SM_math::vec2 diagonalLength = { 1.0f, 1.0f };
 		SM_math::vec2 boxDimensionsHalf = { 0.5f, 0.5f };
@@ -51,7 +53,7 @@ namespace SM_Physics {
 		}
 	};
 
-	struct Box2D {
+	struct Box2D : Collider {
 		SM_math::vec2 diagonalLength = { 1.0f, 1.0f };
 		SM_math::vec2 halfLen = { 0.5f, 0.5f };
 
@@ -80,5 +82,7 @@ namespace SM_Physics {
 			return halfLen;
 		}
 	};
+	*/
+	
 }
 

@@ -1,3 +1,5 @@
+/*
+
 #include"IntersectionDetection.h"
 
 float MaxValue(float a, float b) {
@@ -221,4 +223,6 @@ bool SM_Physics::Intersection_AABBAndOOBB(AABB& b1, Box2D& b2) {
 
 	return r1 == true && r2 == true;
 }
+
+*/
 

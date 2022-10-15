@@ -1,3 +1,5 @@
+/*
+
 #pragma once
 #include"../../Math/SM_math.h"
 
@@ -22,3 +24,4 @@ namespace SM_Physics {
 	bool Intersection_AABBAndAABB(AABB& b1, AABB& b2);
 	bool Intersection_AABBAndOOBB(AABB& b1, Box2D& b2);
 }
+*/

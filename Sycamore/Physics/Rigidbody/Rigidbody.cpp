@@ -35,5 +35,31 @@ namespace SM_Physics {
 	void Rigidbody::SyncWithRenderingPos() {
 		if (m_renderingTrans != nullptr)
 			m_renderingTrans->SetPosition(pos);
+
+		collider->SetPosition(pos);
+	}
+
+	Collider* Rigidbody::GetCollider() {
+		return collider;
+	}
+	void Rigidbody::SetCollider(Collider* c) {
+		collider = c;
+		collider->SetPosition(pos);
+	}
+
+	float Rigidbody::GetInverseMass() {
+		return m_inverseMass;
+	}
+
+	SM_math::vec2& Rigidbody::GetVelocity() {
+		return m_velocity;
+	}
+
+	void Rigidbody::SetVelocity(SM_math::vec2& vel) {
+		m_velocity = vel;
+	}
+
+	float Rigidbody::GetCor() {
+		return cor;
 	}
 }
