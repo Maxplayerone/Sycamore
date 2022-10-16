@@ -23,6 +23,10 @@ private:
 	std::chrono::steady_clock::time_point endTime;
 	std::chrono::duration<float> deltaTime;
 
+	//saving/loading imgui window
+	bool isEnabledSave = true;
+	bool isEnabledLoad = true;
+
 public:
 	Window();
 	~Window();
@@ -31,4 +35,5 @@ public:
 
 	//sets the imGui style
 	void ImGuiTheme();
+	void MainImgui();
 };

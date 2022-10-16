@@ -13,4 +13,5 @@ namespace SM_Physics {
 	};
 
 	CollissionInfo& Collission_CircleAndCircle(Collider* a,	Collider* b);
+	CollissionInfo& Collission_BoxAndBox(Box2D* a, Box2D* b);
 }

@@ -9,6 +9,49 @@ typedef unsigned int uint;
 
 namespace SM_math {
 
+	struct mat2 {
+		SM_math::vec2 column1;
+		SM_math::vec2 column2;
+
+		mat2() {
+			//identity matrix
+			column1.x = 1.0f;
+			column1.y = 0.0f;
+			column2.x = 0.0f;
+			column2.y = 1.0f;
+		}
+
+		mat2(float angle) {
+			float c = cosf(angle);
+			float s = sinf(angle);
+
+			column1.x = c;
+			column1.y = s;
+			column2.x = -s;
+			column2.y = c;
+		}
+
+		mat2(SM_math::vec2& col1, SM_math::vec2& col2) {
+			column1 = col1;
+			column2 = col2;
+		}
+
+		mat2(float x1, float y1, float x2, float y2) {
+			column1.x = x1;
+			column1.y = y1;
+			column2.x = x2;
+			column2.y = y2;
+		}
+
+		mat2& Transpose() const {
+			return mat2(SM_math::vec2(column1.x, column2.x), SM_math::vec2(column1.y, column2.y));
+		}
+	};
+
+	SM_math::vec2& operator*(const mat2& mat, const vec2& vec);
+	SM_math::mat2& operator*(const mat2& a, const mat2& b);
+
+
 	struct mat4 {
 		//			 row column
 		float m4[4][4];

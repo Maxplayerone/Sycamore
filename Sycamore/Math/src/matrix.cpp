@@ -62,3 +62,14 @@ SM_math::mat4& SM_math::MatrixRotation(SM_math::mat4& matrixToRotate, float _ang
 	//we're not caring about the argument's matrix
 	return rotationMatrix;
 }
+
+SM_math::vec2& SM_math::operator*(const mat2& mat, const vec2& vec) {
+	return SM_math::vec2(mat.column1.x * vec.x + mat.column1.y * vec.y, mat.column2.x * vec.x + mat.column2.y * vec.y);
+}
+
+SM_math::mat2& SM_math::operator*(const mat2& a,const mat2& b) {
+	return SM_math::mat2(a.column1.x * b.column1.x + a.column1.y * b.column2.x,
+		a.column1.x * b.column1.y + a.column1.y * b.column2.y,
+		a.column2.x * b.column1.x + a.column2.y * b.column2.x,
+		a.column2.x * b.column1.y + a.column2.y * b.column2.y);
+}

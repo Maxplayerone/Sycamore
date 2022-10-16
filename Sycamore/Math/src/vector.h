@@ -66,10 +66,14 @@ namespace SM_math {
 		//normalizes the vector
 		//(that means it's magnitude is 1)
 		void Normalize();
+		void Set(float _x, float _y) { x = _x; y = _y; }
 
 		friend std::ostream& operator<< (std::ostream& stream, const SM_math::vec2& vector) {
 			stream << "[" << vector.x << " , " << vector.y << "]";
 			return stream;
+		}
+		friend SM_math::vec2& operator+(const SM_math::vec2& a, const SM_math::vec2& b) {
+			return SM_math::vec2(a.x + b.x, a.y + b.y);
 		}
 	};
 

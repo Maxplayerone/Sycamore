@@ -132,7 +132,8 @@ void Window::Run() {
         
         SM_Profiler::ImGuiRender(); 
         m_levelEditorScene->ImGui();
-        SM_Viewport::ImGui();       
+        SM_Viewport::ImGui();     
+        MainImgui();
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -180,5 +181,25 @@ void Window::ImGuiTheme() {
 
     //disable collapsing
     style->WindowMenuButtonPosition = ImGuiDir_None;
+}
+
+void Window::MainImgui() {
+    ImGui::BeginMainMenuBar();
+    if (ImGui::BeginMenu("Save", isEnabledSave)){
+        //the flag to turn on save should be different
+        //(for example it is turned on when someone changes anything)
+
+        std::cout << "saving" << std::endl;
+        isEnabledSave = false;
+        isEnabledLoad = true;
+        ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Load", isEnabledLoad)) {
+        std::cout << "loading " << std::endl;
+        isEnabledLoad = false;
+        isEnabledSave = true;
+        ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
 }
 

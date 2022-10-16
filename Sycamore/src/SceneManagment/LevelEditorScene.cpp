@@ -38,7 +38,7 @@ LevelEditorScene::LevelEditorScene() {
 
 	
 	physicsSystem = new SM_Physics::PhysicsSystem(1 / 60.0f, 1000);
-
+	
 	SM_Physics::Rigidbody* r1 = new SM_Physics::Rigidbody();
 	r1->SetMass(10.0f);
 	r1->SetRenderingPos(trans1);
@@ -51,7 +51,6 @@ LevelEditorScene::LevelEditorScene() {
 	r2->SetRenderingPos(trans2);
 	c2 = new SM_Physics::Circle(75);
 	r2->SetCollider(c2);
-	
 
 	physicsSystem->AddRigidbody(r1);
 	physicsSystem->AddRigidbody(r2, false);

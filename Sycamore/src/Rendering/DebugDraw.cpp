@@ -163,7 +163,7 @@ int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, f
 }
 
 
-int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, flag _flag) {
+int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, float _angle, flag _flag) {
 	float half = length / 2;
 
 	float top = (center.x + half);
@@ -172,13 +172,45 @@ int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, flag _
 	float left = (center.y - half);
 	float right = (center.y + half);
 
-	int firstLineIndex = AddLine2D({ top, right }, { bottom, right }, color, _flag);
-	AddLine2D({ top, left }, { bottom, left }, color, _flag);
-	AddLine2D({ top, left }, { top, right }, color, _flag);
-	AddLine2D({ bottom, left }, { bottom, right }, color, _flag);
+	SM_math::vec2 TR = SM_math::Rotate(SM_math::vec2(top, right), _angle, center);
+	SM_math::vec2 TL = SM_math::Rotate(SM_math::vec2(top, left), _angle, center);
+	SM_math::vec2 BR = SM_math::Rotate(SM_math::vec2(bottom, right), _angle, center);
+	SM_math::vec2 BL = SM_math::Rotate(SM_math::vec2(bottom, left), _angle, center);
+
+	int firstLineIndex = AddLine2D(TR, BR, color, _flag);
+	AddLine2D(TL, BL, color, _flag);
+	AddLine2D(TL, TR, color, _flag);
+	AddLine2D(BL, BR, color, _flag);
 
 	return firstLineIndex;
 }
+
+/*
+int DebugDraw::AddBox2D(SM_math::vec2 center, float length, float angle) {
+	float half = length / 2;
+
+	SM_math::mat4 matrix(1.0f);
+	matrix = SM_math::MatrixRotation(matrix, angle);
+
+	float top = (center.x + half);
+	float bottom = (center.x - half);
+
+	float left = (center.y - half);
+	float right = (center.y + half);
+
+	SM_math::vec2 TR = matrix * SM_math::vec2(top, right);
+	SM_math::vec2 TL = matrix * SM_math::vec2(top, left);
+	SM_math::vec2 BR = matrix * SM_math::vec2(bottom, right);
+	SM_math::vec2 BL = matrix * SM_math::vec2(bottom, left);
+
+	int firstIndex = AddLine2D(TR, BR, { 0.54f, 0.95f, 0.36f});
+	AddLine2D(TL, BL, { 0.54f, 0.95f, 0.36f });
+	AddLine2D(TL, TR, { 0.54f, 0.95f, 0.36f });
+	AddLine2D(BL, BR, { 0.54f, 0.95f, 0.36f });
+
+	return firstIndex;
+}
+*/
 
 #define DRAW_RADIUS_LINES 0
 

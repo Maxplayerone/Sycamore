@@ -24,7 +24,7 @@ namespace DebugDraw {
 	void DrawDebugGrid();
 
 	int AddLine2D(SM_math::vec2 start,	  SM_math::vec2 end, color3 color,	flag _flag = IGNORE_LIFETIME);
-	int AddBox2D(SM_math::vec2 center,	  float length,		 color3 color,	flag _flag = IGNORE_LIFETIME);
+	int AddBox2D(SM_math::vec2 center,	  float length,		 color3 color, float _angle=0.0f,	flag _flag = IGNORE_LIFETIME);
 	char AddCircle2D(SM_math::vec2 center, float radius,		 color3 color,	flag _flag = IGNORE_LIFETIME);
 
 	//used specifically with the method without lifetime
