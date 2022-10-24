@@ -10,4 +10,5 @@ public:
 	void Start() {};
 	virtual void Update(float deltaTime) {};
 	virtual void ImGui() {};
+	virtual void Delete() {};
 };

@@ -6,22 +6,22 @@
 
 
 GameObject::GameObject() {
-	uuid = SM_UUID::GetUUID();
+	m_uuid = SM_UUID::GetUUID();
 	m_name = GetRandomName();
 }
 
 GameObject::GameObject(const std::string& name) {
-	uuid = SM_UUID::GetUUID();
+	m_uuid = SM_UUID::GetUUID();
 	m_name = name;
 }
 
 GameObject::GameObject(const std::string& name, uint64_t _uuid) {
-	uuid = _uuid;
+	m_uuid = _uuid;
 	m_name = name;
 }
 
 GameObject::GameObject(uint64_t _uuid) {
-	uuid = _uuid;
+	m_uuid = _uuid;
 	m_name = GetRandomName();
 }
 
@@ -70,4 +70,7 @@ std::string GameObject::GetRandomName() {
 
 	int randNum = rand() % 15;
 	return randomNames[randNum];
+}
+
+void GameObject::Destroy() {
 }

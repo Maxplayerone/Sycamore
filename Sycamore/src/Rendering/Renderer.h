@@ -13,7 +13,8 @@ public:
 	Renderer();
 
 	void ChangeBGColor(color4 color) const;
-	void Add(GameObject& go);
 	void Render();
 
+	void Add(GameObject* go);
+	void Delete(GameObject* go);
 };

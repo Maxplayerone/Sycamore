@@ -13,12 +13,6 @@ private:
 
 	GameObject m_sceneObjects[MAX_OBJECT_SIZE];
 	uint m_sceneObjectsSize = 0;
-
-	GameObject* activeGameObject;
-
-	int CheckForClickedObject();
-	void MoveActiveObject();
-	void SnapBlockToGrid();
 public:
 	LevelEditorScene();
 
@@ -26,4 +20,5 @@ public:
 	int AddGameObjectToScene(GameObject& go);
 
 	void ImGui() override;
+	void CleanUp();
 };

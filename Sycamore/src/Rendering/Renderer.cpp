@@ -20,8 +20,12 @@ void Renderer::Render() {
 		batch->Render();
 }
 
-void Renderer::Add(GameObject& go) {
+void Renderer::Add(GameObject* go) {
 	if (batch->HasRoom())
 		batch->Add(go);
+}
+
+void Renderer::Delete(GameObject* go) {
+	batch->Delete(go);
 }
 

@@ -17,7 +17,11 @@ private:
 		return dynamic_cast<const Base*>(ptr) != nullptr;
 	}
 
-	uint64_t uuid;
+	uint64_t m_uuid;
+	//id given by the batch renderer
+	//that is the same as the position of the object
+	//in that batch's array
+	int m_rendererID = 0;
 
 	std::string GetRandomName();
 public:
@@ -73,7 +77,12 @@ public:
 	void Update(float deltaTime);
 	void ImGui();
 
-	unsigned int GetID() const { return uuid; }
+	uint64_t GetID() const { return m_uuid; }
 
 	std::string GetName() { return m_name; }
+
+	void SetRendererID(int id) { m_rendererID = id; }
+	int GetRendererID() const { return m_rendererID; }
+
+	void Destroy();
 };

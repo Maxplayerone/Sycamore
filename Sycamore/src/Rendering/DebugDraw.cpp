@@ -22,7 +22,7 @@ uint _vaID;
 
 //used to setup camera
 //maybe will change later
-void SetupMatrices(uint shaderID) {
+static void SetupMatrices(uint shaderID) {
 	F4 orthoProj{ -((float)SM_settings::windowWidth) / 2,
 				   (float)SM_settings::windowWidth / 2 ,
 				   -((float)SM_settings::windowHeight) / 2,
@@ -68,7 +68,7 @@ DebugDraw::DebugLine2D lines2D[MAX_DEBUG_OBJECTS];
 //			DEBUG
 //----------------------------------
 static uint numOfCycles = 0;
-void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
+static void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
 	uint used_space = (lineCount + 1) * VERTEX_PER_OBJECT;
 
 	if (numOfCycles == (cyclesBeforeAssertion - 1)) {
@@ -90,7 +90,7 @@ void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
 		ASSERT(false);
 }
 
-void PrintLine2D(DebugDraw::DebugLine2D line) {
+static void PrintLine2D(DebugDraw::DebugLine2D line) {
 	std::stringstream ss;
 
 	//new lines don't work
@@ -101,26 +101,9 @@ void PrintLine2D(DebugDraw::DebugLine2D line) {
 	LOGGER_INFO(ss.str());
 }
 
-int UpdateVerticesLine2D(DebugDraw::DebugLine2D &line2D) {
+static void UpdateVerticesLine2D(DebugDraw::DebugLine2D &line2D) {
 	float xValue = line2D.start.x;
 	float yValue = line2D.start.y;
-
-	//index of the first place in the lines2D
-	//array in which there is no line
-	//(the line might be dead)
-	int freeBufferSpaceIndex = -1;
-
-	for (int i = 0; i < MAX_DEBUG_OBJECTS; i++) {
-		if (lines2D[i].isDead == true) {
-			freeBufferSpaceIndex = i;
-			break;
-		}
-	}
-
-	if (freeBufferSpaceIndex == -1) {
-		LOGGER_ERROR("batch for debug drawing overflow!");
-		ASSERT(false);
-	}
 
 	for (int i = 0; i < 2; i++) {
 		switch (i) {
@@ -131,39 +114,33 @@ int UpdateVerticesLine2D(DebugDraw::DebugLine2D &line2D) {
 		}
 
 		//that 5 is a number of unique vertex data (aka 2 * position and 3 * color)
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 0)] = xValue;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 1)] = yValue;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 2)] = line2D.color.r;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 3)] = line2D.color.g;
-		vertices[(i * 5) + (freeBufferSpaceIndex * VERTEX_PER_OBJECT + 4)] = line2D.color.b;
+		vertices[(i * 5) + (lineCount * VERTEX_PER_OBJECT + 0)] = xValue;
+		vertices[(i * 5) + (lineCount * VERTEX_PER_OBJECT + 1)] = yValue;
+		vertices[(i * 5) + (lineCount * VERTEX_PER_OBJECT + 2)] = line2D.color.r;
+		vertices[(i * 5) + (lineCount * VERTEX_PER_OBJECT + 3)] = line2D.color.g;
+		vertices[(i * 5) + (lineCount * VERTEX_PER_OBJECT + 4)] = line2D.color.b;
 	}
 
-	lines2D[freeBufferSpaceIndex] = line2D;
-	lines2D[freeBufferSpaceIndex].isDead = false;
+	lines2D[lineCount] = line2D;
 
 	dirty = true;
 	lineCount = lineCount + 1;
-	return freeBufferSpaceIndex;
 }
 
 //---------------------------------------
 //		Adding primitives to the batch
 //----------------------------------------
-
-int DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color, flag _flag) {
+void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color) {
 	DebugLine2D tmpLine;
 	tmpLine.start = start;
 	tmpLine.end = end;
 	tmpLine.color = color;
 
-	tmpLine.lifetimeFlag = _flag;
-
-	int index = UpdateVerticesLine2D(tmpLine);
-	return index;
+	UpdateVerticesLine2D(tmpLine);
 }
 
 
-int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, float _angle, flag _flag) {
+void DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, float _angle) {
 	float half = length / 2;
 
 	float top = (center.x + half);
@@ -177,44 +154,15 @@ int DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, float 
 	SM_math::vec2 BR = SM_math::Rotate(SM_math::vec2(bottom, right), _angle, center);
 	SM_math::vec2 BL = SM_math::Rotate(SM_math::vec2(bottom, left), _angle, center);
 
-	int firstLineIndex = AddLine2D(TR, BR, color, _flag);
-	AddLine2D(TL, BL, color, _flag);
-	AddLine2D(TL, TR, color, _flag);
-	AddLine2D(BL, BR, color, _flag);
-
-	return firstLineIndex;
+	AddLine2D(TR, BR, color);
+	AddLine2D(TL, BL, color);
+	AddLine2D(TL, TR, color);
+	AddLine2D(BL, BR, color);
 }
-
-/*
-int DebugDraw::AddBox2D(SM_math::vec2 center, float length, float angle) {
-	float half = length / 2;
-
-	SM_math::mat4 matrix(1.0f);
-	matrix = SM_math::MatrixRotation(matrix, angle);
-
-	float top = (center.x + half);
-	float bottom = (center.x - half);
-
-	float left = (center.y - half);
-	float right = (center.y + half);
-
-	SM_math::vec2 TR = matrix * SM_math::vec2(top, right);
-	SM_math::vec2 TL = matrix * SM_math::vec2(top, left);
-	SM_math::vec2 BR = matrix * SM_math::vec2(bottom, right);
-	SM_math::vec2 BL = matrix * SM_math::vec2(bottom, left);
-
-	int firstIndex = AddLine2D(TR, BR, { 0.54f, 0.95f, 0.36f});
-	AddLine2D(TL, BL, { 0.54f, 0.95f, 0.36f });
-	AddLine2D(TL, TR, { 0.54f, 0.95f, 0.36f });
-	AddLine2D(BL, BR, { 0.54f, 0.95f, 0.36f });
-
-	return firstIndex;
-}
-*/
 
 #define DRAW_RADIUS_LINES 0
 
-char DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color, flag _flag) {
+void DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color) {
 #if DRAW_RADIUS_LINES == 0
 	const uint radiusCount = 20;
 	SM_math::vec2 radiuses[radiusCount];
@@ -228,12 +176,11 @@ char DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color, fl
 	}
 
 	for (uint i = 0; i < radiusCount - 1; i++) {
-		AddLine2D(radiuses[i], radiuses[i + 1], color, _flag);
+		AddLine2D(radiuses[i], radiuses[i + 1], color);
 	}
 	//joining the last point with the first one
-	AddLine2D(radiuses[radiusCount - 1], radiuses[0], color, _flag);
+	AddLine2D(radiuses[radiusCount - 1], radiuses[0], color);
 
-	return 69;
 #elif DRAW_RADIUS_LINES == 1
 	const uint radiusCount = 20;
 	SM_math::vec2 radiuses[radiusCount];
@@ -247,10 +194,8 @@ char DebugDraw::AddCircle2D(SM_math::vec2 center, float radius, color3 color, fl
 	}
 
 	for (uint i = 0; i < radiusCount; i++) {
-		AddLine2D(center, radiuses[i], color, _flag);
+		AddLine2D(center, radiuses[i], color);
 	}
-
-	return 69;
 #endif
 }
 
@@ -297,18 +242,6 @@ void DebugDraw::DrawDebugGrid() {
 //        overall rendering
 //--------------------------------
 
-void EmptyLineArray() {
-	for (uint i = 0; i < lineCount; i++) {
-		if (lines2D[i].lifetimeFlag == DebugDraw::IGNORE_LIFETIME) continue;
-
-		for (uint j = 0; j < VERTEX_PER_OBJECT; j++) {
-			vertices[(i * 10) + j] = 0.0f;
-		}
-		lines2D[i].isDead = true;
-	}
-}
-
-
 void DebugDraw::Render() {
 	SM_Profiler::MAIN("debug draw render");
 
@@ -329,6 +262,10 @@ void DebugDraw::Render() {
 		dirty = false;
 	}
 	else {
+		//we are changing to clean
+		//there is a possibility that we had lines that were DESTROY_ON_FRAME but now we should not draw them 
+		//we should clean the array list
+
 		SM_Buffers::BindVertexArray(_vaID);;
 		SM_Buffers::BindVertexBuffer(_vbID);
 		Shader::UseShader(debugShaderID);
@@ -346,24 +283,5 @@ void DebugDraw::Render() {
 		GLCall(glDrawArrays(GL_LINES, 0, lineCount * 2));
 	}
 
-	EmptyLineArray();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void DebugDraw::SetLine2DLifetimeFlag(int index, flag _lifetimeFlag) {
-	lines2D[index].lifetimeFlag = _lifetimeFlag;
+	lineCount = 0;
 }

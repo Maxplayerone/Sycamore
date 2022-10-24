@@ -11,7 +11,7 @@
 
 class BatchRenderer {
 private:
-    GameObject objectsForRender[MAX_BATCH_SIZE];
+    GameObject* objectsForRender[MAX_BATCH_SIZE];
     uint gameObjectCount = 0;
     float* vertices;
 
@@ -27,7 +27,8 @@ private:
     bool oneTimeFlag = true; //ignore this please
 public:
     BatchRenderer();
-    void Add(GameObject& go);
+    void Add(GameObject* go);
+    void Delete(GameObject* go);
     void Render();
 
     bool HasRoom() const { return (gameObjectCount < MAX_BATCH_SIZE) ? true : false; }

@@ -34,12 +34,44 @@ BatchRenderer::BatchRenderer() {
     batchShaderID = SM_Pool::GetShader();
 }
 
-void BatchRenderer::Add(GameObject& go) {
-    //auto itr = std::find(objectsForRender.begin(), objectsForRender.end(), go);
-    //the object is already in the vector
-    //if (itr != objectsForRender.end()) return;
+void BatchRenderer::Add(GameObject* go) {
+    objectsForRender[gameObjectCount] = go;
+    objectsForRender[gameObjectCount]->SetRendererID(gameObjectCount);
+    gameObjectCount++;
+}
 
-    objectsForRender[gameObjectCount++] = go;
+void BatchRenderer::Delete(GameObject* go) {
+    int index = go->GetRendererID();
+
+    //weird fix for a weird bug
+    if (index > MAX_BATCH_SIZE)
+        //for some reason the index of the last placed object is always incorrect
+        index = gameObjectCount - 1;
+
+    //the object we've clicked is the last objects we've added
+    if (index == gameObjectCount) {
+        LOGGER_ERROR("WELCUM");
+
+        //empty the buffer
+        for (int i = 0; i < VERTICES_DATA_FOR_QUAD; i++) {
+            vertices[i] = 0.0f;
+        }
+        gameObjectCount--;
+    }
+    else {
+        for (int i = 0; i < VERTICES_DATA_FOR_QUAD; i++) {
+            //swapping the data from the object we want to delete with the last object in the vertices buffer
+            vertices[((index + 1) * VERTICES_DATA_FOR_QUAD) - (VERTICES_DATA_FOR_QUAD - i)] = vertices[(gameObjectCount * VERTICES_DATA_FOR_QUAD) - (VERTICES_DATA_FOR_QUAD - i)];
+
+        }
+        int id = objectsForRender[index]->GetRendererID();
+        //LOGGER_INFO("before tragedy");
+        objectsForRender[gameObjectCount- 1]->SetRendererID(id);
+        //LOGGER_INFO("after tragedy");
+        gameObjectCount--;
+    }
+    
+    reloadBuffers = true;
 }
 
 void BatchRenderer::Render() {
@@ -47,11 +79,11 @@ void BatchRenderer::Render() {
     //dirty flagging
     for (int i = 0; i < gameObjectCount; i++) {
         //if the position/color/texture of any object changed
-        if (objectsForRender[i].GetComponent<Transform>()->IsDirty() || objectsForRender[i].GetComponent<SpriteRenderer>()->IsDirty() || oneTimeFlag) {
+        if (objectsForRender[i]->GetComponent<Transform>()->IsDirty() || objectsForRender[i]->GetComponent<SpriteRenderer>()->IsDirty() || oneTimeFlag) {
             //LOGGER_INFO("Re-setupping the batch renderer");
             LoadVerticesData(i);
-            objectsForRender[i].GetComponent<Transform>()->Clean();
-            objectsForRender[i].GetComponent<SpriteRenderer>()->Clean();
+            objectsForRender[i]->GetComponent<Transform>()->Clean();
+            objectsForRender[i]->GetComponent<SpriteRenderer>()->Clean();
 
             reloadBuffers = true;
         }
@@ -79,9 +111,9 @@ void BatchRenderer::Render() {
 }
 
 void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
-    GameObject go = objectsForRender[gameObjectIndex];
-    Transform* trans = go.GetComponent<Transform>();
-    SpriteRenderer* rend = go.GetComponent<SpriteRenderer>();
+    GameObject* go = objectsForRender[gameObjectIndex];
+    Transform* trans = go->GetComponent<Transform>();
+    SpriteRenderer* rend = go->GetComponent<SpriteRenderer>();
 
     unsigned int texCoordsIndex = 0;
     float offsetX = 0.0f;

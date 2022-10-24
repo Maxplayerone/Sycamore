@@ -27,6 +27,8 @@ private:
 	bool isEnabledSave = true;
 	bool isEnabledLoad = true;
 
+	//destroys the last existing scene (used along side the load button)
+	void CleanUp();
 public:
 	Window();
 	~Window();

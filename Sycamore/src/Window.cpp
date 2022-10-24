@@ -122,7 +122,9 @@ void Window::Run() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        glClear(GL_COLOR_BUFFER_BIT);       
+        glClear(GL_COLOR_BUFFER_BIT);      
+        if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_T))
+            CleanUp();
                 
         SM_Buffers::BindFramebuffer(_fboID);
 
@@ -162,7 +164,6 @@ Window::~Window() {
     ImGui::DestroyContext();   
 
     glfwTerminate();
-    SM_Serializer::Serialize();
 }
 
 void Window::ImGuiTheme() {
@@ -189,17 +190,24 @@ void Window::MainImgui() {
         //the flag to turn on save should be different
         //(for example it is turned on when someone changes anything)
 
-        std::cout << "saving" << std::endl;
+        SM_Serializer::Serialize();
+
         isEnabledSave = false;
         isEnabledLoad = true;
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Load", isEnabledLoad)) {
-        std::cout << "loading " << std::endl;
+        CleanUp();
+        SM_Serializer::Deserialize(m_levelEditorScene);
+
         isEnabledLoad = false;
         isEnabledSave = true;
         ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();
+}
+
+void Window::CleanUp() {
+    m_levelEditorScene->CleanUp();
 }
 
