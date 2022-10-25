@@ -20,6 +20,9 @@
 #include"../../Physics/PhysicsSystem.h"
 #include"../../Physics/Primitives/Primitives.h"
 
+#include"../InputHandling/KeysHandleler.h"
+#include"../InputHandling/InputCallbacks.h"
+
 GameObject activeGameObject;
 
 int result = -3;
@@ -35,10 +38,73 @@ activeObjectState state = activeObjectState::NO_STATE;
 //currently active object
 int activeObjectIndex = -1;
 
+color3 color1;
+color3 color2;
+
+SM_Physics::PhysicsSystem* physicsSystem;
+SM_Physics::AABB* a1;
+SM_Physics::AABB* a2;
+
+Transform* trans1 = new Transform(SM_math::vec2(0.0f, 300.0f), 75.0f);
+Transform* trans2 = new Transform(SM_math::vec2(0.0f, -250.0f), 100.0f);
+
+SM_math::vec2 t1_pos;
+SM_math::vec2 t1_radius;
+SM_math::vec2 t2_pos;
+SM_math::vec2 t2_radius;
 
 LevelEditorScene::LevelEditorScene() {
-	this->m_renderer = new Renderer();	
+	this->m_renderer = new Renderer();
 	activeGameObject = GameObject("NULL");
+
+	t1_pos = trans1->GetPos();
+	t1_radius = trans1->GetRadius();
+
+	t2_pos = trans2->GetPos();
+	t2_radius = trans2->GetRadius();
+
+	LoadData();
+}
+
+void LevelEditorScene::LoadData() {
+	trans1->SetPosition(t1_pos);
+	trans1->SetRadius(t1_radius);
+	trans2->SetPosition(t2_pos);
+	trans2->SetRadius(t2_radius);
+
+	physicsSystem = new SM_Physics::PhysicsSystem(16.6f, 0.01f);
+
+	SM_Physics::Rigidbody* r1 = new SM_Physics::Rigidbody();
+	r1->SetMass(10.0f);
+	r1->SetRenderingPos(trans1);
+	a1 = new SM_Physics::AABB(75.0f);
+	r1->SetCollider(a1);
+
+
+	SM_Physics::Rigidbody* r2 = new SM_Physics::Rigidbody();
+	r2->SetMass(20.0f);
+	r2->SetRenderingPos(trans2);
+	a2 = new SM_Physics::AABB(100.0f);
+	r2->SetCollider(a2);
+
+
+	physicsSystem->AddRigidbody(r1);
+	physicsSystem->AddRigidbody(r2, false);
+
+
+	color1 = RandomColor();
+	color2 = RandomColor();
+
+
+	GameObject go;
+	go.AddComponent(trans1);
+	go.AddComponent(new SpriteRenderer({ color1.r, color1.b, color1.g, 1.0f }));
+	AddGameObjectToScene(go);
+
+	GameObject go2;
+	go2.AddComponent(trans2);
+	go2.AddComponent(new SpriteRenderer({ color2.r, color2.b, color2.g, 1.0f }));
+	AddGameObjectToScene(go2);
 }
 
 static int CheckCollissionMouseAndObject(int size, GameObject* objects) {
@@ -46,7 +112,7 @@ static int CheckCollissionMouseAndObject(int size, GameObject* objects) {
 	SM_math::vec2 mouse = MouseHandleler::Get().GetMousePosModel();
 	for (uint i = 0; i < size; i++) {
 		SM_math::vec2 pos = objects[i].GetComponent<Transform>()->GetPos();
-		SM_math::vec2 scale = objects[i].GetComponent<Transform>()->GetScale();
+		SM_math::vec2 scale = objects[i].GetComponent<Transform>()->GetRadius();
 
 		if (mouse.x > pos.x && mouse.x < pos.x + scale.x && mouse.y > pos.y && mouse.y < pos.y + scale.y) {
 			GameObject clickedObj = objects[i];
@@ -115,8 +181,8 @@ static void DrawActiveGameObjectOutline() {
 		return;
 	}
 
-	SM_math::vec2 center(activeGameObject.GetComponent<Transform>()->GetPos().x + activeGameObject.GetComponent<Transform>()->GetScale().x / 2, activeGameObject.GetComponent<Transform>()->GetPos().y + activeGameObject.GetComponent<Transform>()->GetScale().y / 2);
-	DebugDraw::AddBox2D(center, activeGameObject.GetComponent<Transform>()->GetScale().x, { 1, 0.2, 0.3 });
+	SM_math::vec2 center(activeGameObject.GetComponent<Transform>()->GetPos().x + activeGameObject.GetComponent<Transform>()->GetRadius().x / 2, activeGameObject.GetComponent<Transform>()->GetPos().y + activeGameObject.GetComponent<Transform>()->GetRadius().y / 2);
+	DebugDraw::AddBox2D(center, activeGameObject.GetComponent<Transform>()->GetRadius().x, { 1, 0.2, 0.3 });
 }
 
 static int CheckForMouseInput(int size, GameObject* objects, Renderer* rend) {
@@ -177,10 +243,34 @@ void LevelEditorScene::OnUpdate(float deltaTime) {
 	result = CheckForMouseInput(m_sceneObjectsSize, m_sceneObjects, m_renderer);
 	ResolveMouseInputRequest(m_sceneObjects);
 
+	//physicsSystem->FixedUpdate();
+
+	//DebugDraw::AddBox2D(trans1->GetPos(), trans1->GetRadius().x, color1);
+	//DebugDraw::AddBox2D(trans2->GetPos(), trans2->GetRadius().x, color2);
+
 	//rendering and imgui
 	activeGameObject.ImGui();
 	DebugDraw::Render();
 	this->m_renderer->Render();	
+}
+
+void LevelEditorScene::OnUpdateRuntime(float deltaTime) {
+	SM_Profiler::MAIN("LevelEditorScene update");
+
+	this->m_renderer->ChangeBGColor(bgColor);
+
+	result = CheckForMouseInput(m_sceneObjectsSize, m_sceneObjects, m_renderer);
+	ResolveMouseInputRequest(m_sceneObjects);
+
+	physicsSystem->FixedUpdate();
+
+	//DebugDraw::AddBox2D(trans1->GetPos(), trans1->GetRadius().x, color1);
+	//DebugDraw::AddBox2D(trans2->GetPos(), trans2->GetRadius().x, color2);
+
+	//rendering and imgui
+	activeGameObject.ImGui();
+	DebugDraw::Render();
+	this->m_renderer->Render();
 }
 
 int LevelEditorScene::AddGameObjectToScene(GameObject& go) {

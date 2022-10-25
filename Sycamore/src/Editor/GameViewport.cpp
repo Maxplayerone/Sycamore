@@ -54,32 +54,25 @@ ImVec2 windowSize;
 ImVec2 windowPos;
 ImVec2 topLeft;
 
-void SM_Viewport::ImGui() {
-	/*
-	//add flags for scrolling
-	ImGui::Begin("Game viewport", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-	
+bool startRuntime = true;
+bool stopRuntime = true;
+int kljsaakskajskjksajkjsla = -1;
 
-	windowSize = GetMaxSizeForViewport();
-	windowPos = GetCenteredPosForViewport(windowSize);
-
-	//centers the texture
-	ImGui::SetCursorPos(windowPos);
-	topLeft = ImGui::GetWindowPos();
-
-	if (!initializedFbo) {
-		framebufferID = SM_Pool::GetFramebufferID(SM_settings::windowWidth, SM_settings::windowHeight);
-		initializedFbo = true;
+int SM_Viewport::ImGui() {
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("Start", startRuntime)) {
+		startRuntime = false;
+		stopRuntime = true;
+		ImGui::EndMenu();
+		kljsaakskajskjksajkjsla = 0;
 	}
-
-	ImGui::Image((ImTextureID)SM_Pool::GetFramebufferColorAttachment(), windowSize, ImVec2(0, 1), ImVec2(1, 0));
-
-	bool result = MouseHandleler::Get().IsMouseOnWindow(SM_math::vec2(windowSize.x, windowSize.y), SM_math::vec2(topLeft.x, topLeft.y));
-	if (result) LOGGER_INFO("The mouse is on the window");
-	else LOGGER_WARNING("The mouse is not on the window");
-
-	ImGui::End();
-	*/
+	if (ImGui::BeginMenu("Stop", stopRuntime)) {
+		stopRuntime = false;
+		startRuntime = true;
+		ImGui::EndMenu();
+		kljsaakskajskjksajkjsla = 1;
+	}
+	ImGui::EndMainMenuBar();
 
 	ImGui::Begin("Game viewport", 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove);
 
@@ -96,4 +89,6 @@ void SM_Viewport::ImGui() {
 	MouseHandleler::Get().SetMousePosViewport({ windowSize.x, windowSize.y }, { topLeft.x, topLeft.y });
 
 	ImGui::End();
+
+	return kljsaakskajskjksajkjsla;
 }

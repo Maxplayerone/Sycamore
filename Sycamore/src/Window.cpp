@@ -116,6 +116,7 @@ void Window::Run() {
     ImGuiTheme();
     
     while (!glfwWindowShouldClose(m_window)) {
+
         SM_Profiler::MAIN("Main loop");
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -123,18 +124,31 @@ void Window::Run() {
         ImGui::NewFrame();
 
         glClear(GL_COLOR_BUFFER_BIT);      
-        if (KeyHandleler::Get().IsKeyPressed(GLFW_KEY_T))
-            CleanUp();
+
+        if (runtimeResult == 0 && cleanUp) {
+            m_levelEditorScene->CleanUp();
+            m_levelEditorScene->LoadData();
+            cleanUp = false;
+        }
+
+        if (runtimeResult == 1 && cleanUp) {
+            m_levelEditorScene->CleanUp();
+            m_levelEditorScene->LoadData();
+            cleanUp = false;
+        }
                 
         SM_Buffers::BindFramebuffer(_fboID);
 
-        m_levelEditorScene->OnUpdate(deltaTime.count());         
+        if (runtimeResult == 0)
+            m_levelEditorScene->OnUpdateRuntime(deltaTime.count());
+        else
+            m_levelEditorScene->OnUpdate(deltaTime.count());
 
         SM_Buffers::UnbindFramebuffer();
         
         SM_Profiler::ImGuiRender(); 
         m_levelEditorScene->ImGui();
-        SM_Viewport::ImGui();     
+        runtimeResult = SM_Viewport::ImGui();     
         MainImgui();
         
         ImGui::Render();

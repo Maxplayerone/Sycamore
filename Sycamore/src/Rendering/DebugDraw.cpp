@@ -75,7 +75,7 @@ static void TestVerticesData(float buffer[], uint cyclesBeforeAssertion) {
 		for (int i = 0; i < used_space; i++) {
 			if (i % VERTEX_PER_OBJECT == 0) {
 				std::stringstream ss;
-				ss << "Line number " << i / 10;
+				ss << "Line number " << (i / 10) +1;
 				LOGGER_INFO(ss.str());
 			}
 
@@ -140,8 +140,7 @@ void DebugDraw::AddLine2D(SM_math::vec2 start, SM_math::vec2 end, color3 color) 
 }
 
 
-void DebugDraw::AddBox2D(SM_math::vec2 center, float length, color3 color, float _angle) {
-	float half = length / 2;
+void DebugDraw::AddBox2D(SM_math::vec2 center, float half, color3 color, float _angle) {
 
 	float top = (center.x + half);
 	float bottom = (center.x - half);
@@ -282,6 +281,5 @@ void DebugDraw::Render() {
 		GLCall(glLineWidth(4.0f));
 		GLCall(glDrawArrays(GL_LINES, 0, lineCount * 2));
 	}
-
 	lineCount = 0;
 }

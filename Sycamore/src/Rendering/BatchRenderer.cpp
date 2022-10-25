@@ -50,8 +50,6 @@ void BatchRenderer::Delete(GameObject* go) {
 
     //the object we've clicked is the last objects we've added
     if (index == gameObjectCount) {
-        LOGGER_ERROR("WELCUM");
-
         //empty the buffer
         for (int i = 0; i < VERTICES_DATA_FOR_QUAD; i++) {
             vertices[i] = 0.0f;
@@ -89,7 +87,7 @@ void BatchRenderer::Render() {
         }
     }
     oneTimeFlag = false;
-    //TestVertices(2);
+    //TestVertices(1);
 
     if (reloadBuffers) {
         vbID = SM_Buffers::CreateVertexBuffer(gameObjectCount * VERTICES_DATA_FOR_QUAD * sizeof(float), vertices);
@@ -108,6 +106,9 @@ void BatchRenderer::Render() {
 
 
     GLCall(glDrawElements(GL_TRIANGLES, 6 * gameObjectCount, GL_UNSIGNED_INT, nullptr));
+    //GLCall(glDrawElements(GL_LINES, 8 * gameObjectCount, GL_UNSIGNED_INT, nullptr));
+    //GLCall(glPointSize(10.0f));
+    //GLCall(glDrawElements(GL_POINTS, 6 * gameObjectCount, GL_UNSIGNED_INT, nullptr));
 }
 
 void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
@@ -116,29 +117,43 @@ void BatchRenderer::LoadVerticesData(unsigned int gameObjectIndex) {
     SpriteRenderer* rend = go->GetComponent<SpriteRenderer>();
 
     unsigned int texCoordsIndex = 0;
-    float offsetX = 0.0f;
-    float offsetY = 0.0f;
+    float radiusX = 0.0f;
+    float radiusY = 0.0f;
     unsigned int gameObjectOffset = gameObjectIndex * VERTICES_DATA_FOR_QUAD;
 
     //every iteration of the loop creates a single "point" of a quad
+
+    /*
+        3--------------4
+        -              -
+        -              -
+        -              -
+        -              -
+        1--------------2
+    
+    */
     for (int i = 0; i < 4; i++) {
         switch (i) {
+        case 0:
+            radiusX = -trans->GetRadius().x;
+            radiusY = -trans->GetRadius().y;
+            break;
         case 1:
-            offsetX = trans->GetScale().x;
+            radiusX = trans->GetRadius().x;
+            radiusY = -trans->GetRadius().y;
             break;
         case 2:
-            offsetX = 0.0f;
-            offsetY = trans->GetScale().y;
+            radiusX = -trans->GetRadius().x;
+            radiusY = trans->GetRadius().y;
             break;
         case 3:
-            offsetX = trans->GetScale().x;
-            break;
-        default:
+            radiusX = trans->GetRadius().x;
+            radiusY = trans->GetRadius().y;
             break;
         }
 
-        vertices[(0 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().x + offsetX;
-        vertices[(1 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().y + offsetY;
+        vertices[(0 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().x + radiusX;
+        vertices[(1 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = trans->GetPos().y + radiusY;
         vertices[(2 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().r;
         vertices[(3 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().g;
         vertices[(4 + (DATA_IN_ONE_VERTEX * i)) + gameObjectOffset] = rend->GetColor4().b;

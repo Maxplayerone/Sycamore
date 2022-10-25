@@ -27,6 +27,13 @@ private:
 	bool isEnabledSave = true;
 	bool isEnabledLoad = true;
 
+	int runtimeResult = -1;
+	//value returned from the runtime start/stop buttons
+	//0 - start
+	//1 - stop
+	bool cleanUp = false;
+	//used to cleanUp scenes while transitioning between runtime and stuff`
+
 	//destroys the last existing scene (used along side the load button)
 	void CleanUp();
 public:

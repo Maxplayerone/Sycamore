@@ -229,7 +229,7 @@ void SerializeEntity(YAML::Emitter& out, GameObject go) {
 		out << YAML::Value << trans->GetPos();
 
 		out << YAML::Key << "Scale";
-		out << YAML::Value << trans->GetScale();
+		out << YAML::Value << trans->GetRadius();
 
 		out << YAML::EndMap;
 	}

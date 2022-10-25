@@ -15,8 +15,12 @@ private:
 	uint m_sceneObjectsSize = 0;
 public:
 	LevelEditorScene();
+	//used to instantiate some object that we want to use
+	//during runtime and assets
+	void LoadData();
 
 	void OnUpdate(float deltaTime) override;
+	void OnUpdateRuntime(float deltaTime);
 	int AddGameObjectToScene(GameObject& go);
 
 	void ImGui() override;
